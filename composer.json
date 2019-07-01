@@ -22,16 +22,8 @@
     }
   },
   "repositories": [ {
-    "type": "package",
-    "package": {
-      "name": "twodee/greentea",
-      "version": "dev-master",
-      "source": {
-        "url": "https://github.com/2dsharp/greentea.git",
-        "type": "git",
-        "reference": "master"
-      }
-    }
+    "type": "vcs",
+    "url": "https://github.com/2dsharp/greentea.git"
   }],
   "require": {
     "php": ">=7.2",
@@ -41,7 +33,7 @@
     "twodee/phypes": "dev-master",
     "twodee/greentea": "dev-master",
     "twig/twig": "^2.0",
-    "symfony/http-foundation": "^3.3",
+    "symfony/http-foundation": "^4.2",
     "nikic/fast-route": "^1.2",
     "rdlowrey/auryn": "^1.4",
     "symfony/config": "^3.2",
