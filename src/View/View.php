@@ -11,12 +11,14 @@
 namespace Skletter\View;
 
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class View
 {
-    protected function respond()
-    {
-        return new Response();
+    protected function respond(Request $request, $html,  int $status = 200) {
+        $response = new Response($html, $status);
+        $response->prepare($request);
+        return $response;
     }
 }
