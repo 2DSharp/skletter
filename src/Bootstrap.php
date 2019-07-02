@@ -8,30 +8,53 @@
  * file that was distributed with this source code.
  */
 
+use Auryn\InjectionException;
 use Greentea\Core\Application;
 
-use function Skletter\getInjectorWithDependencies;
+use Greentea\Exception\NoHandlerSpecifiedException;
+use Skletter\Exception\InvalidErrorPage;
 use Skletter\RouteFactory;
 
-require_once __DIR__ . '../vendor/autoload.php';
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
-$injector = getInjectorWithDependencies();
+require_once __DIR__ . '/../vendor/autoload.php';
 
+$injector = require_once(__DIR__.'/Dependencies.php');
+$request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 
-$app = new Application($injector);
 
 try
 {
-    $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
     $routes = require_once(__DIR__.'/Routes.php');
 
     $router = new RouteFactory($routes, $request, \Skletter\View\ErrorPages::class);
     $router->buildPaths('Skletter\Controller\\', 'Skletter\View\\');
 
+    $app = new Application($injector);
     $app->run($request, $router);
+}
+catch (InjectionException | InvalidErrorPage | NoHandlerSpecifiedException $e) {
 
-}
-catch (\Auryn\InjectionException $e) {
-}
-catch (\Skletter\Exception\InvalidErrorPage $e) {
+    $log = new Logger('Resolution');
+    try
+    {
+        $log->pushHandler(new StreamHandler(__DIR__ . '/../app/logs/error.log', Logger::CRITICAL));
+        $log->addCritical($e->getMessage(),
+            array(
+                'Stack Trace' => $e->getTraceAsString()
+            ));
+    }
+    catch (Exception $e)
+    {
+        echo "No access to log file: ". $e->getMessage();
+    }
+    finally
+    {
+        /**
+         * @var \Skletter\View\ErrorPageView $errorPage
+         */
+        $errorPage = $injector->make(\Skletter\View\ErrorPages::class);
+        $errorPage->internalError($request)->send();
+    }
 }
