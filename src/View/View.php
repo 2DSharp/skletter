@@ -13,6 +13,7 @@ namespace Skletter\View;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 abstract class View
 {
@@ -20,5 +21,19 @@ abstract class View
         $response = new Response($html, $status);
         $response->prepare($request);
         return $response;
+    }
+
+    /**
+     * @param Environment $twig
+     * @param string $template
+     * @param array $params
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    protected function createHTMLFromTemplate(Environment $twig, string $template, $params = [])  : string
+    {
+        return $html = $twig->render($template, $params);
     }
 }
