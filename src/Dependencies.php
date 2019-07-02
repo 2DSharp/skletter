@@ -10,13 +10,18 @@
 namespace Skletter;
 
 use Auryn\Injector;
+use Symfony\Component\HttpFoundation\Request;
 
-function getInjectorWithDependencies() : Injector
-{
-    $injector = new Injector;
-    /**
-     * Dependencies go here
-     * Add factories by delegating functions to their ctors
-     */
-    return $injector;
-}
+$injector = new Injector;
+/**
+ * Dependencies go here
+ * Add factories by delegating functions to their ctors
+ */
+$requestFactory = function() {
+    $obj = Request::createFromGlobals();
+
+    return $obj;
+};
+$injector->delegate(Request::class, $requestFactory);
+
+return $injector;
