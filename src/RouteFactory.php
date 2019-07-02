@@ -17,6 +17,14 @@ use Skletter\Exception\InvalidErrorPage;
 use Skletter\View\ErrorPageView;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class RouteFactory
+ * @package Skletter
+ *
+ * This class works as a wrapper around FastRoute to implement the RouteInterface
+ * It enables to extract the necessary information from the request to route to the correct \
+ * handler.
+ */
 class RouteFactory implements RouteInterface
 {
     /**
@@ -49,23 +57,25 @@ class RouteFactory implements RouteInterface
     {
         $routeInfo = $this->getRouteInfo($routes, $request);
 
-        $this->className = $routeInfo[1][0];
-        $this->method = $routeInfo[1][1];
 
         if ($routeInfo[0] != Dispatcher::FOUND) {
             if (is_subclass_of($errorPage, ErrorPageView::class)) {
                 $this->view = $errorPage;
                 $this->method = $this->errorPageMap[$routeInfo[0]];
+                return;
             }
             else
-                throw new InvalidErrorPage("The error page class don't implement ErrorPageView");
+                throw new InvalidErrorPage("The error page class doesn't implement ErrorPageView");
         }
+
+        $this->className = $routeInfo[1][0];
+        $this->method = $routeInfo[1][1];
     }
 
     public function buildPaths(string $controllerNamespace, string $viewNamespace) : void
     {
         $this->controller = $controllerNamespace . $this->className;
-        $this->view = $viewNamespace . $this->className;
+        $this->view = ($this->view == null) ? $viewNamespace . $this->className : $this->view;
     }
 
     private function getRouteInfo(array $routes, Request $request) : array

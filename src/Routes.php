@@ -9,8 +9,5 @@
  */
 
 return [
-    ['GET', '/loadHome', ['Home', 'homeBuild']],
-    ['GET', '/another-route', function () {
-        echo 'This works too';
-    }],
-];
+    ['GET', '/', ['Home', 'main']]
+    ];
