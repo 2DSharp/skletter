@@ -10,13 +10,12 @@
 
 use Auryn\InjectionException;
 use Greentea\Core\Application;
-
 use Greentea\Exception\NoHandlerSpecifiedException;
+use Greentea\Exception\TemplatingException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Skletter\Exception\InvalidErrorPage;
 use Skletter\RouteFactory;
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -32,8 +31,7 @@ try
 
     $app = new Application($injector);
     $app->run($request, $router);
-}
-catch (InjectionException | InvalidErrorPage | NoHandlerSpecifiedException $e)
+} catch (InjectionException | InvalidErrorPage | NoHandlerSpecifiedException | TemplatingException $e)
 {
     $log = new Logger('Resolution');
     try
