@@ -11,11 +11,13 @@
 namespace Skletter\View;
 
 
+use Greentea\Exception\TemplatingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ErrorPages extends View implements ErrorPageView
+class ErrorPages extends AbstractView implements ErrorPageView
 {
+    // TODO: Avoid using Twig for generating Error pages. Use regular PHP within html to avoid Twig Errors from the error pages.
     private $templating;
 
     public function __construct(\Twig\Environment $twig)
@@ -26,9 +28,7 @@ class ErrorPages extends View implements ErrorPageView
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws \Twig\Error\Error
      */
     public function pageNotFound(Request $request) : Response
     {
@@ -41,9 +41,7 @@ class ErrorPages extends View implements ErrorPageView
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws \Twig\Error\Error
      */
     public function methodNotAllowed(Request $request) : Response
     {
@@ -57,9 +55,7 @@ class ErrorPages extends View implements ErrorPageView
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws \Twig\Error\Error
      */
     public function internalError(Request $request) : Response
     {
@@ -69,4 +65,18 @@ class ErrorPages extends View implements ErrorPageView
         return $this->respond($request, $html, 500);
     }
 
+    /**
+     * @param Request $request
+     * @param string $method
+     * @return Response
+     * @throws TemplatingException
+     */
+    public function createResponse(Request $request, string $method): Response
+    {
+        try {
+            return $this->{$method}($request);
+        } catch (\Twig\Error\Error $e) {
+            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 }

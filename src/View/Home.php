@@ -11,10 +11,11 @@
 namespace Skletter\View;
 
 
+use Greentea\Exception\TemplatingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Home extends View
+class Home extends AbstractView
 {
     private $templating;
 
@@ -28,10 +29,25 @@ class Home extends View
      * @return Response
      * @throws \Twig\Error\Error
      */
-    public function main(Request $request) : Response
+    private function main(Request $request): Response
     {
         $html = $this->createHTMLFromTemplate($this->templating, 'home.twig',
             ['title' => 'Skletter - Home']);
         return $this->respond($request, $html);
+    }
+
+    /**
+     * @param Request $request
+     * @param string $method
+     * @return Response
+     * @throws TemplatingException
+     */
+    public function createResponse(Request $request, string $method): Response
+    {
+        try {
+            return $this->{$method}($request);
+        } catch (\Twig\Error\Error $e) {
+            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }

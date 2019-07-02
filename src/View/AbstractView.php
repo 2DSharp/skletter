@@ -11,13 +11,15 @@
 namespace Skletter\View;
 
 
+use Greentea\Core\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-abstract class View
+abstract class AbstractView implements View
 {
-    protected function respond(Request $request, $html,  int $status = 200) {
+    protected function respond(Request $request, $html, int $status = 200)
+    {
         $response = new Response($html, $status);
         $response->prepare($request);
         return $response;
@@ -28,9 +30,7 @@ abstract class View
      * @param string $template
      * @param array $params
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws \Twig\Error\Error
      */
     protected function createHTMLFromTemplate(Environment $twig, string $template, $params = [])  : string
     {
