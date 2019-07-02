@@ -12,17 +12,24 @@ namespace Skletter\View;
 
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ErrorPages extends View implements ErrorPageView
 {
 
-    function pageNotFound(Request $request)
+    public function pageNotFound(Request $request) : Response
     {
-        // TODO: Implement pageNotFound() method.
+        return $this->respond($request, 'Page Not Found', 404);
     }
 
-    function methodNotAllowed(Request $request)
+    public function methodNotAllowed(Request $request) : Response
     {
-        // TODO: Implement methodNotAllowed() method.
+        return $this->respond($request, 'Method not allowed', 401);
     }
+
+    public function internalError(Request $request) : Response
+    {
+        return $this->respond($request, 'Internal Server error', 500);
+    }
+
 }

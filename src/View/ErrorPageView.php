@@ -12,9 +12,11 @@ namespace Skletter\View;
 
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface ErrorPageView
 {
-    function pageNotFound(Request $request);
-    function methodNotAllowed(Request $request);
+    function pageNotFound(Request $request) : Response;
+    function methodNotAllowed(Request $request) : Response;
+    public function internalError(Request $request) : Response;
 }
