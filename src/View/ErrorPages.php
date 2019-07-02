@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ErrorPages extends AbstractView implements ErrorPageView
 {
-    // TODO: Avoid using Twig for generating Error pages. Use regular PHP within html to avoid Twig Errors from the error pages.
     private $templating;
 
     public function __construct(\Twig\Environment $twig)
@@ -55,13 +54,11 @@ class ErrorPages extends AbstractView implements ErrorPageView
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig\Error\Error
      */
     public function internalError(Request $request) : Response
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'error.twig',
-            ['title' => 'Something went wrong',
-                'message' => "It's not you, it's us.\nWe ran into some problem and are fixing the problem as we speak."]);
+        // This is a fall back error page which doesn't depend on Twig to be loaded. Use it to mask fatal errors.
+        $html = file_get_contents(__DIR__ . '/../../templates/internal_error.html');
         return $this->respond($request, $html, 500);
     }
 
