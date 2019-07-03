@@ -1,0 +1,66 @@
+<?php
+/*
+ * This file is part of Skletter <https://github.com/2DSharp/Skletter>.
+ *
+ * (c) Dedipyaman Das <2d@twodee.me>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Skletter\Factory;
+
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\VirtualProxyInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Twig\Environment;
+
+function buildTwig(string $templatesDir, string $cacheDir)
+{
+    $loader = new \Twig\Loader\FilesystemLoader($templatesDir);
+    $twig = new Environment($loader, [
+        'cache' => $cacheDir,
+    ]);
+
+    return $twig;
+}
+
+function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
+{
+    return function () use ($lazyloader, $templatesDir, $cacheDir) : VirtualProxyInterface {
+        $factory = $lazyloader;
+        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+                                 $method,
+                                 array $parameters,
+                                 & $initializer) use ($templatesDir, $cacheDir) {
+            $initializer = null; // disable initialization
+            $wrappedObject = buildTwig($templatesDir, $cacheDir);
+            return true;
+        };
+        return $factory->createProxy(Environment::class, $initializer);
+    };
+}
+
+function getRequestFactory(): callable
+{
+    return function (): Request {
+        $obj = Request::createFromGlobals();
+        return $obj;
+    };
+}
+
+function buildLazyLoader(string $proxyDir, bool $generate = false): LazyLoadingValueHolderFactory
+{
+    $config = new \ProxyManager\Configuration();
+    $config->setProxiesTargetDir($proxyDir);
+
+    if ($generate) {
+        // generate the proxies and store them as files
+        $fileLocator = new \ProxyManager\FileLocator\FileLocator($proxyDir);
+        $config->setGeneratorStrategy(new \ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy($fileLocator));
+    }
+
+    spl_autoload_register($config->getProxyAutoloader());
+
+    return new LazyLoadingValueHolderFactory($config);
+}

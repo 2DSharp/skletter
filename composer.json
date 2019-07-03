@@ -13,7 +13,13 @@
   ],
 
   "autoload": {
-    "psr-4": { "Skletter\\": "src/" }
+    "psr-4": {
+      "Skletter\\": "src/"
+    },
+    "files": [
+      "src/Factory/DependencyFactory.php"
+    ]
+
   },
 
   "autoload-dev": {
