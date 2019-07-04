@@ -1,8 +1,30 @@
-<html>
-    <head>
-        <title> {{ title }}</title>
-    </head>
-    <body>
-        <h1>Welcome to Skletter</h1>
-    </body>
-</html>
+{% extends "base.twig" %}
+
+{% block title %} Home - Skletter {% endblock %}
+{% block head %}
+    <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
+    <link href="{{ server.css_assets }}/home.css" rel="stylesheet">
+    <style>
+        body {
+            background: url("{{ server.img_assets }}/bg2.jpg") no-repeat;
+            background-size: cover;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="welcome-msg">
+        <h1 class="bold-head" style="color: #ffa13c;">
+            <span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">SKLETTER</span>
+        </h1>
+        <h2 class="bold-head"><span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">
+                WRITE LETTERS TO <span style="color:#3dc7ff;">YOURSELF.</span></span>
+        </h2>
+        <h2 class="bold-head"><span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">
+                AND THE <span style="color:#d970ff;">WORLD.</span></span>
+        </h2>
+
+    </div>
+
+
+{% endblock %}
