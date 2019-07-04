@@ -1,0 +1,4 @@
+base_url = "http://localhost"
+assets = ${base_url}
+css_assets = "${assets}/static/css"
+img_assets = "${assets}/static/img"
