@@ -15,13 +15,19 @@ use ProxyManager\Proxy\VirtualProxyInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
+function addTwigGlobals(Environment $twig)
+{
+    $twig->addGlobal('server', [
+        'css_assets' => $_ENV['css_assets'],
+        'img_assets' => $_ENV['img_assets']]);
+}
 function buildTwig(string $templatesDir, string $cacheDir)
 {
     $loader = new \Twig\Loader\FilesystemLoader($templatesDir);
     $twig = new Environment($loader, [
-        'cache' => $cacheDir,
+        //  'cache' => $cacheDir,
     ]);
-
+    addTwigGlobals($twig);
     return $twig;
 }
 
