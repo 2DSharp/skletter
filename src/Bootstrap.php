@@ -19,6 +19,12 @@ use Skletter\RouteFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+/**
+ * Load environment variables
+ */
+$dotenv = Dotenv\Dotenv::create(__DIR__ . "/../app/config", 'env_vars');
+$dotenv->load();
+
 $injector = require_once(__DIR__.'/Dependencies.php');
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 
