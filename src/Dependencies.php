@@ -16,7 +16,6 @@ use function Skletter\Factory\buildLazyLoader;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
 
-
 $injector = new Injector;
 /**
  * Dependencies go here
@@ -25,7 +24,7 @@ $injector = new Injector;
 
 $injector->delegate(Request::class, getRequestFactory());
 
-$lazyloader = buildLazyLoader(__DIR__ . '/../app/cache/proxies', true);
+$lazyloader = buildLazyLoader(__DIR__ . '/../app/cache/proxies');
 
 $templatesDir = __DIR__ . '/../templates';
 $templatesCacheDir = __DIR__ . '/../app/cache/templates';
