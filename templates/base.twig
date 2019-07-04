@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {{ include('base_includes.twig') }}
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<div id="header"></div>
+<div id="content">{% block content %}{% endblock %}</div>
+<div id="footer">
+    {% block footer %}
+        &copy; Skletter.
+    {% endblock %}
+</div>
+</body>
+</html>

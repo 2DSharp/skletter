@@ -1,0 +1,23 @@
+
+h1.light-head {
+    font-size: 36px;
+}
+
+.bold-head {
+    font-family: 'Oswald', sans-serif;
+    color: #fff;
+    line-height: 54px;
+}
+
+h1.bold-head {
+    font-size: 72px;
+}
+
+h2.bold-head {
+    font-size: 48px;
+    line-height: 34px;
+}
+
+.welcome-msg {
+    margin-top: 180px;
+}
