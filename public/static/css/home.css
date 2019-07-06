@@ -19,5 +19,49 @@ h2.bold-head {
 }
 
 .welcome-msg {
-    margin-top: 180px;
+}
+
+.home-description {
+    font-family: 'Open Sans', sans-serif;
+    width: 600px;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.highlighted {
+    background-color: rgba(0, 0, 0, .7);
+    padding: 0 10px 0 10px;
+}
+
+.left-block {
+    width: 620px;
+    display: inline-block;
+}
+
+.right-block {
+    float: right;
+    display: inline-block;
+    width: 620px;
+}
+
+.login-container {
+    min-height: 200px;
+    border-radius: 10px;
+    background-color: rgba(148, 165, 173, 0.5);
+    width: 440px;
+    margin-left: 180px;
+    padding: 40px 20px 40px 20px;
+}
+
+.main-container {
+    margin-top: 140px;
+}
+
+input[type="text"].std-text {
+    padding: 3px;
+    border-radius: 7px;
+    width: 300px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid #71bdff;
 }

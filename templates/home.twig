@@ -13,18 +13,35 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="welcome-msg">
-        <h1 class="bold-head" style="color: #ffa13c;">
-            <span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">SKLETTER</span>
-        </h1>
-        <h2 class="bold-head"><span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">
-                WRITE LETTERS TO <span style="color:#3dc7ff;">YOURSELF.</span></span>
-        </h2>
-        <h2 class="bold-head"><span style="background-color: rgba(0,0,0,.7); padding: 0 10px 0 10px;">
-                AND THE <span style="color:#d970ff;">WORLD.</span></span>
-        </h2>
+    <div class="main-container">
+        <div class="left-block">
+            <div class="welcome-msg">
+                <h1 class="bold-head" style="color: #ffa13c;">
+                    <span class="highlighted">SKLETTER</span>
+                </h1>
+                <h2 class="bold-head"><span class="highlighted">
+                        WRITE LETTERS TO <span style="color:#3dc7ff;">YOURSELF.</span></span>
+                </h2>
+                <h2 class="bold-head"><span class="highlighted">
+                        AND THE <span style="color:#d970ff;">WORLD.</span></span>
+                </h2>
 
+            </div>
+            <div class="home-description">
+                <p><span class="highlighted">Skletter is a social diary that allows you to record events from your life and
+                        your fantasies, all in one place.</span></p>
+                <p><span class="highlighted"> You want to scream something out to the world?</span><br><span
+                            class="highlighted"> We've got you covered.</span><br><span class="highlighted">
+                    Or not, we can keep it a secret if you want</span></p>
+            </div>
+        </div>
+        <div class="right-block">
+            <div class="login-container">
+                <input type="text" class="std-text">
+                <input type="text" class="std-text">
+
+            </div>
+        </div>
     </div>
-
 
 {% endblock %}
