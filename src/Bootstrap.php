@@ -25,15 +25,13 @@ $injector = require_once(__DIR__.'/Dependencies.php');
 
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 
-$injector->define(\Skletter\Component\FallbackExceptionHandler::class, [':logConfig' =>
-    ['LOG_FILE' => __DIR__ . '/../../logs/error.log']]);
 $fallBackHandler = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
 
-$handler = function ($exception) use ($fallBackHandler, $request) {
+$exceptionHandler = function ($exception) use ($fallBackHandler, $request) {
     $fallBackHandler->handle($exception, $request);
 };
 
-set_exception_handler($handler);
+set_exception_handler($exceptionHandler);
 
 $routes = require_once(__DIR__ . '/Routes.php');
 
