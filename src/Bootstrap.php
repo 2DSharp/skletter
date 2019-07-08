@@ -8,13 +8,7 @@
  * file that was distributed with this source code.
  */
 
-use Auryn\InjectionException;
 use Greentea\Core\Application;
-use Greentea\Exception\NoHandlerSpecifiedException;
-use Greentea\Exception\TemplatingException;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Skletter\Exception\InvalidErrorPage;
 use Skletter\RouteFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -24,41 +18,27 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 $dotenv = Dotenv\Dotenv::create(__DIR__ . "/../app/config", 'env_vars');
 $dotenv->load();
-
+/**
+ * @var \Auryn\Injector $injector
+ */
 $injector = require_once(__DIR__.'/Dependencies.php');
+
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 
-try
-{
-    $routes = require_once(__DIR__.'/Routes.php');
+$injector->define(\Skletter\Component\FallbackExceptionHandler::class, [':logConfig' =>
+    ['LOG_FILE' => __DIR__ . '/../../logs/error.log']]);
+$fallBackHandler = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
 
-    $router = new RouteFactory($routes, $request, \Skletter\View\ErrorPages::class);
-    $router->buildPaths('Skletter\Controller\\', 'Skletter\View\\');
+$handler = function ($exception) use ($fallBackHandler, $request) {
+    $fallBackHandler->handle($exception, $request);
+};
 
-    $app = new Application($injector);
-    $app->run($request, $router);
-} catch (InjectionException | InvalidErrorPage | NoHandlerSpecifiedException | TemplatingException $e)
-{
-    $log = new Logger('Resolution');
-    try
-    {
-        $log->pushHandler(new StreamHandler(__DIR__ . '/../app/logs/error.log', Logger::CRITICAL));
-        $log->addCritical($e->getMessage(),
-            array(
-                'Stack Trace' => $e->getTraceAsString()
-            ));
-    }
-    catch (Exception $e)
-    {
-        echo "No access to log file: ". $e->getMessage();
-        // Handle this exception by pushing to db or emailing
-    }
-    finally
-    {
-        /**
-         * @var \Skletter\View\ErrorPageView $errorPage
-         */
-        $errorPage = $injector->make(\Skletter\View\ErrorPages::class);
-        $errorPage->internalError($request)->send();
-    }
-}
+set_exception_handler($handler);
+
+$routes = require_once(__DIR__ . '/Routes.php');
+
+$router = new RouteFactory($routes, $request, \Skletter\View\ErrorPages::class);
+$router->buildPaths('Skletter\Controller\\', 'Skletter\Views\\');
+
+$app = new Application($injector);
+$app->run($request, $router);
