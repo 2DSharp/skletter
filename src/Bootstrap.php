@@ -16,7 +16,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * Load environment variables
  */
-$dotenv = Dotenv\Dotenv::create(__DIR__ . "/../app/config", 'env_vars');
+$dotenv = Dotenv\Dotenv::create(__DIR__ . "/../app/config");
 $dotenv->load();
 /**
  * @var \Auryn\Injector $injector
@@ -36,7 +36,7 @@ set_exception_handler($exceptionHandler);
 $routes = require_once(__DIR__ . '/Routes.php');
 
 $router = new RouteFactory($routes, $request, \Skletter\View\ErrorPages::class);
-$router->buildPaths('Skletter\Controller\\', 'Skletter\Views\\');
+$router->buildPaths('Skletter\Controller\\', 'Skletter\View\\');
 
 $app = new Application($injector);
 $app->run($request, $router);
