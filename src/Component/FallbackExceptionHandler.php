@@ -35,8 +35,8 @@ class FallbackExceptionHandler
     }
 
     /**
-     * Store an exception into a log file
-     * @param Exception $exception the exception that'll be sent
+     * Store an exception into a log file and/or DB/ELK and/or Syslog
+     * @param Exception $exception
      * @param Request $request
      * @throws Exception
      */
@@ -54,11 +54,13 @@ class FallbackExceptionHandler
 
     /**
      * The file/DB logger failed, alert the sysadmins!
-     * @param Exception $exception the exception that'll be sent
+     * @param Exception $exception
      * @param Request $request
      */
     protected function sendToEmail(Exception $exception, Request $request)
     {
+        // For debugging purposes
+        echo $exception->getMessage();
         $log = new Logger('Logger Failure');
         //$log->pushHandler(new \Monolog\Handler\ErrorLogHandler('Error!', Logger::ALERT));
 
