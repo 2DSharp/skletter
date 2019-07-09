@@ -9,7 +9,7 @@
  */
 
 use Greentea\Core\Application;
-use Skletter\RouteFactory;
+use Skletter\Router;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -24,7 +24,7 @@ $dotenv->load();
 $injector = require_once(__DIR__.'/Dependencies.php');
 
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
-
+// TODO: Find a better name replacement for fallBackHandler
 $fallBackHandler = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
 
 $exceptionHandler = function ($exception) use ($fallBackHandler, $request) {
@@ -35,8 +35,8 @@ set_exception_handler($exceptionHandler);
 
 $routes = require_once(__DIR__ . '/Routes.php');
 
-$router = new RouteFactory($routes, $request, \Skletter\View\ErrorPages::class);
-$router->buildPaths('Skletter\Controller\\', 'Skletter\View\\');
+$router = new Router($routes, \Skletter\View\ErrorPages::class);
+$requestedRoute = $router->route($request, 'Skletter\Controller\\', 'Skletter\View\\');
 
 $app = new Application($injector);
-$app->run($request, $router);
+$app->run($request, $requestedRoute);

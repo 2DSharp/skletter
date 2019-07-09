@@ -12,70 +12,66 @@ namespace Skletter;
 
 
 use FastRoute\Dispatcher;
-use Greentea\Component\RouteInterface;
+use Greentea\Component\RouteVOInterface;
+use Skletter\Component\RouteInformation;
 use Skletter\Exception\InvalidErrorPage;
 use Skletter\View\ErrorPageView;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class RouteFactory
+ * Class Router
  * @package Skletter
  *
  * This class works as a wrapper around FastRoute to implement the RouteInterface
  * It enables to extract the necessary information from the request to route to the correct \
  * handler.
  */
-class RouteFactory implements RouteInterface
+class Router
 {
     /**
-     * @var string $className
+     * @var array $routes
      */
-    private $className;
+    private $routes;
     /**
-     * @var string $controller
+     * @var $errorPage
      */
-    private $controller;
+    private $errorPage;
     /**
-     * @var string|null $view
+     * @var array $errorPageMap , method mappings to unsuccessful routing paths
      */
-    private $view;
-    /**
-     * @var string|null $method
-     */
-    private $method;
-
     private $errorPageMap = [Dispatcher::NOT_FOUND => 'pageNotFound', Dispatcher::METHOD_NOT_ALLOWED => 'methodNotAllowed'];
 
     /**
      * RouteFactory constructor.
      * @param array $routes
-     * @param Request $request
      * @param string $errorPage
      * @throws InvalidErrorPage
      */
-    public function __construct(array $routes, Request $request, string $errorPage)
+    public function __construct(array $routes, string $errorPage)
     {
-        $routeInfo = $this->getRouteInfo($routes, $request);
+        $this->routes = $routes;
+        $this->errorPage = $errorPage;
 
-
-        if ($routeInfo[0] != Dispatcher::FOUND) {
-            if (is_subclass_of($errorPage, ErrorPageView::class)) {
-                $this->view = $errorPage;
-                $this->method = $this->errorPageMap[$routeInfo[0]];
-                return;
-            }
-            else
-                throw new InvalidErrorPage("The error page class doesn't implement ErrorPageView");
+        if (!is_subclass_of($this->errorPage, ErrorPageView::class)) {
+            throw new InvalidErrorPage("The error page class doesn't implement ErrorPageView");
         }
-
-        $this->className = $routeInfo[1][0];
-        $this->method = $routeInfo[1][1];
     }
 
-    public function buildPaths(string $controllerNamespace, string $viewNamespace) : void
+    public function route(Request $request, string $controllerNamespace, string $viewNamespace): RouteVOInterface
     {
-        $this->controller = $controllerNamespace . $this->className;
-        $this->view = ($this->view == null) ? $viewNamespace . $this->className : $this->view;
+        $routeInfo = $this->getRouteInfo($this->routes, $request);
+        $controller = $view = null;
+
+        if ($routeInfo[0] != Dispatcher::FOUND) {
+            $method = $this->errorPageMap[$routeInfo[0]];
+            $view = $this->errorPage;
+        } else {
+            $method = $routeInfo[1][1];
+            $controller = $controllerNamespace . $routeInfo[1][0];
+            $view = $viewNamespace . $routeInfo[1][0];
+        }
+
+        return new RouteInformation($method, $controller, $view);
     }
 
     private function getRouteInfo(array $routes, Request $request) : array
@@ -90,18 +86,5 @@ class RouteFactory implements RouteInterface
 
         return $routeInfo;
     }
-    public function resolveController(): ?string
-    {
-        return $this->controller;
-    }
 
-    public function resolveView(): ?string
-    {
-        return $this->view;
-    }
-
-    public function resolveMethod(): string
-    {
-        return $this->method;
-    }
 }

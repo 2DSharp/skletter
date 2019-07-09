@@ -9,5 +9,7 @@
  */
 
 return [
-    ['GET', '/', ['Home', 'main']]
+    ['GET', '/', ['Home', 'main']],
+    ['POST', '/login', ['Login', 'attemptLogin']],
+    ['GET', '/login', ['Login', 'renderLoginPage']]
     ];
