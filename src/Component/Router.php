@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter;
+namespace Skletter\Component;
 
 
 use FastRoute\Dispatcher;
