@@ -29,7 +29,7 @@ class LoginState
      * LoggedIn status
      * @var bool $isLoggedIn
      */
-    private $isLoggedIn;
+    private $isLoggedIn = false;
 
     /**
      * @return Identity
