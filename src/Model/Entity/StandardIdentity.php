@@ -13,6 +13,7 @@ namespace Skletter\Model\Entity;
 
 use Phypes\Exception\InvalidValue;
 use Phypes\Type\Email;
+use Phypes\Type\StringRequired;
 use Phypes\Type\Type;
 use Phypes\Type\Username;
 use Skletter\Contract\Identity;
@@ -47,6 +48,7 @@ class StandardIdentity implements Identity
      * @param string $identifier
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
+     * @throws \Phypes\Exception\EmptyRequiredValue
      */
     public function __construct(string $identifier)
     {
@@ -64,22 +66,24 @@ class StandardIdentity implements Identity
     /**
      * @param string $email
      * @throws InvalidValue
+     * @throws \Phypes\Exception\EmptyRequiredValue
      */
     private function createIdentityFromEmail(string $email)
     {
-        $this->identifier = new Email(strtolower($email));
         $this->type = self::EMAIL;
+        $this->identifier = new Email((new StringRequired(strtolower($email)))->getValue());
     }
 
     /**
      * @param $username
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
+     * @throws \Phypes\Exception\EmptyRequiredValue
      */
     private function createIdentityFromUsername($username): void
     {
-        $this->identifier = new Username(strtolower($username));
         $this->type = self::USERNAME;
+        $this->identifier = new Username((new StringRequired(strtolower($username)))->getValue());
     }
 
     /**
