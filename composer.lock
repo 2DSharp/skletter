@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-  "content-hash": "a746c6330c07bd1e6ba22506a57a5fcf",
+  "content-hash": "c064072399ca61e6509832380a23a644",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1056,12 +1056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/2DSharp/Phypes.git",
-              "reference": "a3ceaf"
+              "reference": "02963cd8da5e03555357a58620ff54abaaee6b0c"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/a3ceaf",
-              "reference": "a3ceaf",
+              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/02963cd8da5e03555357a58620ff54abaaee6b0c",
+              "reference": "02963cd8da5e03555357a58620ff54abaaee6b0c",
                 "shasum": ""
             },
             "require": {
@@ -1100,7 +1100,7 @@
                 "validation",
                 "value objects"
             ],
-          "time": "2019-07-11T09:01:17+00:00"
+          "time": "2019-07-11T14:25:47+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -2802,7 +2802,8 @@
     "platform": {
         "php": ">=7.2",
         "ext-pdo": "*",
-        "ext-mbstring": "*"
+      "ext-mbstring": "*",
+      "ext-json": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
