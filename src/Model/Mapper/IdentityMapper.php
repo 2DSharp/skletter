@@ -18,6 +18,7 @@ class IdentityMapper
 
     public function findByEmail(StandardIdentity $identity)
     {
+        $identity->setId(123);
     }
 
     public function findByUsername(StandardIdentity $identity)
