@@ -19,7 +19,8 @@ function addTwigGlobals(Environment $twig)
 {
     $twig->addGlobal('server', [
         'css_assets' => $_ENV['css_assets'],
-        'img_assets' => $_ENV['img_assets']]);
+        'img_assets' => $_ENV['img_assets'],
+        'base_url' => $_ENV['base_url']]);
 }
 function buildTwig(string $templatesDir, string $cacheDir)
 {
