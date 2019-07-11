@@ -28,18 +28,21 @@
 
             </div>
             <div class="home-description">
-                <p><span class="highlighted">Skletter is a social diary that allows you to record events from your life and
-                        your fantasies, all in one place.</span></p>
-                <p><span class="highlighted"> You want to scream something out to the world?</span><br><span
-                            class="highlighted"> We've got you covered.</span><br><span class="highlighted">
-                    Or not, we can keep it a secret if you want</span></p>
+                <p><span class="highlighted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></p>
+                <p><span class="highlighted"> ed condimentum risus pulvinar risus finibus, ut pharetra ante commodo. Vivamus ac ex nec lorem dignissim viverra.</span><br><span
+                            class="highlighted">Etiam porta elit et condimentum mattis. Nam hendrerit libero enim, nec rutrum orci fringilla ut. Ut luctus congue bibendum.</span><br><span
+                            class="highlighted">
+                    Suspendisse vitae tortor lacus. </span></p>
             </div>
         </div>
         <div class="right-block">
             <div class="login-container">
-                <input type="text" class="std-text">
-                <input type="text" class="std-text">
-
+                <form method="post" action="{{ server.base_url }}/login">
+                    <input name="identity" placeholder="Email or Username" type="text" class="std-text">
+                    <input name="password" placeholder="Password" type="text" class="std-text">
+                    <button class="login"> Login</button>
+                </form>
+                <button> Sign up</button>
             </div>
         </div>
     </div>
