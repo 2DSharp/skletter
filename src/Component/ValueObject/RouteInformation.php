@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Component;
+namespace Skletter\Component\ValueObject;
 
 
 use Greentea\Component\RouteVOInterface;

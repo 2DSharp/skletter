@@ -13,7 +13,7 @@ namespace Skletter;
 
 use FastRoute\Dispatcher;
 use Greentea\Component\RouteVOInterface;
-use Skletter\Component\RouteInformation;
+use Skletter\Component\ValueObject\RouteInformation;
 use Skletter\Exception\InvalidErrorPage;
 use Skletter\View\ErrorPageView;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +71,7 @@ class Router
             $view = $viewNamespace . $routeInfo[1][0];
         }
 
-        return new RouteInformation($method, $controller, $view);
+        return new RouteInformation($controller, $view, $method);
     }
 
     private function getRouteInfo(array $routes, Request $request) : array
