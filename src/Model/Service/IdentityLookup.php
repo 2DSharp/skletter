@@ -47,12 +47,14 @@ class IdentityLookup
      * @throws \Phypes\Exception\InvalidRule
      * @throws UserDoesntExistException
      * @throws InvalidIdentifier
+     * @throws \Phypes\Exception\EmptyRequiredValue
      */
     public function getStandardIdentity($identifier): Identity
     {
         try {
             $identity = new StandardIdentity($identifier);
             $this->populateStandardIdentity($identity);
+            return $identity;
         } catch (InvalidValue $e) {
             throw new InvalidIdentifier();
         }
