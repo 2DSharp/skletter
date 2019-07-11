@@ -37,7 +37,7 @@ class IdentityLookup
             $this->mapper->findByUsername($identity);
         }
 
-        if (!$identity->getId())
+        if (!$identity->isFound())
             throw new UserDoesntExistException();
     }
 

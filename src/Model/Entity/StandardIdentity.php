@@ -40,6 +40,7 @@ class StandardIdentity implements Identity
 
     public const EMAIL = 1;
     public const USERNAME = 2;
+    private $found = false;
 
     /**
      * Identity constructor.
@@ -106,10 +107,19 @@ class StandardIdentity implements Identity
     }
 
     /**
+     * Is the account found?
+     * @return bool
+     */
+    public function isFound(): bool
+    {
+        return $this->found;
+    }
+    /**
      * @param int $id
      */
     public function setId(int $id): void
     {
+        $this->found = true;
         $this->id = $id;
     }
 
