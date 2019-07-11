@@ -11,7 +11,6 @@
 namespace Skletter\Component;
 
 
-use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Skletter\View\ErrorPages;
@@ -36,11 +35,11 @@ class FallbackExceptionHandler
 
     /**
      * Store an exception into a log file and/or DB/ELK and/or Syslog
-     * @param Exception $exception
+     * @param \Throwable $exception
      * @param Request $request
-     * @throws Exception
+     * @throws \Throwable
      */
-    protected function storeToLog(Exception $exception, Request $request): void
+    protected function storeToLog(\Throwable $exception, Request $request): void
     {
         $log = new Logger('Unhandled Exception');
         $log->pushHandler(new StreamHandler($this->logConfig['LOG_FILE'], Logger::CRITICAL));
@@ -54,10 +53,10 @@ class FallbackExceptionHandler
 
     /**
      * The file/DB logger failed, alert the sysadmins!
-     * @param Exception $exception
+     * @param \Throwable $exception
      * @param Request $request
      */
-    protected function sendToEmail(Exception $exception, Request $request)
+    protected function sendToEmail(\Throwable $exception, Request $request)
     {
         // For debugging purposes
         echo $exception->getMessage();
@@ -73,14 +72,14 @@ class FallbackExceptionHandler
 
     /**
      * Handle an exception
-     * @param Exception $exception the exception that'll be handled
+     * @param \Throwable $exception the exception that'll be handled
      * @param Request $request
      */
-    public function handle(Exception $exception, Request $request)
+    public function handle(\Throwable $exception, Request $request)
     {
         try {
             $this->storeToLog($exception, $request);
-        } catch (Exception $exception) {
+        } catch (\Throwable $exception) {
             // Massive failure, storing to log has file access problems
             // Send email to the sysadmin
             $this->sendToEmail($exception, $request);

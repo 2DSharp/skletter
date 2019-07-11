@@ -9,7 +9,7 @@
  */
 
 use Greentea\Core\Application;
-use Skletter\Router;
+use Skletter\Component\Router;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
