@@ -33,7 +33,7 @@ class LoginManager
     /**
      * @var array|string $errors
      */
-    private $errors;
+    private $errors = [];
 
     /**
      * LoginManager constructor.
