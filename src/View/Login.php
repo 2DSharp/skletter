@@ -12,7 +12,7 @@ namespace Skletter\View;
 
 
 use Greentea\Exception\TemplatingException;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\DTO\LoginState;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,19 +22,19 @@ use Twig\Environment;
 class Login extends AbstractView
 {
     /**
-     * Shared LoginManager service to retrieve current login state
-     * @var LoginManager $loginManager
+     * Shared DTO to retrieve current login state
+     * @var LoginState $state
      */
-    private $loginManager;
+    private $state;
     /**
      * @var Environment $twig
      */
     private $twig;
 
-    public function __construct(LoginManager $loginManager, Environment $twig)
+    public function __construct(LoginState $state, Environment $twig)
     {
-        $this->loginManager = $loginManager;
         $this->twig = $twig;
+        $this->state = $state;
     }
 
     /**
@@ -44,15 +44,15 @@ class Login extends AbstractView
      */
     public function attemptLogin(Request $request): Response
     {
-        if ($this->loginManager->isLoggedIn())
+        if ($this->state->isLoggedIn())
             return new RedirectResponse($_ENV['base_url'] . '/success');
         else {
             if ($request->isXmlHttpRequest())
-                return new JsonResponse($this->loginManager->getErrors());
+                return new JsonResponse(json_encode(array('status' => 'failed', 'error' => $this->state->getError())));
             else
                 return $this->respond($request, $this->createHTMLFromTemplate($this->twig,
                     'login_prompt.twig',
-                    ['status' => 'failed', 'errors' => $this->loginManager->getErrors()]));
+                    ['status' => 'failed', 'error' => $this->state->getError()]));
         }
     }
 

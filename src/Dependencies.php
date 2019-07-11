@@ -11,7 +11,7 @@ namespace Skletter;
 
 use Auryn\Injector;
 use Skletter\Component\FallbackExceptionHandler;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\DTO\LoginState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -40,7 +40,7 @@ $injector->define(FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]);
 
 $injector->alias(SessionInterface::class, Session::class);
-$injector->share(LoginManager::class);
+$injector->share(LoginState::class);
 
 return $injector;
 
