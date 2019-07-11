@@ -36,7 +36,7 @@
     "ext-pdo": "*",
     "psr/log": "1.*",
     "ext-mbstring": "*",
-    "twodee/phypes": "dev-master#26cad77",
+    "twodee/phypes": "dev-master#a3ceaf",
     "twodee/greentea": "dev-master",
     "twig/twig": "^2.0",
     "symfony/http-foundation": "^4.2",
