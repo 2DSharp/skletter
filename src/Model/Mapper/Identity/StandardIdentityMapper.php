@@ -11,9 +11,10 @@
 namespace Skletter\Model\Mapper\Identity;
 
 
+use Skletter\Contract\Mapper\DataMapper;
 use Skletter\Model\Entity\StandardIdentity;
 
-class StandardIdentityMapper
+class StandardIdentityMapper implements DataMapper
 {
     /**
      * @var \PDO $connection
@@ -25,38 +26,35 @@ class StandardIdentityMapper
         $this->connection = $connection;
     }
 
-    public function fetch(StandardIdentity $identity)
+    /**
+     * Query to fetch entity data
+     *
+     * @param StandardIdentity $entity
+     * @param null $queryObject
+     */
+    public function fetch($entity, $queryObject = null): void
     {
-        if ($identity->getId()) {
-            $this->fetchById($identity);
-            return;
-        }
-        $this->fetchByIdentifier($identity);
-
+        // TODO: Implement fetch() method.
     }
 
-    private function fetchById(StandardIdentity $identity)
+    /**
+     * @param StandardIdentity $entity
+     * @param null $queryObject
+     * @return bool
+     */
+    public function update($entity, $queryObject = null): bool
     {
-
+        // TODO: Implement update() method.
     }
 
-    private function fetchByIdentifier(StandardIdentity $identity)
+    public function delete($entity, $queryObject = null): bool
     {
-        if ($identity->getType() == StandardIdentity::EMAIL) {
-            $this->fetchByEmail($identity);
-        } else {
-            $this->fetchByUsername($identity);
-        }
+        // TODO: Implement delete() method.
     }
 
-    private function fetchByUsername(StandardIdentity $identity)
+    public function store($entity, $queryObject = null): bool
     {
-
+        // TODO: Implement store() method.
     }
-
-    private function fetchByEmail(StandardIdentity $identity)
-    {
-    }
-
 
 }
