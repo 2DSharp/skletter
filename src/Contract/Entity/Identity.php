@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Contract;
+namespace Skletter\Contract\Entity;
 
 
 use Phypes\Type\Type;
@@ -20,4 +20,6 @@ interface Identity
     function getID(): int;
 
     function getIdentifier(): Type;
+
+
 }
