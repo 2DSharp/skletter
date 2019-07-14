@@ -11,12 +11,17 @@ namespace Skletter;
 
 use Auryn\Injector;
 use Skletter\Component\FallbackExceptionHandler;
+use Skletter\Contract\Factory\MapperFactoryInterface;
+use Skletter\Contract\Factory\QueryObjectFactoryInterface;
+use Skletter\Factory\MapperFactory;
+use Skletter\Factory\QueryObjectFactory;
 use Skletter\Model\DTO\LoginState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig\Environment;
 use function Skletter\Factory\buildLazyLoader;
+use function Skletter\Factory\buildPDO;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
 
@@ -40,7 +45,11 @@ $injector->define(FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]);
 
 $injector->alias(SessionInterface::class, Session::class);
+$injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
+$injector->alias(MapperFactoryInterface::class, MapperFactory::class);
+
 $injector->share(LoginState::class);
+$injector->delegate(\PDO::class, buildPDO());
 
 return $injector;
 
