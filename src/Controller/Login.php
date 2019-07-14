@@ -66,6 +66,7 @@ class Login implements Controller
 
             // Set session data, log stuff, update db
             $this->loginManager->loginWithPassword($identity, $rawPassword);
+
             $this->state->setIdentity($identity);
 
         } catch (UserDoesntExistException | InvalidIdentifier $exception) {

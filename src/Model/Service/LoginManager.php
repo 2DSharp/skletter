@@ -14,7 +14,7 @@ namespace Skletter\Model\Service;
 use Phypes\Exception\InvalidValue;
 use Phypes\Type\Password;
 use Phypes\Type\StringRequired;
-use Skletter\Contract\Identity;
+use Skletter\Contract\Entity\Identity;
 use Skletter\Exception\InvalidPassword;
 use Skletter\Exception\PasswordMismatch;
 use Skletter\Model\Entity\StandardIdentity;

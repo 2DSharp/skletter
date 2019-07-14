@@ -11,7 +11,7 @@
 namespace Skletter\Model\DTO;
 
 
-use Skletter\Contract\Identity;
+use Skletter\Contract\Entity\Identity;
 
 class LoginState
 {
