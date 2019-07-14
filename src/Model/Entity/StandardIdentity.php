@@ -16,7 +16,7 @@ use Phypes\Type\Email;
 use Phypes\Type\StringRequired;
 use Phypes\Type\Type;
 use Phypes\Type\Username;
-use Skletter\Contract\Identity;
+use Skletter\Contract\Entity\Identity;
 
 class StandardIdentity implements Identity
 {
@@ -38,6 +38,18 @@ class StandardIdentity implements Identity
      * @var string $hashedPassword
      */
     private $hashedPassword;
+    /**
+     * @var Type $email
+     */
+    private $email;
+    /**
+     * @var Type $username
+     */
+    private $username;
+    /**
+     * @var string $status
+     */
+    private $status;
 
     public const EMAIL = 1;
     public const USERNAME = 2;
@@ -141,5 +153,53 @@ class StandardIdentity implements Identity
     public function setHashedPassword(string $hashedPassword): void
     {
         $this->hashedPassword = $hashedPassword;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getEmail(): Type
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param Type $email
+     */
+    public function setEmail(Type $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getUsername(): Type
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param Type $username
+     */
+    public function setUsername(Type $username): void
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 }
