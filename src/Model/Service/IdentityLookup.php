@@ -12,17 +12,26 @@ namespace Skletter\Model\Service;
 
 
 use Phypes\Exception\InvalidValue;
-use Skletter\Contract\Identity;
+use Skletter\Contract\Entity\Identity;
+use Skletter\Contract\Factory\QueryObjectFactoryInterface;
+use Skletter\Contract\Query\QueryObject;
 use Skletter\Exception\InvalidIdentifier;
 use Skletter\Exception\UserDoesntExistException;
 use Skletter\Model\Entity\StandardIdentity;
-use Skletter\Model\Mapper\IdentityMapper;
+use Skletter\Model\Query\LoadIdentityByEmail;
+use Skletter\Model\Query\LoadIdentityByUsername;
 
 class IdentityLookup
 {
-    public function __construct(IdentityMapper $mapper)
+    /**
+     * @var QueryObjectFactoryInterface $queryFactory
+     */
+    private $queryFactory;
+
+
+    public function __construct(QueryObjectFactoryInterface $queryFactory)
     {
-        $this->mapper = $mapper;
+        $this->queryFactory = $queryFactory;
     }
 
     /**
@@ -31,11 +40,16 @@ class IdentityLookup
      */
     private function populateStandardIdentity(StandardIdentity $identity)
     {
+        /**
+         * @var QueryObject $queryObject
+         */
         if ($identity->getType() == StandardIdentity::EMAIL) {
-            $this->mapper->findByEmail($identity);
+            $queryObject = $this->queryFactory->create(LoadIdentityByEmail::class);
         } else {
-            $this->mapper->findByUsername($identity);
+            $queryObject = $this->queryFactory->create(LoadIdentityByUsername::class);
         }
+
+        $queryObject->execute($identity);
 
         if (!$identity->isFound())
             throw new UserDoesntExistException();
@@ -44,10 +58,10 @@ class IdentityLookup
     /**
      * @param $identifier
      * @return Identity
-     * @throws \Phypes\Exception\InvalidRule
-     * @throws UserDoesntExistException
      * @throws InvalidIdentifier
+     * @throws UserDoesntExistException
      * @throws \Phypes\Exception\EmptyRequiredValue
+     * @throws \Phypes\Exception\InvalidRule
      */
     public function getStandardIdentity($identifier): Identity
     {
