@@ -10,6 +10,7 @@
 
 namespace Skletter\Factory;
 
+use PDO;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,20 @@ function buildTwig(string $templatesDir, string $cacheDir)
     return $twig;
 }
 
+function buildPDO(): callable
+{
+    return function (): PDO {
+        $dsn = 'mysql:dbname=Skletter;host=127.0.0.1';
+        $user = $_ENV['DB_USER'];
+        $password = $_ENV['DB_PASS'];
+
+        $obj = new PDO($dsn, $user, $password);
+        $obj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        return $obj;
+    };
+
+}
 function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
 {
     return function () use ($lazyloader, $templatesDir, $cacheDir) : VirtualProxyInterface {
