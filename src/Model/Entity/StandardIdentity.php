@@ -13,6 +13,7 @@ namespace Skletter\Model\Entity;
 
 use Phypes\Exception\InvalidValue;
 use Phypes\Type\Email;
+use Phypes\Type\Password;
 use Phypes\Type\StringRequired;
 use Phypes\Type\Type;
 use Phypes\Type\Username;
@@ -56,19 +57,19 @@ class StandardIdentity implements Identity
     private $found = false;
 
     /**
-     * Identity constructor.
+     * Initialize from an identifier.
      * @param string $identifier
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Phypes\Exception\EmptyRequiredValue
      */
-    public function __construct(string $identifier)
+    public function setIdentifier(string $identifier)
     {
         try {
-            $this->createIdentityFromEmail($identifier);
+            $this->initializeFromEmail($identifier);
         } catch (InvalidValue $exception) {
             try {
-                $this->createIdentityFromUsername($identifier);
+                $this->initializeFromUsername($identifier);
             } catch (InvalidValue $exception) {
                 throw new InvalidValue('Invalid username or email');
             }
@@ -80,7 +81,7 @@ class StandardIdentity implements Identity
      * @throws InvalidValue
      * @throws \Phypes\Exception\EmptyRequiredValue
      */
-    private function createIdentityFromEmail(string $email)
+    private function initializeFromEmail(string $email)
     {
         $this->type = self::EMAIL;
         $this->identifier = new Email((new StringRequired(strtolower($email)))->getValue());
@@ -92,7 +93,7 @@ class StandardIdentity implements Identity
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Phypes\Exception\EmptyRequiredValue
      */
-    private function createIdentityFromUsername($username): void
+    private function initializeFromUsername(string $username): void
     {
         $this->type = self::USERNAME;
         $this->identifier = new Username((new StringRequired(strtolower($username)))->getValue());
@@ -139,6 +140,10 @@ class StandardIdentity implements Identity
         $this->id = $id;
     }
 
+    public function setPassword(Password $password, int $hashCost = 12): void
+    {
+        $this->hashedPassword = password_hash($password->getValue(), PASSWORD_DEFAULT, ['cost' => $hashCost]);
+    }
     /**
      * @return string
      */
@@ -164,11 +169,12 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param Type $email
+     * @param string $email
+     * @throws InvalidValue
      */
-    public function setEmail(Type $email): void
+    public function setEmail(string $email): void
     {
-        $this->email = $email;
+        $this->email = new Email($email);
     }
 
     /**
@@ -180,13 +186,30 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param Type $username
+     * @param string $username
+     * @throws InvalidValue
+     * @throws \Phypes\Exception\InvalidRule
      */
-    public function setUsername(Type $username): void
+    public function setUsername(string $username): void
+    {
+        $this->username = new Username($username);
+    }
+
+    /**
+     * @param Email $email
+     */
+    public function setTypedEmail(Email $email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @param Username $username
+     */
+    public function setTypedUsername(Username $username): void
     {
         $this->username = $username;
     }
-
     /**
      * @return string
      */
