@@ -16,7 +16,7 @@ use Phypes\Exception\EmptyRequiredValue;
 use Skletter\Exception\InvalidIdentifier;
 use Skletter\Exception\InvalidPassword;
 use Skletter\Exception\PasswordMismatch;
-use Skletter\Exception\UserDoesntExistException;
+use Skletter\Exception\UserDoesNotExistException;
 use Skletter\Model\DTO\LoginState;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service\IdentityLookup;
@@ -69,7 +69,7 @@ class Login implements Controller
 
             $this->state->setIdentity($identity);
 
-        } catch (UserDoesntExistException | InvalidIdentifier $exception) {
+        } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
             $this->state->setError('The username or email you have entered does not belong to any account.');
 
         } catch (PasswordMismatch | InvalidPassword $e) {

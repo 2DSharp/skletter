@@ -27,11 +27,12 @@ use Skletter\Contract\Entity\Identity;
  */
 interface IdentityRepositoryInterface
 {
+    function load(Identity $identity);
+
     function save(Identity $identity);
 
     function update(Identity $identity);
 
     function delete(Identity $identity);
 
-    function has(Identity $identity);
 }
