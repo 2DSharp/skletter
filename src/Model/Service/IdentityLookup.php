@@ -11,15 +11,16 @@
 namespace Skletter\Model\Service;
 
 
+use Phypes\Exception\EmptyRequiredValue;
+use Phypes\Exception\InvalidRule;
 use Phypes\Exception\InvalidValue;
 use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
-use Skletter\Contract\Query\QueryObject;
+use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Exception\InvalidIdentifier;
-use Skletter\Exception\UserDoesntExistException;
+use Skletter\Exception\UserDoesNotExistException;
 use Skletter\Model\Entity\StandardIdentity;
-use Skletter\Model\Query\LoadIdentityByEmail;
-use Skletter\Model\Query\LoadIdentityByUsername;
+
 
 class IdentityLookup
 {
@@ -27,46 +28,46 @@ class IdentityLookup
      * @var QueryObjectFactoryInterface $queryFactory
      */
     private $queryFactory;
+    /**
+     * @var IdentityRepositoryInterface $repository
+     */
+    private $repository;
 
-
-    public function __construct(QueryObjectFactoryInterface $queryFactory)
+    /**
+     * IdentityLookup constructor.
+     * @param IdentityRepositoryInterface $repository
+     */
+    public function __construct(IdentityRepositoryInterface $repository)
     {
-        $this->queryFactory = $queryFactory;
+        $this->repository = $repository;
     }
 
     /**
      * @param StandardIdentity $identity
-     * @throws UserDoesntExistException
+     * @throws UserDoesNotExistException
      */
     private function populateStandardIdentity(StandardIdentity $identity)
     {
-        /**
-         * @var QueryObject $queryObject
-         */
-        if ($identity->getType() == StandardIdentity::EMAIL) {
-            $queryObject = $this->queryFactory->create(LoadIdentityByEmail::class);
-        } else {
-            $queryObject = $this->queryFactory->create(LoadIdentityByUsername::class);
-        }
-
-        $queryObject->execute($identity);
+        $this->repository->load($identity);
 
         if (!$identity->isFound())
-            throw new UserDoesntExistException();
+            throw new UserDoesNotExistException();
     }
 
     /**
      * @param $identifier
      * @return Identity
      * @throws InvalidIdentifier
-     * @throws UserDoesntExistException
-     * @throws \Phypes\Exception\EmptyRequiredValue
-     * @throws \Phypes\Exception\InvalidRule
+     * @throws UserDoesNotExistException
+     * @throws EmptyRequiredValue
+     * @throws InvalidRule
      */
     public function getStandardIdentity($identifier): Identity
     {
         try {
-            $identity = new StandardIdentity($identifier);
+            $identity = new StandardIdentity();
+            $identity->setIdentifier($identifier);
+
             $this->populateStandardIdentity($identity);
             return $identity;
         } catch (InvalidValue $e) {

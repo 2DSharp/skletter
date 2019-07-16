@@ -13,13 +13,15 @@ namespace Skletter\Model\Repository;
 
 use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Factory\MapperFactoryInterface;
-use Skletter\Contract\Mapper\DataMapper;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Exception\InvalidDataMapper;
+use Skletter\Exception\Mapper\RecordNotFound;
 use Skletter\Exception\MapperNotSpecified;
+use Skletter\Exception\UserDoesNotExistException;
 use Skletter\Factory\MapperFactory;
 use Skletter\Model\Entity;
 use Skletter\Model\Mapper;
+use Skletter\Model\Mapper\Identity\IdentityMapper;
 
 class IdentityRepository implements IdentityRepositoryInterface
 {
@@ -41,6 +43,22 @@ class IdentityRepository implements IdentityRepositoryInterface
         $this->factory = $factory;
     }
 
+    /**
+     * @param Identity $identity
+     * @throws InvalidDataMapper
+     * @throws MapperNotSpecified
+     * @throws UserDoesNotExistException
+     */
+    public function load(Identity $identity)
+    {
+        try {
+            /** @var Entity\StandardIdentity $identity */
+            $mapper = $this->buildMapperFromIdentity($identity);
+            $mapper->fetch($identity, ['ID', 'HashedPassword']);
+        } catch (RecordNotFound $e) {
+            throw new UserDoesNotExistException();
+        }
+    }
 
     /**
      * @param Identity $identity
@@ -50,7 +68,7 @@ class IdentityRepository implements IdentityRepositoryInterface
     public function save(Identity $identity)
     {
         /**
-         * @var DataMapper $mapper
+         * @var IdentityMapper $mapper
          */
         $mapper = $this->buildMapperFromIdentity($identity);
         $mapper->store($identity);
@@ -64,18 +82,11 @@ class IdentityRepository implements IdentityRepositoryInterface
     public function delete(Identity $identity)
     {
         /**
-         * @var DataMapper $mapper
+         * @var IdentityMapper $mapper
          */
         $mapper = $this->buildMapperFromIdentity($identity);
         $mapper->delete($identity);
     }
-
-    public function has(Identity $identity)
-    {
-        // TODO: Implement has() method.
-    }
-
-
     /**
      * @param Identity $identity
      * @throws InvalidDataMapper
@@ -84,7 +95,7 @@ class IdentityRepository implements IdentityRepositoryInterface
     function update(Identity $identity)
     {
         /**
-         * @var DataMapper $mapper
+         * @var  $mapper
          */
         $mapper = $this->buildMapperFromIdentity($identity);
         $mapper->update($identity);
@@ -92,19 +103,24 @@ class IdentityRepository implements IdentityRepositoryInterface
 
     /**
      * @param Identity $identity
-     * @return DataMapper
+     * @return object|IdentityMapper
      * @throws MapperNotSpecified
      * @throws InvalidDataMapper
      */
-    public function buildMapperFromIdentity(Identity $identity): DataMapper
+    public function buildMapperFromIdentity(Identity $identity)
     {
         $key = get_class($identity);
-
+        $mapper = $this->table[$key];
         if (!array_key_exists($key, $this->table)) {
             throw new MapperNotSpecified("No mapper has been specified for the entity '{$key}'");
         }
 
-        return $this->factory->create($this->table[$key]);
+        if (!is_a($mapper, IdentityMapper::class, true)) {
+            throw new InvalidDataMapper("The class '{$mapper}' does not implement the IdentityMapper abstract functions");
+        }
+
+        /** @var IdentityMapper $mapper */
+        return $this->factory->create($mapper);
     }
 
 }
