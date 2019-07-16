@@ -11,5 +11,7 @@
 return [
     ['GET', '/', ['Home', 'main']],
     ['POST', '/login', ['Login', 'attemptLogin']],
-    ['GET', '/login', ['Login', 'renderLoginPage']]
+    ['GET', '/login', ['Login', 'renderLoginPage']],
+    ['GET', '/register', ['Registration', 'displayForm']],
+    ['POST', '/register', ['Registration', 'registerUser']]
     ];
