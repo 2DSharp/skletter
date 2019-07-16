@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-  "content-hash": "c064072399ca61e6509832380a23a644",
+  "content-hash": "db0a1e356b318a8d881f1b0b88f24a9d",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1056,12 +1056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/2DSharp/Phypes.git",
-              "reference": "02963cd8da5e03555357a58620ff54abaaee6b0c"
+              "reference": "7b6f80"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/02963cd8da5e03555357a58620ff54abaaee6b0c",
-              "reference": "02963cd8da5e03555357a58620ff54abaaee6b0c",
+              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/7b6f80",
+              "reference": "7b6f80",
                 "shasum": ""
             },
             "require": {

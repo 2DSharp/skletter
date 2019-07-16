@@ -10,10 +10,7 @@
 
 namespace Skletter\Contract\Factory;
 
-
-use Skletter\Contract\Mapper\DataMapper;
-
 interface MapperFactoryInterface
 {
-    public function create(string $mapper): DataMapper;
+    public function create(string $mapper): object;
 }

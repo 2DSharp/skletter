@@ -11,10 +11,12 @@
 namespace Skletter\Model\Mapper\Identity;
 
 
-use Skletter\Contract\Mapper\DataMapper;
+use Skletter\Component\QueryBuilder\QueryBuilderInterface;
+use Skletter\Contract\Entity\Identity;
+use Skletter\Exception\Mapper\RecordNotFound;
 use Skletter\Model\Entity\StandardIdentity;
 
-class StandardIdentityMapper implements DataMapper
+class StandardIdentityMapper extends IdentityMapper
 {
     /**
      * @var \PDO $connection
@@ -27,34 +29,133 @@ class StandardIdentityMapper implements DataMapper
     }
 
     /**
-     * Query to fetch entity data
-     *
-     * @param StandardIdentity $entity
-     * @param null $queryObject
+     * @param StandardIdentity $identity
+     * @param array $fields
+     * @return mixed
      */
-    public function fetch($entity, $queryObject = null): void
+    private function getFetchedData(StandardIdentity $identity, array $fields)
     {
-        // TODO: Implement fetch() method.
+        if ($identity->getId()) {
+            return $this->fetchByID($identity, $fields);
+        }
+        return $this->fetchByIdentifier($identity, $fields);
     }
 
     /**
-     * @param StandardIdentity $entity
-     * @param null $queryObject
+     * @param Identity $identity
+     * @param array $fields
+     * @throws RecordNotFound
+     */
+    public function fetch(Identity $identity, array $fields): void
+    {
+        /** @var StandardIdentity $identity */
+
+        $data = $this->getFetchedData($identity, $fields);
+
+        if (empty($data) === true) {
+            throw new RecordNotFound();
+        }
+        $this->setFetchedData($identity, $data);
+    }
+
+    /**
+     * @param Identity $identity
      * @return bool
      */
-    public function update($entity, $queryObject = null): bool
+    public function exists(Identity $identity): bool
     {
-        // TODO: Implement update() method.
+        /** @var StandardIdentity $identity */
+        $data = $this->getFetchedData($identity, [1]);
+        return (empty($data) === false);
     }
 
-    public function delete($entity, $queryObject = null): bool
+    /**
+     * @param StandardIdentity $identity
+     * @param array $fields
+     * @return mixed
+     */
+    public function fetchByID(StandardIdentity $identity, array $fields)
     {
-        // TODO: Implement delete() method.
+        $fields = implode(",", $fields);
+        $query = /** @lang MySQL */
+            "SELECT {$fields} FROM Identity WHERE ID = :id";
+
+        return $this->retrieveResults($query, ':id', $identity->getId());
     }
 
-    public function store($entity, $queryObject = null): bool
+    private function buildQueryForIdentifier(int $type, array $fields, string $placeholder)
     {
-        // TODO: Implement store() method.
+        $fields = implode(",", $fields);
+
+        $map = [
+            StandardIdentity::EMAIL => /** @lang MySQL */
+                "SELECT {$fields} FROM Identity WHERE Email = {$placeholder}",
+            StandardIdentity::USERNAME => /** @lang MySQL */
+                "SELECT {$fields} FROM Identity WHERE Username = {$placeholder}"
+        ];
+
+        return $map[$type];
+    }
+
+    /**
+     * @param StandardIdentity $identity
+     * @param array $fields
+     * @return mixed
+     */
+    private function fetchByIdentifier(StandardIdentity $identity, array $fields)
+    {
+        $query = $this->buildQueryForIdentifier($identity->getType(), $fields, ':identifier');
+        $data = $this->retrieveResults($query, ':identifier', $identity->getIdentifier()->getValue());
+
+        return $data;
+    }
+
+    private function retrieveResults(string $query, string $placeholder, $value)
+    {
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindValue($placeholder, $value);
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Run the setters on the entity
+     * @param StandardIdentity $entity
+     * @param array $data
+     */
+    private function setFetchedData(StandardIdentity $entity, array $data)
+    {
+        foreach ($data as $key => $value) {
+            $setter = "set" . $key;
+            $entity->{$setter}($value);
+        }
+    }
+
+    /**
+     * @todo Implement proper query builder
+     * @deprecated
+     * Fetch the data from DB to an array
+     * @param QueryBuilderInterface $queryBuilder
+     * @return mixed
+     */
+    private function getDataFromData(QueryBuilderInterface $queryBuilder)
+    {
+        $fields = $queryBuilder->getFieldsAsString();
+        $filters = $queryBuilder->getFiltersAsString();
+
+        $query = /** @lang MySQL */
+            "SELECT {$fields} FROM Identity WHERE {$filters}";
+
+        $stmt = $this->connection->prepare($query);
+
+        foreach ($queryBuilder->getFilters() as $placeholder => $value) {
+            $stmt->bindValue($placeholder, $value);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
 }
