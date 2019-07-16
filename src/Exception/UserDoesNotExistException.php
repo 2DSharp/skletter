@@ -11,7 +11,7 @@
 namespace Skletter\Exception;
 
 
-class UserDoesntExistException extends \Exception
+class UserDoesNotExistException extends \Exception
 {
 
 }
