@@ -11,20 +11,23 @@
 namespace Skletter\Model\Query;
 
 
-use Skletter\Contract\Query\QueryObject;
 use Skletter\Model\Entity\StandardIdentity;
 
-class LoadIdentityByUsername implements QueryObject
+class FindIdentityByEmail extends StandardIdentityLoader
 {
     private $query = /** @lang MySQL */
-        "SELECT ID, HashedPassword FROM Identity WHERE Username = :username";
+        "SELECT 1 FROM Identity WHERE Email = :email";
 
     /**
-     * @param StandardIdentity $entity
+     * Does the email in the entity already exist in the db?
+     * @param StandardIdentity $identity
+     * @return bool
      */
-    public function execute($entity)
+    public function execute($identity): bool
     {
-        $this->executeQuery($entity, $this->query, ':username');
-
+        /**
+         * @var \PDOStatement $stmt
+         */
+        return $this->find($identity, $this->query, ':email');
     }
 }
