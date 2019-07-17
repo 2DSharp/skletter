@@ -25,6 +25,6 @@ class FindIdentityByUsername extends StandardIdentityLoader
      */
     public function execute($identity): bool
     {
-        return $this->find($identity, $this->query, ':username');
+        return $this->find($this->query, ':username', $identity->getUsername());
     }
 }

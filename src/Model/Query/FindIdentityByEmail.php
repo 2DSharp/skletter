@@ -28,6 +28,6 @@ class FindIdentityByEmail extends StandardIdentityLoader
         /**
          * @var \PDOStatement $stmt
          */
-        return $this->find($identity, $this->query, ':email');
+        return $this->find($this->query, ':email', $identity->getEmail());
     }
 }

@@ -84,7 +84,7 @@ class StandardIdentity implements Identity
     private function initializeFromEmail(string $email)
     {
         $this->type = self::EMAIL;
-        $this->identifier = new Email((new StringRequired(strtolower($email)))->getValue());
+        $this->identifier = new Email(new StringRequired(strtolower($email)));
     }
 
     /**
@@ -96,7 +96,7 @@ class StandardIdentity implements Identity
     private function initializeFromUsername(string $username): void
     {
         $this->type = self::USERNAME;
-        $this->identifier = new Username((new StringRequired(strtolower($username)))->getValue());
+        $this->identifier = new Username(new StringRequired(strtolower($username)));
     }
 
     /**
@@ -142,7 +142,7 @@ class StandardIdentity implements Identity
 
     public function setPassword(Password $password, int $hashCost = 12): void
     {
-        $this->hashedPassword = password_hash($password->getValue(), PASSWORD_DEFAULT, ['cost' => $hashCost]);
+        $this->hashedPassword = password_hash($password, PASSWORD_DEFAULT, ['cost' => $hashCost]);
     }
     /**
      * @return string
