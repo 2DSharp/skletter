@@ -15,7 +15,7 @@ interface Identity
 {
     function setId(int $id): void;
 
-    function getId(): int;
+    function getId(): ?int;
 
     function getIdentifier();
 

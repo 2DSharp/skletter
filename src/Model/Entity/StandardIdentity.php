@@ -118,7 +118,7 @@ class StandardIdentity implements Identity
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

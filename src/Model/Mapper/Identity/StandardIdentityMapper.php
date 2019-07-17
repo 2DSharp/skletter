@@ -35,7 +35,7 @@ class StandardIdentityMapper extends IdentityMapper
      */
     private function getFetchedData(StandardIdentity $identity, array $fields)
     {
-        if ($identity->getId()) {
+        if ($identity->getId() === null) {
             return $this->fetchByID($identity, $fields);
         }
         return $this->fetchByIdentifier($identity, $fields);

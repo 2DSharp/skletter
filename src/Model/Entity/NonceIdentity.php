@@ -102,7 +102,7 @@ class NonceIdentity implements Identity
         $this->id = $id;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
