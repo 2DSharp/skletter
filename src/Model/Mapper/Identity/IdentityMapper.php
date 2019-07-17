@@ -22,6 +22,8 @@ abstract class IdentityMapper
      */
     public abstract function fetch(Identity $identity, array $fields): void;
 
+    public abstract function store(Identity $identity): bool;
+
 
     public function update($entity): bool
     {
@@ -33,8 +35,4 @@ abstract class IdentityMapper
         // TODO: Implement delete() method.
     }
 
-    public function store($entity): bool
-    {
-        // TODO: Implement store() method.
-    }
 }

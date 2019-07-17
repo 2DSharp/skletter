@@ -58,6 +58,24 @@ class StandardIdentityMapper extends IdentityMapper
         $this->setFetchedData($identity, $data);
     }
 
+    public function store(Identity $identity): bool
+    {
+        /**
+         * @var StandardIdentity $identity
+         */
+        $command = /** @lang MySQL */
+            "INSERT INTO Identity (Email, Username, HashedPassword, Status) VALUES (:email, :username, :passwordHash, :currStatus)";
+        $statement = $this->connection->prepare($command);
+
+        $statement->bindValue(':email', $identity->getEmail());
+        $statement->bindValue(':username', $identity->getUsername());
+        $statement->bindValue(':passwordHash', $identity->getHashedPassword());
+        $statement->bindValue(':currStatus', $identity->getStatus());
+
+        $statement->execute();
+
+        $identity->setId((int)$this->connection->lastInsertId());
+    }
     /**
      * @param Identity $identity
      * @return bool
@@ -105,7 +123,7 @@ class StandardIdentityMapper extends IdentityMapper
     private function fetchByIdentifier(StandardIdentity $identity, array $fields)
     {
         $query = $this->buildQueryForIdentifier($identity->getType(), $fields, ':identifier');
-        $data = $this->retrieveResults($query, ':identifier', $identity->getIdentifier()->getValue());
+        $data = $this->retrieveResults($query, ':identifier', $identity->getIdentifier());
 
         return $data;
     }
