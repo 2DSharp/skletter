@@ -12,26 +12,38 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
+use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service;
 use Symfony\Component\HttpFoundation\Request;
 
 class Registration implements Controller
 {
     /**
-     * @var Service\IdentityManager $manager
+     * @var Service\RegistrationManager $manager
      */
     private $manager;
 
-    public function __construct(Service\IdentityManager $manager)
+    public function __construct(Service\RegistrationManager $manager)
     {
         $this->manager = $manager;
     }
 
     public function registerUser(Request $request): void
     {
-        $this->manager->createStandardIdentity($request->request->get('email'),
+        /** @var StandardIdentity $identity */
+        $this->manager->registerIdentity(
+            $request->request->get('email'),
             $request->request->get('username'),
             $request->request->get('password'));
+
+        $this->manager->registerProfile($request->request->get('name'),
+            $request->request->get('locale'),
+            $request->request->get('Birthday'));
+
+        $this->manager->save();
+
+
+
     }
 
     public function handleRequest(Request $request, string $method): void
