@@ -19,7 +19,7 @@ use Skletter\Exception\PasswordMismatch;
 use Skletter\Exception\UserDoesNotExistException;
 use Skletter\Model\DTO\LoginState;
 use Skletter\Model\Entity\StandardIdentity;
-use Skletter\Model\Service\IdentityLookup;
+use Skletter\Model\Service\IdentityMap;
 use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,7 +32,7 @@ class Login implements Controller
     private $loginManager;
     /**
      * Service to look up identity based on some identifier and build a valid instance
-     * @var IdentityLookup $identityLookup
+     * @var IdentityMap $identityLookup
      */
     private $identityLookup;
     /**
@@ -41,7 +41,7 @@ class Login implements Controller
      */
     private $state;
 
-    public function __construct(LoginManager $loginManager, IdentityLookup $identityLookup, LoginState $state)
+    public function __construct(LoginManager $loginManager, IdentityMap $identityLookup, LoginState $state)
     {
         $this->loginManager = $loginManager;
         $this->identityLookup = $identityLookup;
