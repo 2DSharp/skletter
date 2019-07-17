@@ -11,15 +11,12 @@
 namespace Skletter\Contract\Entity;
 
 
-use Phypes\Type\Type;
-
 interface Identity
 {
-    function setID(int $id): void;
+    function setId(int $id): void;
 
-    function getID(): int;
+    function getId(): int;
 
-    function getIdentifier(): Type;
-
+    function getIdentifier();
 
 }
