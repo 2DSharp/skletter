@@ -49,8 +49,8 @@ class LoginManager
     public function loginWithPassword(StandardIdentity $identity, string $rawPassword)
     {
         try {
-            $password = new Password((new StringRequired($rawPassword))->getValue());
-            if (password_verify($password->getValue(), $identity->getHashedPassword()))
+            $password = new Password(new StringRequired($rawPassword));
+            if (password_verify($password, $identity->getHashedPassword()))
                 $this->login($identity);
             else
                 throw new PasswordMismatch('The password you entered is invalid');
@@ -66,7 +66,7 @@ class LoginManager
      */
     public function login(Identity $identity)
     {
-        $this->session->set('UserID', $identity->getID());
+        $this->session->set('UserID', $identity->getId());
         // Log stuff here
     }
 
