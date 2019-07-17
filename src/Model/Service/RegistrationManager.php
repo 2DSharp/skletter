@@ -11,7 +11,6 @@
 namespace Skletter\Model\Service;
 
 
-use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Contract\Transaction;
 use Skletter\Exception\IdentifierExistsException;
 use Skletter\Exception\ValidationError;
@@ -36,10 +35,6 @@ class RegistrationManager
      */
     private $identityMap;
     /**
-     * @var IdentityRepositoryInterface
-     */
-    private $repository;
-    /**
      * @var Transaction $transaction
      */
     private $transaction;
@@ -47,12 +42,10 @@ class RegistrationManager
     /**
      * IdentityManager constructor.
      * @param IdentityMap $identityMap
-     * @param IdentityRepositoryInterface $repository
      * @param RegisterNewUser $transaction
      */
-    public function __construct(IdentityMap $identityMap, IdentityRepositoryInterface $repository, RegisterNewUser $transaction)
+    public function __construct(IdentityMap $identityMap, RegisterNewUser $transaction)
     {
-        $this->repository = $repository;
         $this->identityMap = $identityMap;
         $this->transaction = $transaction;
     }
