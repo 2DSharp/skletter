@@ -13,9 +13,11 @@ use Auryn\Injector;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
+use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Factory\MapperFactory;
 use Skletter\Factory\QueryObjectFactory;
 use Skletter\Model\DTO\LoginState;
+use Skletter\Model\Repository\IdentityRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -47,6 +49,7 @@ $injector->define(FallbackExceptionHandler::class,
 $injector->alias(SessionInterface::class, Session::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
+$injector->alias(IdentityRepositoryInterface::class, IdentityRepository::class);
 
 $injector->share(LoginState::class);
 $injector->delegate(\PDO::class, buildPDO());
