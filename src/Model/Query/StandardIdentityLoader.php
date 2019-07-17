@@ -26,22 +26,22 @@ abstract class StandardIdentityLoader
         $this->connection = $connection;
     }
 
-    private function fetchData(StandardIdentity $identity, string $query, string $bindParam): array
+    private function fetchData(string $query, string $bindParam, string $value): array
     {
         /**
          * @var \PDOStatement $stmt
          */
         $stmt = $this->connection->prepare($query);
-        $stmt->bindValue($bindParam, $identity->getIdentifier()->getValue());
+        $stmt->bindValue($bindParam, $value);
         $stmt->execute();
 
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
         return $data;
     }
 
-    protected function load(StandardIdentity $identity, string $query, string $bindParam): bool
+    protected function load(StandardIdentity $identity, string $query, string $bindParam, string $value): bool
     {
-        $data = $this->fetchData($identity, $query, $bindParam);
+        $data = $this->fetchData($query, $bindParam, $value);
 
         if (empty($data) === false) {
             $identity->setId($data['ID']);
@@ -50,9 +50,9 @@ abstract class StandardIdentityLoader
         }
     }
 
-    protected function find(StandardIdentity $identity, string $query, string $bindParam): bool
+    protected function find(string $query, string $bindParam, string $value): bool
     {
-        $data = $this->fetchData($identity, $query, $bindParam);
+        $data = $this->fetchData($query, $bindParam, $value);
         return (empty($data) === false);
     }
 }
