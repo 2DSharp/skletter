@@ -11,9 +11,10 @@
 namespace Skletter\Model\Query;
 
 
+use Skletter\Contract\Query\QueryObject;
 use Skletter\Model\Entity\StandardIdentity;
 
-class FindIdentityByUsername extends StandardIdentityLoader
+class FindIdentityByUsername extends StandardIdentityLoader implements QueryObject
 {
     private $query = /** @lang MySQL */
         "SELECT 1 FROM Identity WHERE Username = :username";
@@ -23,8 +24,8 @@ class FindIdentityByUsername extends StandardIdentityLoader
      * @param StandardIdentity $identity
      * @return bool
      */
-    public function execute($identity): bool
+    public function find($identity): bool
     {
-        return $this->find($this->query, ':username', $identity->getUsername());
+        return $this->exists($this->query, ':username', $identity->getUsername());
     }
 }
