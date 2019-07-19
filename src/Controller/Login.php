@@ -13,8 +13,10 @@ namespace Skletter\Controller;
 
 use Greentea\Core\Controller;
 use Phypes\Exception\EmptyRequiredValue;
+use Phypes\Exception\InvalidValue;
+use Phypes\Type\Password;
+use Phypes\Type\StringRequired;
 use Skletter\Exception\InvalidIdentifier;
-use Skletter\Exception\InvalidPassword;
 use Skletter\Exception\PasswordMismatch;
 use Skletter\Exception\UserDoesNotExistException;
 use Skletter\Model\DTO\LoginState;
@@ -55,10 +57,9 @@ class Login implements Controller
      */
     public function attemptLogin(Request $request)
     {
-        $identifier = $request->request->get('identity');
-        $rawPassword = $request->request->get('password');
-
         try {
+            $identifier = $request->request->get('identity');
+            $rawPassword = new Password(new StringRequired($request->request->get('password')));
             /**
              * @var StandardIdentity $identity
              */
@@ -72,7 +73,7 @@ class Login implements Controller
         } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
             $this->state->setError('The username or email you have entered does not belong to any account.');
 
-        } catch (PasswordMismatch | InvalidPassword $e) {
+        } catch (PasswordMismatch | InvalidValue $e) {
             $this->state->setError('The password you entered is incorrect');
         } catch (EmptyRequiredValue $e) {
             $this->state->setError('You must fill in the all the fields');

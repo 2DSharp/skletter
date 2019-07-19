@@ -11,11 +11,7 @@
 namespace Skletter\Model\Service;
 
 
-use Phypes\Exception\InvalidValue;
-use Phypes\Type\Password;
-use Phypes\Type\StringRequired;
 use Skletter\Contract\Entity\Identity;
-use Skletter\Exception\InvalidPassword;
 use Skletter\Exception\PasswordMismatch;
 use Skletter\Model\Entity\StandardIdentity;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -40,24 +36,14 @@ class LoginManager
 
     /**
      * @param StandardIdentity $identity
-     * @param string $rawPassword
      * @throws PasswordMismatch
-     * @throws InvalidPassword
-     * @throws \Phypes\Exception\InvalidRule
-     * @throws \Phypes\Exception\EmptyRequiredValue
      */
-    public function loginWithPassword(StandardIdentity $identity, string $rawPassword)
+    public function loginWithPassword(StandardIdentity $identity, string $password)
     {
-        try {
-            $password = new Password(new StringRequired($rawPassword));
-            if (password_verify($password, $identity->getHashedPassword()))
-                $this->login($identity);
-            else
-                throw new PasswordMismatch('The password you entered is invalid');
-
-        } catch (InvalidValue $e) {
-            throw new InvalidPassword('The password you entered is invalid');
-        }
+        if (password_verify($password, $identity->getHashedPassword()))
+            $this->login($identity);
+        else
+            throw new PasswordMismatch('The password you entered is invalid');
     }
 
     /**
