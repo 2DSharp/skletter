@@ -15,6 +15,7 @@ use Skletter\Contract\Transaction;
 use Skletter\Exception\IdentifierExistsException;
 use Skletter\Exception\ValidationError;
 use Skletter\Model\Entity\NonceIdentity;
+use Skletter\Model\Entity\Profile;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\UnitOfWork\RegisterNewUser;
 
@@ -29,6 +30,10 @@ class RegistrationManager
      * @var NonceIdentity $nonce
      */
     private $nonce;
+    /**
+     * @var Profile $profile
+     */
+    private $profile;
     /**
      * Mapping service for identity look ups
      * @var IdentityMap $identityMap
@@ -54,6 +59,7 @@ class RegistrationManager
      * @param string $email
      * @param string $username
      * @param string $password
+     * @return void
      * @throws IdentifierExistsException
      * @throws ValidationError
      * @throws \Phypes\Exception\EmptyRequiredValue
@@ -66,9 +72,22 @@ class RegistrationManager
         $this->nonce = $this->identityMap->createNonceIdentity($this->getExpiryTime());
     }
 
+    public function getStandardIdentity(): StandardIdentity
+    {
+        return $this->identity;
+    }
+
+    public function getNonceIdentity(): NonceIdentity
+    {
+        return $this->nonce;
+    }
+
     public function registerProfile(string $name, string $locale, $date)
     {
-
+        $this->profile = new Profile($this->identity);
+        $this->profile->setName($name);
+        $this->profile->setLocale($locale);
+        $this->profile->setBirthday($date);
     }
 
     /**
@@ -85,7 +104,7 @@ class RegistrationManager
     public function save()
     {
         $this->transaction->registerIdentity($this->identity, $this->nonce);
-        // Register profile
-        $this->transaction->commit();
+        $this->transaction->registerProfile($this->profile);
+        return $this->transaction->commit();
     }
 }
