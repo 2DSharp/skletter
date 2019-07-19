@@ -11,6 +11,7 @@
 namespace Skletter\Model\UnitOfWork;
 
 
+use Skletter\Component\SensiblePDOExceptionBuilder;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Contract\Transaction;
 use Skletter\Model\Entity\NonceIdentity;
@@ -77,18 +78,25 @@ class RegisterNewUser implements Transaction
 
     public function commit(): bool
     {
-        $this->connection->beginTransaction();
+        try {
+            $this->connection->beginTransaction();
 
-        $this->identityRepository->save($this->identity);
+            $this->identityRepository->save($this->identity);
 
-        // Transfer the id
-        $this->nonce->setId($this->identity->getId());
-        $this->identityRepository->save($this->nonce);
+            // Transfer the id
+            $this->nonce->setId($this->identity->getId());
+            $this->identityRepository->save($this->nonce);
 
-        $this->profile->setIdentity($this->identity);
-        $this->profileMapper->store($this->profile);
+            $this->profile->setIdentity($this->identity);
+            $this->profileMapper->store($this->profile);
 
-        return $this->connection->commit();
+            return $this->connection->commit();
+        } catch (\PDOException $exception) {
+            $this->connection->rollBack();
+            $exceptionBuilder = new SensiblePDOExceptionBuilder($exception);
+            $exceptionBuilder->throw();
+        }
+
     }
 
     public function rollBack()

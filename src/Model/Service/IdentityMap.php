@@ -131,7 +131,7 @@ class IdentityMap
             $identity->setTypedUsername(new Username(new StringRequired($username)));
             $identity->setPassword(new Password(new StringRequired($password)));
             $identity->setStatus('Temp');
-            $this->checkRedundancies($identity);
+            //$this->checkRedundancies($identity);
 
             return $identity;
         } catch (InvalidValue $exception) {
