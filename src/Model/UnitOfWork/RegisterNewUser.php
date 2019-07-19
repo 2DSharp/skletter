@@ -14,7 +14,9 @@ namespace Skletter\Model\UnitOfWork;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Contract\Transaction;
 use Skletter\Model\Entity\NonceIdentity;
+use Skletter\Model\Entity\Profile;
 use Skletter\Model\Entity\StandardIdentity;
+use Skletter\Model\Mapper\ProfileMapper;
 
 /**
  * Class RegisterNewUser responsible for one unit of work- Registration of a new user.
@@ -40,16 +42,26 @@ class RegisterNewUser implements Transaction
      * @var \PDO $connection
      */
     private $connection;
+    /**
+     * @var ProfileMapper $profileMapper
+     */
+    private $profileMapper;
+    /**
+     * @var Profile $profile
+     */
+    private $profile;
 
     /**
      * RegisterNewUser constructor.
      * @param \PDO $pdo
      * @param IdentityRepositoryInterface $identityRepository
+     * @param ProfileMapper $profileMapper
      */
-    public function __construct(\PDO $pdo, IdentityRepositoryInterface $identityRepository)
+    public function __construct(\PDO $pdo, IdentityRepositoryInterface $identityRepository, ProfileMapper $profileMapper)
     {
         $this->connection = $pdo;
         $this->identityRepository = $identityRepository;
+        $this->profileMapper = $profileMapper;
     }
 
     public function registerIdentity(StandardIdentity $identity, NonceIdentity $nonce)
@@ -58,9 +70,9 @@ class RegisterNewUser implements Transaction
         $this->nonce = $nonce;
     }
 
-    public function registerProfile()
+    public function registerProfile(Profile $profile)
     {
-
+        $this->profile = $profile;
     }
 
     public function commit(): bool
@@ -72,7 +84,9 @@ class RegisterNewUser implements Transaction
         // Transfer the id
         $this->nonce->setId($this->identity->getId());
         $this->identityRepository->save($this->nonce);
-        // Save profile information
+
+        $this->profile->setIdentity($this->identity);
+        $this->profileMapper->store($this->profile);
 
         return $this->connection->commit();
     }
