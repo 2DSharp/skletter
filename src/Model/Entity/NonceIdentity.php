@@ -147,6 +147,6 @@ class NonceIdentity implements Identity
     private function generateSecrets()
     {
         $this->pin = $this->generatePin();
-        $this->token = $this->generateToken();
+        $this->token = $this->generateToken(20);
     }
 }
