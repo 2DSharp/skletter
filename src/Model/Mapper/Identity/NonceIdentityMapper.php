@@ -54,8 +54,9 @@ class NonceIdentityMapper extends IdentityMapper
         $statement->bindValue(':id', $identity->getId());
         $statement->bindValue(':token', $identity->getToken());
         $statement->bindValue(':pin', $identity->getPin());
-        $statement->bindValue(':validity', $identity->getValidTill());
+        $statement->bindValue(':validity', $identity->getValidTill()->format('Y-m-d h:i:s'));
 
-        $statement->execute();
+        return $statement->execute();
+
     }
 }

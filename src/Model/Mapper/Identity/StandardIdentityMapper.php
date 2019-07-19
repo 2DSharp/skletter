@@ -72,9 +72,10 @@ class StandardIdentityMapper extends IdentityMapper
         $statement->bindValue(':passwordHash', $identity->getHashedPassword());
         $statement->bindValue(':currStatus', $identity->getStatus());
 
-        $statement->execute();
+        $result = $statement->execute();
 
         $identity->setId((int)$this->connection->lastInsertId());
+        return $result;
     }
     /**
      * @param Identity $identity
