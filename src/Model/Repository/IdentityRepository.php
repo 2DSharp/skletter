@@ -31,7 +31,8 @@ class IdentityRepository implements IdentityRepositoryInterface
     private $factory;
 
     private $table = [
-        Entity\StandardIdentity::class => Mapper\Identity\StandardIdentityMapper::class
+        Entity\StandardIdentity::class => Mapper\Identity\StandardIdentityMapper::class,
+        Entity\NonceIdentity::class => Mapper\Identity\NonceIdentityMapper::class
     ];
 
     /**
