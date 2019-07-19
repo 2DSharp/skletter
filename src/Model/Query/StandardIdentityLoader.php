@@ -26,7 +26,7 @@ abstract class StandardIdentityLoader
         $this->connection = $connection;
     }
 
-    private function fetchData(string $query, string $bindParam, string $value): array
+    private function fetchData(string $query, string $bindParam, string $value)
     {
         /**
          * @var \PDOStatement $stmt
@@ -50,7 +50,7 @@ abstract class StandardIdentityLoader
         }
     }
 
-    protected function find(string $query, string $bindParam, string $value): bool
+    protected function exists(string $query, string $bindParam, string $value): bool
     {
         $data = $this->fetchData($query, $bindParam, $value);
         return (empty($data) === false);
