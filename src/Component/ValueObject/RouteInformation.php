@@ -34,7 +34,7 @@ class RouteInformation implements RouteVOInterface
      * @param string $view
      * @param string $method
      */
-    public function __construct(string $controller, string $view, string $method)
+    public function __construct(?string $controller, ?string $view, string $method)
     {
         $this->controller = $controller;
         $this->view = $view;
@@ -44,7 +44,7 @@ class RouteInformation implements RouteVOInterface
     /**
      * @return string
      */
-    public function resolveController(): string
+    public function resolveController(): ?string
     {
         return $this->controller;
     }
@@ -52,7 +52,7 @@ class RouteInformation implements RouteVOInterface
     /**
      * @return string
      */
-    public function resolveView(): string
+    public function resolveView(): ?string
     {
         return $this->view;
     }

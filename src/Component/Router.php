@@ -60,7 +60,8 @@ class Router
     public function route(Request $request, string $controllerNamespace, string $viewNamespace): RouteVOInterface
     {
         $routeInfo = $this->getRouteInfo($this->routes, $request);
-        $controller = $view = null;
+
+        $controller = null;
 
         if ($routeInfo[0] != Dispatcher::FOUND) {
             $method = $this->errorPageMap[$routeInfo[0]];
