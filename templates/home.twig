@@ -39,10 +39,12 @@
             <div class="login-container">
                 <form method="post" action="{{ server.base_url }}/login">
                     <input name="identity" placeholder="Email or Username" type="text" class="std-text">
-                    <input name="password" placeholder="Password" type="text" class="std-text">
+                    <input name="password" placeholder="Password" type="password" class="std-text">
                     <button class="login"> Login</button>
                 </form>
-                <button> Sign up</button>
+                <a href="{{ server.base_url }}/register">
+                    <button> Sign up</button>
+                </a>
             </div>
         </div>
     </div>
