@@ -54,8 +54,10 @@ class IdentityMap
      */
     private $errorMap = [
         TypeErrorCode::EMAIL_INVALID => "The email you entered is invalid. Please check your email and try again",
-        TypeErrorCode::USERNAME_INVALID => "The username you entered isn't correct. 2-14 characters including alphabets, 
-        digits and underscores (_) are allowed"
+        TypeErrorCode::USERNAME_INVALID => "The username you entered isn't in the correct form. 2-14 characters including alphabets, 
+        digits and underscores (_) are allowed",
+        TypeErrorCode::PASSWORD_INVALID => "The password must be a minimum of 8 characters with alphanumeric upper case, 
+        lower case combination"
     ];
 
     public function __construct(IdentityRepositoryInterface $repository, QueryObjectFactoryInterface $factory)
@@ -127,7 +129,7 @@ class IdentityMap
             $identity->setTypedEmail(new Email(new StringRequired($email)));
             $identity->setTypedUsername(new Username(new StringRequired($username)));
             $identity->setPassword(new Password(new StringRequired($password)));
-
+            $identity->setStatus('Temp');
             $this->checkRedundancies($identity);
 
             return $identity;
@@ -147,13 +149,13 @@ class IdentityMap
     {
         $query = $this->factory->create(FindIdentityByEmail::class);
 
-        if (!$query->find($identity))
+        if ($query->find($identity))
             throw new IdentifierExistsException("An account with the email you entered already exists." .
                 "Perhaps you'd want to log in instead?");
 
         $query = $this->factory->create(FindIdentityByUsername::class);
 
-        if (!$query->find($identity))
+        if ($query->find($identity))
             throw new IdentifierExistsException("An account with the username you entered already exists." .
                 "Perhaps you'd want to log in instead?");
     }
