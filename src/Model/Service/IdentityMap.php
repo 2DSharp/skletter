@@ -103,12 +103,13 @@ class IdentityMap
     /**
      * Generates a one time use NonceIdentity
      * @param \DateTimeImmutable $validTill
+     * @param int $tokenLength
      * @return NonceIdentity
      * @throws \Exception
      */
-    public function createNonceIdentity(\DateTimeImmutable $validTill): NonceIdentity
+    public function createNonceIdentity(\DateTimeImmutable $validTill, int $tokenLength = 20): NonceIdentity
     {
-        return new NonceIdentity($validTill);
+        return new NonceIdentity($validTill, $tokenLength);
     }
 
     /**

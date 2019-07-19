@@ -41,12 +41,13 @@ class NonceIdentity implements Identity
     /**
      * NonceIdentity constructor.
      * @param \DateTimeImmutable $validTill
+     * @param int $tokenLength
      * @throws \Exception
      */
-    public function __construct(\DateTimeImmutable $validTill)
+    public function __construct(\DateTimeImmutable $validTill, int $tokenLength = 20)
     {
         $this->validTill = $validTill;
-        $this->generateSecrets();
+        $this->generateSecrets($tokenLength);
     }
 
     /**
@@ -142,11 +143,12 @@ class NonceIdentity implements Identity
     }
 
     /**
+     * @param int $tokenLength
      * @throws \Exception
      */
-    private function generateSecrets()
+    private function generateSecrets(int $tokenLength)
     {
         $this->pin = $this->generatePin();
-        $this->token = $this->generateToken(20);
+        $this->token = $this->generateToken($tokenLength);
     }
 }

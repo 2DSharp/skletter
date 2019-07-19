@@ -69,7 +69,7 @@ class RegistrationManager
     public function registerIdentity(string $email, string $username, string $password)
     {
         $this->identity = $this->identityMap->createStandardIdentity($email, $username, $password);
-        $this->nonce = $this->identityMap->createNonceIdentity($this->getExpiryTime());
+        $this->nonce = $this->identityMap->createNonceIdentity($this->getExpiryTime(), 32);
     }
 
     public function getStandardIdentity(): StandardIdentity
