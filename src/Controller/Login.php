@@ -16,6 +16,7 @@ use Phypes\Exception\EmptyRequiredValue;
 use Phypes\Exception\InvalidValue;
 use Phypes\Type\Password;
 use Phypes\Type\StringRequired;
+use Skletter\Component\UserFriendlyError;
 use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidIdentifier;
@@ -71,10 +72,10 @@ class Login implements Controller
             $this->state->setIdentity($identity);
 
         } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
-            $this->state->setError('The username or email you have entered does not belong to any account.');
+            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::NONEXISTENT_IDENTIFIER));
 
         } catch (PasswordMismatch | InvalidValue $e) {
-            $this->state->setError('The password you entered is incorrect');
+            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::INVALID_PASSWORD));
         } catch (EmptyRequiredValue $e) {
             $this->state->setError('You must fill in the all the fields');
         }

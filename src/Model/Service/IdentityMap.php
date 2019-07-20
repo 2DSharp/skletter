@@ -20,6 +20,7 @@ use Phypes\Type\Email;
 use Phypes\Type\Password;
 use Phypes\Type\StringRequired;
 use Phypes\Type\Username;
+use Skletter\Component\UserFriendlyError;
 use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
@@ -32,7 +33,10 @@ use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Query\FindIdentityByEmail;
 use Skletter\Model\Query\FindIdentityByUsername;
 
-
+/**
+ * Class IdentityMap
+ * @package Skletter\Model\Service
+ */
 class IdentityMap
 {
     /**
@@ -128,7 +132,7 @@ class IdentityMap
             $identity->setTypedUsername(new Username(new StringRequired($username)));
             $identity->setPassword(new Password(new StringRequired($password)));
             $identity->setStatus('Temp');
-            //$this->checkRedundancies($identity);
+            $this->checkRedundancies($identity);
 
             return $identity;
         } catch (InvalidValue $exception) {
@@ -148,13 +152,11 @@ class IdentityMap
         $query = $this->factory->create(FindIdentityByEmail::class);
 
         if ($query->find($identity))
-            throw new IdentifierExistsException("An account with the email you entered already exists." .
-                "Perhaps you'd want to log in instead?");
+            throw new IdentifierExistsException(UserFriendlyError::getError(UserFriendlyError::EMAIL_ALREADY_REGISTERED));
 
         $query = $this->factory->create(FindIdentityByUsername::class);
 
         if ($query->find($identity))
-            throw new IdentifierExistsException("An account with the username you entered already exists." .
-                "Perhaps you'd want to log in instead?");
+            throw new IdentifierExistsException(UserFriendlyError::getError(UserFriendlyError::USERNAME_ALREADY_REGISTERED));
     }
 }
