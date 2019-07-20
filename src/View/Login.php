@@ -14,9 +14,9 @@ namespace Skletter\View;
 use Greentea\Exception\TemplatingException;
 use Skletter\Model\DTO\LoginState;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
 
 class Login extends AbstractView
@@ -30,11 +30,13 @@ class Login extends AbstractView
      * @var Environment $twig
      */
     private $twig;
+    private $session;
 
-    public function __construct(LoginState $state, Environment $twig)
+    public function __construct(LoginState $state, Environment $twig, Session $session)
     {
         $this->twig = $twig;
         $this->state = $state;
+        $this->session = $session;
     }
 
     /**
@@ -45,7 +47,8 @@ class Login extends AbstractView
     public function attemptLogin(Request $request): Response
     {
         if ($this->state->isLoggedIn())
-            return new RedirectResponse($_ENV['base_url'] . '/success');
+            return new Response($this->session->get('UserID'));
+        //return new RedirectResponse($_ENV['base_url'] . '/success');
         else {
             if ($request->isXmlHttpRequest())
                 return new JsonResponse(json_encode(array('status' => 'failed', 'error' => $this->state->getError())));
