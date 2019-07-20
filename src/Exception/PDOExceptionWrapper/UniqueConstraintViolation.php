@@ -18,4 +18,17 @@ class UniqueConstraintViolation extends \PDOException
         $this->message = $message;
         $this->code = $code;
     }
+
+    public function getOffendingField(): string
+    {
+        return str_replace("'", "", $this->findLastWord($this->message));
+    }
+
+    private function findLastWord(string $msg): string
+    {
+        $pieces = explode(' ', $msg);
+        $last_word = array_pop($pieces);
+
+        return $last_word;
+    }
 }
