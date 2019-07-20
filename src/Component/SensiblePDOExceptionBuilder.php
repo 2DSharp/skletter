@@ -39,14 +39,15 @@ class SensiblePDOExceptionBuilder
     public function throw(): void
     {
         $exception = $this->createException($this->exception);
-        throw new $exception;
+        throw new $exception($this->exception->getMessage());
     }
 
     private function createException(\PDOException $exception): \PDOException
     {
         $code = $exception->getCode();
-        if (array_key_exists($this->map, $code))
+        if (array_key_exists($code, $this->map)) {
             return new $this->map[$code];
+        }
 
         else return $exception;
     }
