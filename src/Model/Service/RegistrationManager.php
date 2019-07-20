@@ -13,6 +13,8 @@ namespace Skletter\Model\Service;
 
 use Skletter\Contract\Transaction;
 use Skletter\Exception\IdentifierExistsException;
+use Skletter\Exception\PDOExceptionWrapper\UniqueConstraintViolation;
+use Skletter\Exception\RegistrationFailure;
 use Skletter\Exception\ValidationError;
 use Skletter\Model\Entity\NonceIdentity;
 use Skletter\Model\Entity\Profile;
@@ -101,10 +103,20 @@ class RegistrationManager
         return $now->add(new \DateInterval("PT2H"));
     }
 
+    /**
+     * @return bool
+     * @throws RegistrationFailure
+     */
     public function save()
     {
-        $this->transaction->registerIdentity($this->identity, $this->nonce);
-        $this->transaction->registerProfile($this->profile);
-        return $this->transaction->commit();
+        try {
+            $this->transaction->registerIdentity($this->identity, $this->nonce);
+            $this->transaction->registerProfile($this->profile);
+            return $this->transaction->commit();
+        } catch (UniqueConstraintViolation $e) {
+            throw new RegistrationFailure("The " . strtolower($e->getOffendingField()) . " you have provided is already in use. 
+            Perhaps you'd want to log in instead?");
+        }
+
     }
 }
