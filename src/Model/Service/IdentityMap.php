@@ -73,9 +73,6 @@ class IdentityMap
     private function populateStandardIdentity(StandardIdentity $identity)
     {
         $this->repository->load($identity);
-
-        if (!$identity->isFound())
-            throw new UserDoesNotExistException();
     }
 
     /**

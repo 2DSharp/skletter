@@ -12,6 +12,7 @@ namespace Skletter\Contract\Repository;
 
 
 use Skletter\Contract\Entity\Identity;
+use Skletter\Exception\Domain\UserDoesNotExistException;
 
 /**
  * This contract specifies that an IdentityRepository must be able to do the following operations:
@@ -27,6 +28,11 @@ use Skletter\Contract\Entity\Identity;
  */
 interface IdentityRepositoryInterface
 {
+    /**
+     * @param Identity $identity
+     * @return mixed
+     * @throws UserDoesNotExistException
+     */
     function load(Identity $identity);
 
     function save(Identity $identity);
