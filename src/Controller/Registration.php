@@ -13,9 +13,9 @@ namespace Skletter\Controller;
 
 use Greentea\Core\Controller;
 use Phypes\Exception\EmptyRequiredValue;
+use Skletter\Exception\Domain\RegistrationFailure;
+use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
-use Skletter\Exception\RegistrationFailure;
-use Skletter\Exception\ValidationError;
 use Skletter\Model\DTO\RegistrationState;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service;

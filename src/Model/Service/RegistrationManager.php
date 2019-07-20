@@ -12,10 +12,10 @@ namespace Skletter\Model\Service;
 
 
 use Skletter\Contract\Transaction;
+use Skletter\Exception\Domain\RegistrationFailure;
+use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
 use Skletter\Exception\PDOExceptionWrapper\UniqueConstraintViolation;
-use Skletter\Exception\RegistrationFailure;
-use Skletter\Exception\ValidationError;
 use Skletter\Model\Entity\NonceIdentity;
 use Skletter\Model\Entity\Profile;
 use Skletter\Model\Entity\StandardIdentity;

@@ -8,9 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Exception;
+namespace Skletter\Exception\Domain;
 
 
-class InvalidPassword extends \Exception
+class RegistrationFailure extends \Exception
 {
+
 }

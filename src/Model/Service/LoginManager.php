@@ -12,7 +12,7 @@ namespace Skletter\Model\Service;
 
 
 use Skletter\Contract\Entity\Identity;
-use Skletter\Exception\PasswordMismatch;
+use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Model\Entity\StandardIdentity;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

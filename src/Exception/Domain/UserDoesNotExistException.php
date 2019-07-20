@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Exception;
+namespace Skletter\Exception\Domain;
 
 
-class ValidationError extends \Exception
+class UserDoesNotExistException extends \Exception
 {
 
 }
