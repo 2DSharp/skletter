@@ -36,6 +36,7 @@ class LoginManager
 
     /**
      * @param StandardIdentity $identity
+     * @param string $password
      * @throws PasswordMismatch
      */
     public function loginWithPassword(StandardIdentity $identity, string $password)
