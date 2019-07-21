@@ -14,6 +14,7 @@ namespace Skletter\View;
 use Greentea\Exception\TemplatingException;
 use Skletter\Model\DTO\LoginState;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -40,23 +41,46 @@ class Login extends AbstractView
     }
 
     /**
+     * Redirect the user on success, or let JS handle it in case its an AJAX request
+     * @param Request $request
+     * @return Response
+     */
+    private function sendSuccessResponse(Request $request): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(array('status' => 'success'));
+        }
+        return new RedirectResponse($_ENV['base_url'] . '/success');
+    }
+
+    /**
+     * Send a response with error messages
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\Error
+     */
+    private function sendFailureResponse(Request $request): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse(array('status' => 'failed', 'error' => $this->state->getError()));
+        }
+        return $this->respond($request, $this->createHTMLFromTemplate($this->twig,
+            'login_prompt.twig',
+            ['status' => 'failed', 'error' => $this->state->getError()]));
+    }
+
+    /**
+     * Redirect to correct location on success otherwise show error messages
      * @param Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     public function attemptLogin(Request $request): Response
     {
-        if ($this->state->isLoggedIn())
-            return new Response($this->session->get('UserID'));
-        //return new RedirectResponse($_ENV['base_url'] . '/success');
-        else {
-            if ($request->isXmlHttpRequest())
-                return new JsonResponse(json_encode(array('status' => 'failed', 'error' => $this->state->getError())));
-            else
-                return $this->respond($request, $this->createHTMLFromTemplate($this->twig,
-                    'login_prompt.twig',
-                    ['status' => 'failed', 'error' => $this->state->getError()]));
+        if ($this->state->isLoggedIn()) {
+            return $this->sendSuccessResponse($request);
         }
+        return $this->sendFailureResponse($request);
     }
 
     /**

@@ -31,7 +31,7 @@ class Home extends AbstractView
      */
     private function main(Request $request): Response
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'home.twig',
+        $html = $this->createHTMLFromTemplate($this->templating, 'pages/home.twig',
             ['title' => 'Skletter - Home']);
         return $this->respond($request, $html);
     }
