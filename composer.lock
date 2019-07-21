@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-  "content-hash": "db0a1e356b318a8d881f1b0b88f24a9d",
+  "content-hash": "23d1f57baf9196923dc18b531e80efdc",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1056,12 +1056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/2DSharp/Phypes.git",
-              "reference": "7b6f80"
+              "reference": "658045e"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/7b6f80",
-              "reference": "7b6f80",
+              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/658045e",
+              "reference": "658045e",
                 "shasum": ""
             },
             "require": {
@@ -1088,8 +1088,8 @@
             "authors": [
                 {
                     "name": "Dedipyaman Das",
-                    "email": "2d@twodee.me",
-                    "role": "Developer"
+                  "role": "Developer",
+                  "email": "2d@twodee.me"
                 }
             ],
             "description": "Validation components for commonly used data with value objects.",
@@ -1100,7 +1100,7 @@
                 "validation",
                 "value objects"
             ],
-          "time": "2019-07-11T14:25:47+00:00"
+          "time": "2019-07-21T09:25:30+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
