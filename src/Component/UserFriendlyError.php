@@ -23,11 +23,11 @@ class UserFriendlyError
             self::EMAIL_ALREADY_REGISTERED => 'The email you provided has already been used.Perhaps you\'d like to log in instead?',
             self::USERNAME_ALREADY_REGISTERED => "The username you provided has already been used. Perhaps you'd like to log in instead?",
             self::NONEXISTENT_IDENTIFIER => 'The username or email you have entered does not belong to any account.',
+            self::INVALID_PASSWORD => 'You have entered an incorrect password'
         ];
 
     public static function getError(int $err): string
     {
         return self::$errors[$err];
     }
-
 }
