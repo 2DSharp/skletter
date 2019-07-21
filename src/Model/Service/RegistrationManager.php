@@ -11,6 +11,7 @@
 namespace Skletter\Model\Service;
 
 
+use Skletter\Component\UserFriendlyError;
 use Skletter\Contract\Transaction;
 use Skletter\Exception\Domain\RegistrationFailure;
 use Skletter\Exception\Domain\ValidationError;
@@ -45,6 +46,10 @@ class RegistrationManager
      * @var Transaction $transaction
      */
     private $transaction;
+
+    private $errorMap =
+        ['Email' => UserFriendlyError::EMAIL_ALREADY_REGISTERED,
+            'Username' => UserFriendlyError::USERNAME_ALREADY_REGISTERED];
 
     /**
      * IdentityManager constructor.
@@ -84,6 +89,11 @@ class RegistrationManager
         return $this->nonce;
     }
 
+    /**
+     * @param string $name
+     * @param string $locale
+     * @param $date
+     */
     public function registerProfile(string $name, string $locale, $date)
     {
         $this->profile = new Profile($this->identity);
@@ -104,6 +114,7 @@ class RegistrationManager
     }
 
     /**
+     * Commit to persistence
      * @return bool
      * @throws RegistrationFailure
      */
@@ -114,8 +125,7 @@ class RegistrationManager
             $this->transaction->registerProfile($this->profile);
             return $this->transaction->commit();
         } catch (UniqueConstraintViolation $e) {
-            throw new RegistrationFailure("The " . strtolower($e->getOffendingField()) . " you have provided is already in use. 
-            Perhaps you'd want to log in instead?");
+            throw new RegistrationFailure($this->errorMap[$e->getOffendingField()]);
         }
 
     }
