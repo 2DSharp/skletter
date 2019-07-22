@@ -65,7 +65,7 @@ class Login extends AbstractView
             return new JsonResponse(array('status' => 'failed', 'error' => $this->state->getError()));
         }
         return $this->respond($request, $this->createHTMLFromTemplate($this->twig,
-            'login_prompt.twig',
+            'pages/login_prompt.twig',
             ['status' => 'failed', 'error' => $this->state->getError()]));
     }
 
