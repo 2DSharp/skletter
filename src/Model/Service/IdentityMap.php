@@ -57,11 +57,9 @@ class IdentityMap
      * @var array $errorMap
      */
     private $errorMap = [
-        TypeErrorCode::EMAIL_INVALID => "The email you entered is invalid. Please check your email and try again",
-        TypeErrorCode::USERNAME_INVALID => "The username you entered isn't in the correct form. 2-14 characters including alphabets, 
-        digits and underscores (_) are allowed",
-        TypeErrorCode::PASSWORD_INVALID => "The password must be a minimum of 8 characters with alphanumeric upper case, 
-        lower case combination",
+        TypeErrorCode::EMAIL_INVALID => UserFriendlyError::INVALID_EMAIL_HELPFUL,
+        TypeErrorCode::USERNAME_INVALID => UserFriendlyError::INVALID_USERNAME_HELPFUL,
+        TypeErrorCode::PASSWORD_INVALID => UserFriendlyError::INVALID_PASSWORD_HELPFUL,
     ];
 
     public function __construct(IdentityRepositoryInterface $repository, QueryObjectFactoryInterface $factory)
@@ -137,7 +135,7 @@ class IdentityMap
         } catch (InvalidValue $exception) {
             /** @var Error $error */
             $error = $exception->getErrors()[0];
-            throw new ValidationError($this->errorMap[$error->getCode()]);
+            throw new ValidationError(UserFriendlyError::getError($this->errorMap[$error->getCode()]));
         } catch (EmptyRequiredValue $exception) {
             throw new ValidationError(UserFriendlyError::getError(UserFriendlyError::EMPTY_REQUIRED));
         }

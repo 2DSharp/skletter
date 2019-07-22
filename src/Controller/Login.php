@@ -75,7 +75,7 @@ class Login implements Controller
             $this->state->setError(UserFriendlyError::getError(UserFriendlyError::NONEXISTENT_IDENTIFIER));
 
         } catch (PasswordMismatch | InvalidValue $e) {
-            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::INVALID_PASSWORD));
+            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::INVALID_PASSWORD_VAGUE));
         } catch (EmptyRequiredValue $e) {
             $this->state->setError('You must fill in the all the fields');
         }
