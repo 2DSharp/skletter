@@ -1,0 +1,38 @@
+
+.std {
+    width: 380px;
+    margin: 5px;
+    height: 40px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.text {
+    border: none;
+    border-bottom: 2px solid rgba(207, 22, 113, 0.7);
+    font-size: 18px;
+}
+
+.text:focus {
+    border-bottom: 2px solid rgba(207, 22, 113, 1);
+}
+
+button.std::-moz-focus-inner {
+    border: 0;
+}
+
+:focus {
+    outline: none;
+}
+
+::-moz-focus-inner {
+    border: 0;
+}
+
+button.std {
+    margin-top: 18px;
+    border-radius: 20px;
+    border: 0 solid;
+    font-weight: bold;
+    cursor: pointer;
+}

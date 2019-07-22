@@ -4,6 +4,7 @@
     <title>Home - Skletter</title>
     <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
     <link href="{{ server.css_assets }}/home.css" rel="stylesheet">
+    <link href="{{ server.css_assets }}/form.css" rel="stylesheet">
 
 </head>
 <body>
@@ -26,10 +27,7 @@
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                         labore et dolore magna aliqua.
                     </div>
-                    <div class="card">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -41,10 +39,10 @@
                     <div class="login-container">
                         <form onsubmit="login(event)" method="post" action="">
                             <input id="identity" name="identity" placeholder="Email or Username" type="text"
-                                   class="std text">
+                                   tabindex="1" class="std text">
                             <input id="password" name="password" placeholder="Password" type="password"
-                                   class="std text">
-                            <button class="std login-btn"> Login</button>
+                                   class="std text" tabindex="2">
+                            <button class="std login-btn" tabindex="3"> Login</button>
                         </form>
                         <div id="processor">
                             <img id="loader" style="margin-top: 10px" width="32"
@@ -57,21 +55,25 @@
                 </div>
                 <div id="registration-box">
                     <a href="{{ server.base_url }}/register">
-                        <button class="std registration-btn"> Sign up</button>
+                        <button class="std registration-btn" tabindex="4"> Sign up</button>
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{{ include('pieces/footer.twig') }}
 
 </body>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{{ server.js_assets }}/axios.min.js"></script>
 <script>
     function login(event) {
         event.preventDefault();
         document.getElementById('processor').style.display = "block";
+        let error_box = document.getElementById('error-box');
         let loader = document.getElementById('loader');
+
+        error_box.style.display = "none";
         loader.style.display = "initial";
 
         axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -86,7 +88,6 @@
                     window.location = '{{ server.base_url }}/success';
                 }
                 else {
-                    let error_box = document.getElementById('error-box');
                     loader.style.display = "none";
                     error_box.style.display = "block";
                     error_box.innerText = response.data['error'];
