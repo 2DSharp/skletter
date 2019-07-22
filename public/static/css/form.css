@@ -1,7 +1,7 @@
 
 .std {
     width: 380px;
-    margin: 5px;
+    margin: 0px 0 10px 0;
     height: 40px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -14,7 +14,7 @@
 }
 
 .text:focus {
-    border-bottom: 2px solid rgba(207, 22, 113, 1);
+    border-bottom: 2px solid rgba(207, 22, 113, 1) !important;
 }
 
 button.std::-moz-focus-inner {
@@ -35,4 +35,37 @@ button.std {
     border: 0 solid;
     font-weight: bold;
     cursor: pointer;
+}
+
+.primary-btn {
+    background-color: rgba(229, 25, 131, 0.7);
+    color: azure;
+}
+
+.primary-btn:hover, .primary-btn:focus {
+    background-color: #cf1671;
+
+}
+
+.secondary-btn {
+    background-color: rgba(182, 182, 182, 0.69);
+}
+
+.secondary-btn:hover, .secondary-btn:focus {
+    border: 1px solid #cf1671;
+    color: #cf1671;
+    background-color: white;
+}
+
+.error-box {
+    color: #cf1671;
+    display: none;
+    padding: 8px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.processor {
+    display: none;
+    text-align: center;
 }

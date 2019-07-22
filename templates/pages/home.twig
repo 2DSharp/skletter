@@ -42,12 +42,12 @@
                                    tabindex="1" class="std text">
                             <input id="password" name="password" placeholder="Password" type="password"
                                    class="std text" tabindex="2">
-                            <button class="std login-btn" tabindex="3"> Login</button>
+                            <button class="std primary-btn" tabindex="3"> Login</button>
                         </form>
-                        <div id="processor">
-                            <img id="loader" style="margin-top: 10px" width="32"
+                        <div class="processor" id="login-processor">
+                            <img class="loader" id="login-loader" style="margin-top: 10px" width="32"
                                  src="{{ server.img_assets }}/loader-64.gif">
-                            <div id="error-box">
+                            <div class="error-box" id="login-error-box">
 
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                 </div>
                 <div id="registration-box">
                     <a href="{{ server.base_url }}/register">
-                        <button class="std registration-btn" tabindex="4"> Sign up</button>
+                        <button class="std secondary-btn" tabindex="4"> Sign up</button>
                     </a>
                 </div>
             </div>
@@ -69,9 +69,9 @@
 <script>
     function login(event) {
         event.preventDefault();
-        document.getElementById('processor').style.display = "block";
-        let error_box = document.getElementById('error-box');
-        let loader = document.getElementById('loader');
+        document.getElementById('login-processor').style.display = "block";
+        let error_box = document.getElementById('login-error-box');
+        let loader = document.getElementById('login-loader');
 
         error_box.style.display = "none";
         loader.style.display = "initial";

@@ -75,36 +75,6 @@ body {
     padding-bottom: 30px;
 }
 
-.login-btn {
-    background-color: rgba(229, 25, 131, 0.7);
-    color: azure;
-}
-
-.login-btn:hover, .login-btn:focus {
-    background-color: #cf1671;
-
-}
-
-.registration-btn {
-    background-color: rgba(182, 182, 182, 0.69);
-}
-
-.registration-btn:hover, .registration-btn:focus {
-    border: 1px solid #cf1671;
-    color: #cf1671;
-    background-color: white;
-}
-
-#error-box {
-    color: #cf1671;
-    display: none;
-    padding: 8px;
-    font-size: 14px;
-}
-
-#processor {
-    display: none;
-}
 
 .card-container {
 }
