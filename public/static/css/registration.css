@@ -1,0 +1,22 @@
+.container {
+    width: 420px;
+    margin-top: 80px;
+}
+
+.info {
+    font-size: 13px;
+}
+
+h1 {
+    font-weight: 300;
+}
+
+.std {
+    width: 420px !important;
+    border-bottom-color: rgba(182, 182, 182, 0.69) !important;
+}
+
+.tooltip {
+    color: #cf1671;
+    font-size: 12px;
+}

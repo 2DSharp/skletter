@@ -1,0 +1,50 @@
+{% extends "base.twig" %}
+
+{% block title %} Register - Skletter {% endblock %}
+{% block head %}
+    <link href="{{ server.css_assets }}/registration.css" rel="stylesheet">
+    <link href="{{ server.css_assets }}/form.css" rel="stylesheet">
+    <script src="{{ server.js_assets }}/axios.min.js"></script>
+    <script src="{{ server.js_assets }}/register.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>Create an account</h1>
+        <div>
+            <form method="post" onsubmit="register(event, '{{ server.base_url }}/register')"
+                  action="{{ server.base_url }}/register">
+                <label for="name" class="tooltip">
+                    Name:
+                </label>
+
+                <input id="name" name="name" tabindex="1" placeholder="Your Full Name" type="text" autofocus
+                       class="std text">
+                <label for="email" class="tooltip">
+                    Email address:
+                </label>
+                <input id="email" name="email" tabindex="2" placeholder="email@example.com" type="email"
+                       class="std text">
+                <label for="username" class="tooltip">
+                    Username:
+                </label>
+                <input name="username" id="username" tabindex="3" placeholder="A cool username" type="text"
+                       class="std text">
+                <label for="email" id="name" class="tooltip">
+                    Password:
+                </label>
+                <input name="password" id="password" tabindex="4"
+                       placeholder="Min. 8 characters, mixed case, alphanumeric" type="password" class="std text">
+                <div><p class="info">By signing up, you are agreeing to the terms of service and privacy policy.</p>
+                </div>
+                <button class="std primary-btn">Sign up</button>
+            </form>
+            <div class="processor" id="reg-processor">
+                <img class="loader" id="reg-loader" style="margin-top: 10px" width="32"
+                     src="{{ server.img_assets }}/loader-64.gif">
+                <div class="error-box" id="reg-error-box">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
