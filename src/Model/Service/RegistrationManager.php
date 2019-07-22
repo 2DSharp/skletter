@@ -69,7 +69,6 @@ class RegistrationManager
      * @return void
      * @throws IdentifierExistsException
      * @throws ValidationError
-     * @throws \Phypes\Exception\EmptyRequiredValue
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Exception
      */

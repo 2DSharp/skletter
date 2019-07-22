@@ -12,7 +12,6 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
-use Phypes\Exception\EmptyRequiredValue;
 use Skletter\Exception\Domain\RegistrationFailure;
 use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
@@ -61,7 +60,7 @@ class Registration implements Controller
             $identity = $this->manager->getStandardIdentity();
             $this->state->setStatus('success');
 
-        } catch (EmptyRequiredValue | IdentifierExistsException | ValidationError | RegistrationFailure $e) {
+        } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {
             $this->state->setStatus('failure');
             $this->state->setError($e->getMessage());
         }

@@ -61,7 +61,7 @@ class IdentityMap
         TypeErrorCode::USERNAME_INVALID => "The username you entered isn't in the correct form. 2-14 characters including alphabets, 
         digits and underscores (_) are allowed",
         TypeErrorCode::PASSWORD_INVALID => "The password must be a minimum of 8 characters with alphanumeric upper case, 
-        lower case combination"
+        lower case combination",
     ];
 
     public function __construct(IdentityRepositoryInterface $repository, QueryObjectFactoryInterface $factory)
@@ -121,7 +121,6 @@ class IdentityMap
      * @return StandardIdentity
      * @throws IdentifierExistsException
      * @throws ValidationError
-     * @throws \Phypes\Exception\EmptyRequiredValue
      * @throws \Phypes\Exception\InvalidRule
      */
     public function createStandardIdentity(string $email, string $username, string $password): StandardIdentity
@@ -139,6 +138,8 @@ class IdentityMap
             /** @var Error $error */
             $error = $exception->getErrors()[0];
             throw new ValidationError($this->errorMap[$error->getCode()]);
+        } catch (EmptyRequiredValue $exception) {
+            throw new ValidationError(UserFriendlyError::getError(UserFriendlyError::EMPTY_REQUIRED));
         }
     }
 

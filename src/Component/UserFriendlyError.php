@@ -17,13 +17,15 @@ class UserFriendlyError
     public const USERNAME_ALREADY_REGISTERED = 1;
     public const NONEXISTENT_IDENTIFIER = 2;
     public const INVALID_PASSWORD = 3;
+    const EMPTY_REQUIRED = 4;
 
     private static $errors =
         [
             self::EMAIL_ALREADY_REGISTERED => 'The email you provided has already been used.Perhaps you\'d like to log in instead?',
             self::USERNAME_ALREADY_REGISTERED => "The username you provided has already been used. Perhaps you'd like to log in instead?",
             self::NONEXISTENT_IDENTIFIER => 'The username or email you have entered does not belong to any account.',
-            self::INVALID_PASSWORD => 'You have entered an incorrect password'
+            self::INVALID_PASSWORD => 'You have entered an incorrect password',
+            self::EMPTY_REQUIRED => 'You must fill in all the fields'
         ];
 
     public static function getError(int $err): string
