@@ -31,13 +31,18 @@ class Registration extends AbstractView
         $this->state = $state;
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\Error
+     */
     public function registerUser(Request $request): Response
     {
         if ($this->state->getStatus() == 'success') {
-            return new Response("Success!");
-        } else {
-            return new Response("Error > " . $this->state->getError());
+            return $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url'] . '/success');
         }
+        return $this->sendFailureResponse($request, $this->templating, ['status' => 'failed',
+            'error' => $this->state->getError()], 'pages/registration.twig');
     }
     /**
      * @param Request $request
