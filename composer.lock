@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-  "content-hash": "23d1f57baf9196923dc18b531e80efdc",
+  "content-hash": "395bfdd1dba95c3df336362b1306fe74",
     "packages": [
         {
             "name": "monolog/monolog",
@@ -1056,12 +1056,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/2DSharp/Phypes.git",
-              "reference": "658045e"
+              "reference": "68d667"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/658045e",
-              "reference": "658045e",
+              "url": "https://api.github.com/repos/2DSharp/Phypes/zipball/68d667",
+              "reference": "68d667",
                 "shasum": ""
             },
             "require": {
@@ -1100,7 +1100,7 @@
                 "validation",
                 "value objects"
             ],
-          "time": "2019-07-21T09:25:30+00:00"
+          "time": "2019-07-22T18:22:36+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -2051,16 +2051,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.13",
+          "version": "7.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b9278591caa8630127f96c63b598712b699e671c"
+              "reference": "2834789aeb9ac182ad69bfdf9ae91856a59945ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b9278591caa8630127f96c63b598712b699e671c",
-                "reference": "b9278591caa8630127f96c63b598712b699e671c",
+              "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2834789aeb9ac182ad69bfdf9ae91856a59945ff",
+              "reference": "2834789aeb9ac182ad69bfdf9ae91856a59945ff",
                 "shasum": ""
             },
             "require": {
@@ -2120,8 +2120,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                  "role": "lead",
+                  "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "The PHP Unit Testing framework.",
@@ -2131,7 +2131,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-06-19T12:01:51+00:00"
+          "time": "2019-07-15T06:24:08+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
