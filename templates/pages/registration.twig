@@ -8,26 +8,33 @@
     <script src="{{ server.js_assets }}/register.js"></script>
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <h1>Create an account</h1>
-        <div>
+    <div id="main-container" class="container">
+
+        <div id="reg-1" class="step">
+            <div>
+                <p style="text-align: right; font-size: 18px" id="step-counter">Step 1/3</p>
+            </div>
+            <h1>Create an account</h1>
             <form method="post" onsubmit="register(event, '{{ server.base_url }}/register')"
                   action="{{ server.base_url }}/register">
                 <label for="name" class="tooltip">
                     Name:
                 </label>
 
-                <input id="name" name="name" tabindex="1" placeholder="Your Full Name" type="text" autofocus
+                <input value="{{ post.name }}" id="name" name="name" tabindex="1" placeholder="Your Full Name"
+                       type="text" autofocus
                        class="std text">
                 <label for="email" class="tooltip">
                     Email address:
                 </label>
-                <input id="email" name="email" tabindex="2" placeholder="email@example.com" type="email"
+                <input value="{{ post.email }}" id="email" name="email" tabindex="2" placeholder="email@example.com"
+                       type="email"
                        class="std text">
                 <label for="username" class="tooltip">
                     Username:
                 </label>
-                <input name="username" id="username" tabindex="3" placeholder="A cool username" type="text"
+                <input value="{{ post.username }}" name="username" id="username" tabindex="3"
+                       placeholder="A cool username" type="text"
                        class="std text">
                 <label for="email" id="name" class="tooltip">
                     Password:
@@ -38,11 +45,13 @@
                 </div>
                 <button class="std primary-btn">Sign up</button>
             </form>
-            <div class="processor" id="reg-processor">
+
+            <div {% if status == 'failed' %} style="display: block" {% endif %} class="processor" id="reg-processor">
                 <img class="loader" id="reg-loader" style="margin-top: 10px" width="32"
                      src="{{ server.img_assets }}/loader-64.gif">
                 <div class="error-box" id="reg-error-box">
-
+                    {{ error }}
+                </div>
                 </div>
             </div>
         </div>

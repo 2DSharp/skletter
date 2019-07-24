@@ -15,6 +15,7 @@ use Greentea\Exception\TemplatingException;
 use Skletter\Model\DTO\RegistrationState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig\Environment;
 
 class Registration extends AbstractView
@@ -24,11 +25,13 @@ class Registration extends AbstractView
      */
     private $templating;
     private $state;
+    private $session;
 
-    public function __construct(Environment $twig, RegistrationState $state)
+    public function __construct(Environment $twig, RegistrationState $state, SessionInterface $session)
     {
         $this->templating = $twig;
         $this->state = $state;
+        $this->session = $session;
     }
 
     /**
@@ -39,10 +42,18 @@ class Registration extends AbstractView
     public function registerUser(Request $request): Response
     {
         if ($this->state->getStatus() == 'success') {
-            return $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url'] . '/success');
+            return $this->sendSuccessResponse($request,
+                ['status' => 'success', 'result' => $this->templating->render('pieces/contact_verification_prompt.twig',
+                    ['email' => $this->session->get('email')])],
+                $_ENV['base_url'] . '/success');
         }
+        $postData = [
+            'name' => $request->request->get('name'),
+            'email' => $request->request->get('email'),
+            'username' => $request->request->get('username')
+        ];
         return $this->sendFailureResponse($request, $this->templating, ['status' => 'failed',
-            'error' => $this->state->getError()], 'pages/registration.twig');
+            'error' => $this->state->getError(), 'post' => $postData], 'pages/registration.twig');
     }
     /**
      * @param Request $request
@@ -51,6 +62,9 @@ class Registration extends AbstractView
      */
     private function displayForm(Request $request): Response
     {
+        if ($this->session->get('status') === 'temp')
+            $html = $this->createHTMLFromTemplate($this->templating, 'pages/registration.twig',
+                ['title' => 'Skletter - Registration']);
         $html = $this->createHTMLFromTemplate($this->templating, 'pages/registration.twig',
             ['title' => 'Skletter - Registration']);
         return $this->respond($request, $html);
