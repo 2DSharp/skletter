@@ -18,7 +18,7 @@ function register(event, actionLocation) {
     axios.post(actionLocation, form)
         .then(function (response) {
             if (response.data['status'] === 'success') {
-                window.location = '{{ server.base_url }}/success';
+                document.getElementById('main-container').innerHTML = response.data['result'];
             }
             else {
                 loader.style.display = "none";
