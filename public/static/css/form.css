@@ -59,7 +59,6 @@ button.std {
 
 .error-box {
     color: #cf1671;
-    display: none;
     padding: 8px;
     font-size: 13px;
     text-align: left;
@@ -68,4 +67,8 @@ button.std {
 .processor {
     display: none;
     text-align: center;
+}
+
+.loader {
+    display: none;
 }
