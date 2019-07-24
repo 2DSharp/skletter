@@ -49,7 +49,7 @@ abstract class AbstractView implements View
     protected function sendSuccessResponse(Request $request, array $params, string $redirectLocation): Response
     {
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse($jsonResponse);
+            return new JsonResponse($params);
         }
         return new RedirectResponse($redirectLocation);
     }
