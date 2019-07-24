@@ -19,6 +19,7 @@ use Skletter\Model\DTO\RegistrationState;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Registration implements Controller
 {
@@ -30,16 +31,22 @@ class Registration implements Controller
      * @var RegistrationState $state
      */
     private $state;
+    /**
+     * @var SessionInterface $session
+     */
+    private $session;
 
-    public function __construct(Service\RegistrationManager $manager, RegistrationState $state)
+    public function __construct(Service\RegistrationManager $manager, RegistrationState $state, SessionInterface $session)
     {
         $this->manager = $manager;
         $this->state = $state;
+        $this->session = $session;
     }
 
     /**
      * @param Request $request
      * @throws \Phypes\Exception\InvalidRule
+     * @throws \Exception
      */
     public function registerUser(Request $request): void
     {
@@ -58,6 +65,12 @@ class Registration implements Controller
 
             $nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
+
+            $this->session->set('id', $identity->getId());
+            $this->session->set('email', $identity->getEmail());
+            $this->session->set('name', $identity->getUsername());
+            $this->session->set('status', $identity->getStatus());
+
             $this->state->setStatus('success');
 
         } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {

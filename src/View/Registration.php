@@ -45,7 +45,7 @@ class Registration extends AbstractView
             return $this->sendSuccessResponse($request,
                 ['status' => 'success', 'result' => $this->templating->render('pieces/contact_verification_prompt.twig',
                     ['email' => $this->session->get('email')])],
-                $_ENV['base_url'] . '/success');
+                $_ENV['base_url'] . '/register');
         }
         $postData = [
             'name' => $request->request->get('name'),
@@ -62,11 +62,10 @@ class Registration extends AbstractView
      */
     private function displayForm(Request $request): Response
     {
-        if ($this->session->get('status') === 'temp')
-            $html = $this->createHTMLFromTemplate($this->templating, 'pages/registration.twig',
-                ['title' => 'Skletter - Registration']);
         $html = $this->createHTMLFromTemplate($this->templating, 'pages/registration.twig',
-            ['title' => 'Skletter - Registration']);
+            ['title' => 'Skletter - Registration',
+                'status' => $this->session->get('status'),
+                'email' => $this->session->get('email')]);
         return $this->respond($request, $html);
     }
 
