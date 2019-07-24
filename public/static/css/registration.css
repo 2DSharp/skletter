@@ -1,8 +1,20 @@
 .container {
-    width: 420px;
-    margin-top: 80px;
+    width: 640px;
+    margin-top: 60px;
 }
 
+.step {
+    margin: 0 auto;
+
+}
+
+#reg-1 {
+    width: 420px;
+}
+
+#reg-2 {
+    width: 640px;
+}
 .info {
     font-size: 13px;
 }
