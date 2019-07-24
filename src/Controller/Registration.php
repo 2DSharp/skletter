@@ -19,7 +19,6 @@ use Skletter\Model\DTO\RegistrationState;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Registration implements Controller
 {
@@ -32,15 +31,17 @@ class Registration implements Controller
      */
     private $state;
     /**
-     * @var SessionInterface $session
+     * @var Service\LoginManager $loginManager
      */
-    private $session;
+    private $loginManager;
 
-    public function __construct(Service\RegistrationManager $manager, RegistrationState $state, SessionInterface $session)
+    public function __construct(Service\RegistrationManager $registrationManager,
+                                RegistrationState $state,
+                                Service\LoginManager $loginManager)
     {
-        $this->manager = $manager;
+        $this->manager = $registrationManager;
         $this->state = $state;
-        $this->session = $session;
+        $this->loginManager = $loginManager;
     }
 
     /**
@@ -66,10 +67,7 @@ class Registration implements Controller
             $nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
 
-            $this->session->set('id', $identity->getId());
-            $this->session->set('email', $identity->getEmail());
-            $this->session->set('name', $identity->getUsername());
-            $this->session->set('status', $identity->getStatus());
+            $this->loginManager->login($identity);
 
             $this->state->setStatus('success');
 

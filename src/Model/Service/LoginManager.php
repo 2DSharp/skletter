@@ -11,7 +11,6 @@
 namespace Skletter\Model\Service;
 
 
-use Skletter\Contract\Entity\Identity;
 use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Model\Entity\StandardIdentity;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -49,11 +48,14 @@ class LoginManager
 
     /**
      * Sets the login state, by updating db and logging data
-     * @param Identity $identity
+     * @param StandardIdentity $identity
      */
-    public function login(Identity $identity)
+    public function login(StandardIdentity $identity)
     {
-        $this->session->set('UserID', $identity->getId());
+        $this->session->set('id', $identity->getId());
+        $this->session->set('email', $identity->getEmail());
+        $this->session->set('name', $identity->getUsername());
+        $this->session->set('status', $identity->getStatus());
         // Log stuff here
     }
 
