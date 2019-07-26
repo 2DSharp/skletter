@@ -11,7 +11,9 @@
 namespace Skletter\Model\Entity;
 
 use Skletter\Component\SecureTokenManager;
+use Skletter\Component\ValueObject\TokenKeyPair;
 use Skletter\Contract\Entity\Identity;
+use Skletter\Exception\InvalidCookie;
 
 class CookieIdentity implements Identity
 {
@@ -25,19 +27,29 @@ class CookieIdentity implements Identity
      */
     private $token;
 
-    public function __construct(string $token)
-    {
-        $this->token = $token;
-    }
-
     public static function createNew()
     {
         $pair = SecureTokenManager::generate();
-        $identity = new CookieIdentity($pair->getToken());
+
+        $identity = new CookieIdentity();
+        $identity->setToken($pair->getToken());
         $identity->setHmacKey($pair->getKey());
         return $identity;
     }
 
+    /**
+     * @param TokenKeyPair $pair
+     * @throws InvalidCookie
+     */
+    public function createFromTokenKeyPair(TokenKeyPair $pair)
+    {
+        if (SecureTokenManager::isTampered($pair)) {
+            throw new InvalidCookie();
+        }
+
+        $this->setHmacKey($pair->getKey());
+        $this->setToken($pair->getToken());
+    }
     public function setId(int $id): void
     {
         $this->id = $id;
