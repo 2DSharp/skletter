@@ -10,9 +10,10 @@
 
 namespace Skletter\Model\Service;
 
-
 use Skletter\Exception\Domain\PasswordMismatch;
+use Skletter\Model\Entity\CookieIdentity;
 use Skletter\Model\Entity\StandardIdentity;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -22,7 +23,6 @@ class LoginManager
      * @var Session $session
      */
     private $session;
-
 
     /**
      * LoginManager constructor.
@@ -59,4 +59,22 @@ class LoginManager
         // Log stuff here
     }
 
+    /**
+     * Generate a cookie for remembering the user based on the cookie identity
+     * @param CookieIdentity $identity
+     * @return Cookie
+     */
+    public function createCookie(CookieIdentity $identity): Cookie
+    {
+        return Cookie::create('uid', $identity->getToken(), $identity->getValidTill());
+    }
+
+    public function isLoggedIn(): bool
+    {
+        $id = $this->session->get('id', 'none');
+        if ($id != 'none') {
+
+        }
+        return false;
+    }
 }
