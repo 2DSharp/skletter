@@ -35,4 +35,15 @@ abstract class IdentityMapper
         // TODO: Implement delete() method.
     }
 
+    protected function bindAndFetch(\PDO $connection, string $query, array $bindValues = [])
+    {
+        $stmt = $connection->prepare($query);
+
+        foreach ($bindValues as $placeholder => $value) {
+            $stmt->bindValue($placeholder, $value);
+        }
+
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
 }

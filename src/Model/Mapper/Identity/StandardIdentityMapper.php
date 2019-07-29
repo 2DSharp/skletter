@@ -99,7 +99,7 @@ class StandardIdentityMapper extends IdentityMapper
         $query = /** @lang MySQL */
             "SELECT {$fields} FROM Identity WHERE ID = :id";
 
-        return $this->retrieveResults($query, ':id', $identity->getId());
+        return $this->bindAndFetch($this->connection, $query, [':id' => $identity->getId()]);
     }
 
     private function buildQueryForIdentifier(int $type, array $fields, string $placeholder)
@@ -124,19 +124,11 @@ class StandardIdentityMapper extends IdentityMapper
     private function fetchByIdentifier(StandardIdentity $identity, array $fields)
     {
         $query = $this->buildQueryForIdentifier($identity->getType(), $fields, ':identifier');
-        $data = $this->retrieveResults($query, ':identifier', $identity->getIdentifier());
+        $data = $this->bindAndFetch($this->connection, $query, [':identifier' => $identity->getIdentifier()]);
 
         return $data;
     }
 
-    private function retrieveResults(string $query, string $placeholder, $value)
-    {
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindValue($placeholder, $value);
-        $stmt->execute();
-
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
-    }
 
     /**
      * Run the setters on the entity
