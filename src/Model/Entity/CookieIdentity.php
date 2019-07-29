@@ -16,7 +16,6 @@ use Skletter\Exception\InvalidCookie;
 
 class CookieIdentity implements Identity
 {
-
     /**
      * IdentityID
      * @var int $id
@@ -26,6 +25,10 @@ class CookieIdentity implements Identity
      * @var string $token
      */
     private $token;
+    /**
+     * @var \DateTimeImmutable $validTill
+     */
+    private $validTill;
 
     /**
      * CookieIdentity constructor.
@@ -63,4 +66,21 @@ class CookieIdentity implements Identity
     {
         return $this->id;
     }
+
+    /**
+     * @return \DateTimeImmutable
+     */
+    public function getValidTill(): \DateTimeImmutable
+    {
+        return $this->validTill;
+    }
+
+    /**
+     * @param \DateTimeImmutable $validTill
+     */
+    public function setValidTill(\DateTimeImmutable $validTill): void
+    {
+        $this->validTill = $validTill;
+    }
+
 }
