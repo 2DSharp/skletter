@@ -31,9 +31,9 @@ class Registration implements Controller
      */
     private $state;
     /**
-     * @var Service\LoginManager $loginManager
+     * @var Service\LoginManager $loginService
      */
-    private $loginManager;
+    private $loginService;
 
     public function __construct(Service\RegistrationManager $registrationManager,
                                 RegistrationState $state,
@@ -41,7 +41,7 @@ class Registration implements Controller
     {
         $this->manager = $registrationManager;
         $this->state = $state;
-        $this->loginManager = $loginManager;
+        $this->loginService = $loginManager;
     }
 
     /**
@@ -67,7 +67,8 @@ class Registration implements Controller
             $nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
 
-            $this->loginManager->login($identity);
+            $this->loginService->login($identity);
+            $this->loginService->createCookie($identity);
 
             $this->state->setStatus('success');
 

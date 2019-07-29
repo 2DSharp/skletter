@@ -31,7 +31,9 @@ class Login extends AbstractView
     private $twig;
     private $session;
 
-    public function __construct(LoginState $state, Environment $twig, Session $session)
+    public function __construct(LoginState $state,
+                                Environment $twig,
+                                Session $session)
     {
         $this->twig = $twig;
         $this->state = $state;
