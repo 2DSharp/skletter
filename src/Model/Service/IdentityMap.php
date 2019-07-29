@@ -20,6 +20,7 @@ use Phypes\Type\Email;
 use Phypes\Type\Password;
 use Phypes\Type\StringRequired;
 use Phypes\Type\Username;
+use Skletter\Component\SecureTokenManager;
 use Skletter\Component\UserFriendlyError;
 use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
@@ -28,6 +29,7 @@ use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
 use Skletter\Exception\InvalidIdentifier;
+use Skletter\Model\Entity\CookieIdentity;
 use Skletter\Model\Entity\NonceIdentity;
 use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Query\FindIdentityByEmail;
@@ -139,6 +141,21 @@ class IdentityMap
         } catch (EmptyRequiredValue $exception) {
             throw new ValidationError(UserFriendlyError::getError(UserFriendlyError::EMPTY_REQUIRED));
         }
+    }
+
+    /**
+     * @param Identity $cookie
+     * @param \DateTimeImmutable $validTill
+     * @return Identity|CookieIdentity
+     * @throws \Skletter\Exception\InvalidCookie
+     */
+    public function createCookieIdentity(Identity $cookie, \DateTimeImmutable $validTill)
+    {
+        $cookie = new CookieIdentity(SecureTokenManager::generate());
+        $cookie->setValidTill($validTill);
+        $cookie->setId($cookie->getId());
+
+        return $cookie;
     }
 
     /**
