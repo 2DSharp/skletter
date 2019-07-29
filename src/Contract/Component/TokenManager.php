@@ -14,7 +14,7 @@ use Skletter\Component\ValueObject\TokenKeyPair;
 
 interface TokenManager
 {
-    public static function generate(): TokenKeyPair;
+    public static function generate(): string;
 
-    public static function isTampered(TokenKeyPair $pair): bool;
+    public static function isTampered(string $token): bool;
 }

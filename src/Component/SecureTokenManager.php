@@ -18,25 +18,25 @@ class SecureTokenManager implements TokenManager
 {
     /**
      * Generates a secure random cookie string with hmac
-     * @return TokenKeyPair
+     * @return string
      */
-    public static function generate(): TokenKeyPair
+    public static function generate(): string
     {
         $token = openssl_random_pseudo_bytes(32);
-        $key = openssl_random_pseudo_bytes(16);
+        $key = base64_decode($_ENV('COOKIE_HMAC_KEY'));
         $token .= ':' . hash_hmac('sha256', $token, $key);
 
-        return new TokenKeyPair($token, $key);
+        return $token;
     }
 
     /**
      * Check the hmac to find any tampering
-     * @param TokenKeyPair $pair
+     * @param string $token
      * @return bool
      */
-    public static function isTampered(TokenKeyPair $pair): bool
+    public static function isTampered(string $token): bool
     {
-        list($tokenValue, $hmac) = explode(':', $pair->getToken(), 2);
-        return ($hmac != hash_hmac('sha256', $tokenValue, $pair->getKey()));
+        list($tokenValue, $hmac) = explode(':', $token, 2);
+        return ($hmac != hash_hmac('sha256', $tokenValue, base64_decode($_ENV('COOKIE_HMAC_KEY'))));
     }
 }
