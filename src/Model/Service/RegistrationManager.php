@@ -17,6 +17,7 @@ use Skletter\Exception\Domain\RegistrationFailure;
 use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
 use Skletter\Exception\PDOExceptionWrapper\UniqueConstraintViolation;
+use Skletter\Factory\IdentityFactory;
 use Skletter\Model\Entity\NonceIdentity;
 use Skletter\Model\Entity\Profile;
 use Skletter\Model\Entity\StandardIdentity;
@@ -39,9 +40,9 @@ class RegistrationManager
     private $profile;
     /**
      * Mapping service for identity look ups
-     * @var IdentityMap $identityMap
+     * @var IdentityMap $factory
      */
-    private $identityMap;
+    private $factory;
     /**
      * @var Transaction $transaction
      */
@@ -53,12 +54,12 @@ class RegistrationManager
 
     /**
      * IdentityManager constructor.
-     * @param IdentityMap $identityMap
+     * @param IdentityMap $factory
      * @param RegisterNewUser $transaction
      */
-    public function __construct(IdentityMap $identityMap, RegisterNewUser $transaction)
+    public function __construct(IdentityFactory $factory, RegisterNewUser $transaction)
     {
-        $this->identityMap = $identityMap;
+        $this->factory = $factory;
         $this->transaction = $transaction;
     }
 
@@ -74,8 +75,8 @@ class RegistrationManager
      */
     public function registerIdentity(string $email, string $username, string $password)
     {
-        $this->identity = $this->identityMap->createStandardIdentity($email, $username, $password);
-        $this->nonce = $this->identityMap->createNonceIdentity($this->getExpiryTime(), 32);
+        $this->identity = $this->factory->createStandardIdentity($email, $username, $password);
+        $this->nonce = $this->factory->createNonceIdentity($this->getExpiryTime(), 32);
     }
 
     public function getStandardIdentity(): StandardIdentity
@@ -126,6 +127,5 @@ class RegistrationManager
         } catch (UniqueConstraintViolation $e) {
             throw new RegistrationFailure($this->errorMap[$e->getOffendingField()]);
         }
-
     }
 }
