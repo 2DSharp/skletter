@@ -20,6 +20,7 @@ use Skletter\Exception\InvalidIdentifier;
 use Skletter\Model\Entity\StandardIdentity;
 
 /**
+ * TODO: Turn it into a StandardIdentity query
  * Class IdentityMap
  * @package Skletter\Model\Service
  */

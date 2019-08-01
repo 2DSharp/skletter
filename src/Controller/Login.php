@@ -35,19 +35,19 @@ class Login implements Controller
     private $loginManager;
     /**
      * Service to look up identity based on some identifier and build a valid instance
-     * @var IdentityMap $identityLookup
+     * @var IdentityMap $lookup
      */
-    private $identityLookup;
+    private $lookup;
     /**
      * Data Transfer Object to carry forward the login data to the view
      * @var LoginState
      */
     private $state;
 
-    public function __construct(LoginManager $loginManager, IdentityMap $identityLookup, LoginState $state)
+    public function __construct(LoginManager $loginManager, IdentityMap $lookup, LoginState $state)
     {
         $this->loginManager = $loginManager;
-        $this->identityLookup = $identityLookup;
+        $this->lookup = $lookup;
         $this->state = $state;
     }
 
@@ -64,7 +64,7 @@ class Login implements Controller
             /**
              * @var StandardIdentity $identity
              */
-            $identity = $this->identityLookup->getStandardIdentity($identifier);
+            $identity = $this->lookup->getStandardIdentity($identifier);
 
             // Set session data, log stuff, update db
             $this->loginManager->loginWithPassword($identity, $rawPassword);

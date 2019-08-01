@@ -25,10 +25,10 @@ $injector = require_once(__DIR__.'/Dependencies.php');
 
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 // TODO: Find a better name replacement for fallBackHandler
-$fallBackHandler = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
+$provider = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
 
-$exceptionHandler = function ($exception) use ($fallBackHandler, $request) {
-    $fallBackHandler->handle($exception, $request);
+$exceptionHandler = function ($exception) use ($provider, $request) {
+    $provider->handle($exception, $request);
 };
 
 set_exception_handler($exceptionHandler);
