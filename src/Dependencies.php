@@ -19,6 +19,7 @@ use Skletter\Factory\QueryObjectFactory;
 use Skletter\Model\DTO\LoginState;
 use Skletter\Model\DTO\RegistrationState;
 use Skletter\Model\Repository\IdentityRepository;
+use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -53,6 +54,7 @@ $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
 $injector->alias(IdentityRepositoryInterface::class, IdentityRepository::class);
 
 $injector->share(LoginState::class);
+$injector->share(LoginManager::class);
 $injector->share(RegistrationState::class);
 $injector->delegate(\PDO::class, buildPDO());
 

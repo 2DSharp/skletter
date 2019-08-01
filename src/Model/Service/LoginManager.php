@@ -20,6 +20,10 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class LoginManager
 {
     /**
+     * @var CookieIdentity $cookie
+     */
+    private $cookie;
+    /**
      * @var Session $session
      */
     private $session;
@@ -70,14 +74,23 @@ class LoginManager
      * Generate a cookie for remembering the user based on the cookie identity
      * @param Identity $identity
      * @param \DateTimeImmutable $validTill
-     * @return CookieIdentity
+     * @return void
      * @throws \Skletter\Exception\InvalidCookie
      */
-    public function remember(Identity $identity, \DateTimeImmutable $validTill): CookieIdentity
+    public function remember(Identity $identity, \DateTimeImmutable $validTill): void
     {
-        $cookie = $this->cookieManager->buildCookieIdentity($identity, $validTill);
-        $this->cookieManager->store($cookie);
-        return $cookie;
+        $this->cookie = $this->cookieManager->buildCookieIdentity($identity, $validTill);
+        $this->cookieManager->store($this->cookie);
+    }
+
+    public function isCookieSet(): bool
+    {
+        return $this->cookie !== null;
+    }
+
+    public function getCookieIdentity(): CookieIdentity
+    {
+        return $this->cookie;
     }
 
     public function isLoggedIn(): bool
