@@ -10,10 +10,10 @@
 
 namespace Skletter\Model\Service;
 
+use Skletter\Contract\Entity\Identity;
 use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Model\Entity\CookieIdentity;
 use Skletter\Model\Entity\StandardIdentity;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -23,14 +23,21 @@ class LoginManager
      * @var Session $session
      */
     private $session;
+    /**
+     * @var CookieManager $cookieManager
+     */
+    private $cookieManager;
 
     /**
      * LoginManager constructor.
      * @param SessionInterface $session
+     * @param CookieManager $cookieManager
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session,
+                                CookieManager $cookieManager)
     {
         $this->session = $session;
+        $this->cookieManager = $cookieManager;
     }
 
     /**
@@ -61,12 +68,16 @@ class LoginManager
 
     /**
      * Generate a cookie for remembering the user based on the cookie identity
-     * @param CookieIdentity $identity
-     * @return Cookie
+     * @param Identity $identity
+     * @param \DateTimeImmutable $validTill
+     * @return CookieIdentity
+     * @throws \Skletter\Exception\InvalidCookie
      */
-    public function createCookie(CookieIdentity $identity): Cookie
+    public function remember(Identity $identity, \DateTimeImmutable $validTill): CookieIdentity
     {
-        return Cookie::create('uid', $identity->getToken(), $identity->getValidTill());
+        $cookie = $this->cookieManager->buildCookieIdentity($identity, $validTill);
+        $this->cookieManager->store($cookie);
+        return $cookie;
     }
 
     public function isLoggedIn(): bool
