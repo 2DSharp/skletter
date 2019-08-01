@@ -54,7 +54,7 @@ class RegistrationManager
 
     /**
      * IdentityManager constructor.
-     * @param IdentityMap $factory
+     * @param IdentityFactory $factory
      * @param RegisterNewUser $transaction
      */
     public function __construct(IdentityFactory $factory, RegisterNewUser $transaction)
