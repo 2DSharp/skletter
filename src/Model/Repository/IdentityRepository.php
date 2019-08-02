@@ -56,7 +56,7 @@ class IdentityRepository implements IdentityRepositoryInterface
         try {
             /** @var Entity\StandardIdentity $identity */
             $mapper = $this->buildMapperFromIdentity($identity);
-            $mapper->fetch($identity, ['ID', 'HashedPassword']);
+            $mapper->fetch($identity, ['ID', 'Email', 'Username', 'Status', 'HashedPassword']);
         } catch (RecordNotFound $e) {
             throw new UserDoesNotExistException();
         }
