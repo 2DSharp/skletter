@@ -16,8 +16,8 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class CookieFactory
 {
-    public static function createFromCookieIdentity(CookieIdentity $identity): Cookie
+    public static function createFromCookieIdentity(CookieIdentity $identity, string $name): Cookie
     {
-        return Cookie::create($identity->getToken(), $identity->getValidTill());
+        return Cookie::create($name, $identity->getToken(), $identity->getValidTill());
     }
 }

@@ -54,11 +54,11 @@ class Login extends AbstractView
     public function attemptLogin(Request $request): Response
     {
         if ($this->loginManager->isLoggedIn()) {
-
-            $cookie = CookieFactory::createFromCookieIdentity($this->loginManager->getCookieIdentity());
+            $cookie = CookieFactory::createFromCookieIdentity($this->loginManager->getCookieIdentity(), 'uid');
             $response = $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url'] . '/success');
-
             $response->headers->setCookie($cookie);
+
+            return $response;
         }
         return $this->sendFailureResponse($request, $this->twig, ['status' => 'failed',
             'error' => $this->state->getError()], 'pages/login_prompt.twig');
