@@ -23,7 +23,7 @@ class SecureTokenManager implements TokenManager
     public static function generate(): string
     {
         $token = openssl_random_pseudo_bytes(32);
-        $key = base64_decode($_ENV('COOKIE_HMAC_KEY'));
+        $key = base64_decode($_ENV['COOKIE_HMAC_KEY']);
         $token .= ':' . hash_hmac('sha256', $token, $key);
 
         return $token;
@@ -37,6 +37,6 @@ class SecureTokenManager implements TokenManager
     public static function isTampered(string $token): bool
     {
         list($tokenValue, $hmac) = explode(':', $token, 2);
-        return ($hmac != hash_hmac('sha256', $tokenValue, base64_decode($_ENV('COOKIE_HMAC_KEY'))));
+        return ($hmac != hash_hmac('sha256', $tokenValue, base64_decode($_ENV['COOKIE_HMAC_KEY'])));
     }
 }
