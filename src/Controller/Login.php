@@ -55,6 +55,8 @@ class Login implements Controller
      * @param Request $request
      * @request_type POST
      * @throws \Phypes\Exception\InvalidRule
+     * @throws \Skletter\Exception\InvalidCookie
+     * @throws \Exception
      */
     public function attemptLogin(Request $request)
     {
@@ -68,6 +70,7 @@ class Login implements Controller
 
             // Set session data, log stuff, update db
             $this->loginManager->loginWithPassword($identity, $rawPassword);
+            $this->loginManager->remember($identity, $this->getExpiryDate());
             $this->state->setSuccess(true);
 
         } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
@@ -78,7 +81,16 @@ class Login implements Controller
         } catch (EmptyRequiredValue $e) {
             $this->state->setError('You must fill in the all the fields');
         }
+    }
 
+    /**
+     * @return \DateTimeImmutable
+     * @throws \Exception
+     */
+    private function getExpiryDate(): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        return $now->add(new \DateInterval("P1M"));
     }
 
     public function handleRequest(Request $request, string $method): void
