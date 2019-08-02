@@ -31,6 +31,10 @@ class LoginManager
      * @var CookieManager $cookieManager
      */
     private $cookieManager;
+    /**
+     * @var bool $isLoggedIn
+     */
+    private $isLoggedIn = true;
 
     /**
      * LoginManager constructor.
@@ -67,6 +71,7 @@ class LoginManager
         $this->session->set('email', $identity->getEmail());
         $this->session->set('name', $identity->getUsername());
         $this->session->set('status', $identity->getStatus());
+        $this->isLoggedIn = true;
         // Log stuff here
     }
 
@@ -95,6 +100,9 @@ class LoginManager
 
     public function isLoggedIn(): bool
     {
+        if ($this->isLoggedIn)
+            return true;
+
         $id = $this->session->get('id', 'none');
         if ($id != 'none') {
 

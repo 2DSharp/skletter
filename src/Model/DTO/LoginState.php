@@ -11,42 +11,18 @@
 namespace Skletter\Model\DTO;
 
 
-use Skletter\Contract\Entity\Identity;
-
 class LoginState
 {
-    /**
-     * User Identity
-     * @var Identity $identity
-     */
-    private $identity;
     /**
      * Login errors
      * @var string $error
      */
     private $error;
     /**
-     * LoggedIn status
-     * @var bool $isLoggedIn
+     * Status
+     * @var bool $success
      */
-    private $isLoggedIn = false;
-
-    /**
-     * @return Identity
-     */
-    public function getIdentity(): Identity
-    {
-        return $this->identity;
-    }
-
-    /**
-     * @param Identity $identity
-     */
-    public function setIdentity(Identity $identity): void
-    {
-        $this->setIsLoggedIn(true);
-        $this->identity = $identity;
-    }
+    private $success = false;
 
     /**
      * @return string
@@ -67,18 +43,16 @@ class LoginState
     /**
      * @return bool
      */
-    public function isLoggedIn(): bool
+    public function isSuccessful(): bool
     {
-        return $this->isLoggedIn;
+        return $this->success;
     }
 
     /**
-     * @param bool $isLoggedIn
+     * @param bool $success
      */
-    private function setIsLoggedIn(bool $isLoggedIn): void
+    public function setSuccess(bool $success): void
     {
-        $this->isLoggedIn = $isLoggedIn;
+        $this->success = $success;
     }
-
-
 }
