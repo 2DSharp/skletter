@@ -68,8 +68,9 @@ class Registration implements Controller
             $identity = $this->manager->getStandardIdentity();
 
             $this->loginService->login($identity);
-            $this->loginService->createCookie($identity);
 
+            // remember the user
+            $this->loginService->remember($identity, new \DateTimeImmutable('PT2H'));
             $this->state->setStatus('success');
 
         } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {
