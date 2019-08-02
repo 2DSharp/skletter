@@ -12,10 +12,11 @@ namespace Skletter\View;
 
 
 use Greentea\Exception\TemplatingException;
+use Skletter\Factory\CookieFactory;
 use Skletter\Model\DTO\LoginState;
+use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Twig\Environment;
 
 class Login extends AbstractView
@@ -29,15 +30,18 @@ class Login extends AbstractView
      * @var Environment $twig
      */
     private $twig;
-    private $session;
+    /**
+     * @var LoginManager $loginManager
+     */
+    private $loginManager;
 
     public function __construct(LoginState $state,
                                 Environment $twig,
-                                Session $session)
+                                LoginManager $loginManager)
     {
         $this->twig = $twig;
         $this->state = $state;
-        $this->session = $session;
+        $this->loginManager = $loginManager;
     }
 
 
@@ -49,8 +53,12 @@ class Login extends AbstractView
      */
     public function attemptLogin(Request $request): Response
     {
-        if ($this->state->isLoggedIn()) {
-            return $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url'] . '/success');
+        if ($this->loginManager->isLoggedIn()) {
+
+            $cookie = CookieFactory::createFromCookieIdentity($this->loginManager->getCookieIdentity());
+            $response = $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url'] . '/success');
+
+            $response->headers->setCookie($cookie);
         }
         return $this->sendFailureResponse($request, $this->twig, ['status' => 'failed',
             'error' => $this->state->getError()], 'pages/login_prompt.twig');
