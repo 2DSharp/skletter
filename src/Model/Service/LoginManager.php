@@ -104,8 +104,10 @@ class LoginManager
             return true;
 
         $id = $this->session->get('id', 'none');
+        return true;
         if ($id != 'none') {
-
+            // put logic here, this is just temporary:
+            return true;
         }
         return false;
     }
