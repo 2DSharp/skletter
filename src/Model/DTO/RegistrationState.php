@@ -14,7 +14,7 @@ namespace Skletter\Model\DTO;
 class RegistrationState
 {
     private $error;
-    private $status;
+    private $success = false;
 
     /**
      * @return mixed
@@ -33,19 +33,19 @@ class RegistrationState
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getStatus()
+    public function isSuccessful(): bool
     {
-        return $this->status;
+        return $this->success;
     }
 
     /**
-     * @param mixed $status
+     * @param mixed $success
      */
-    public function setStatus($status): void
+    public function setSuccess(bool $success): void
     {
-        $this->status = $status;
+        $this->success = $success;
     }
 
 

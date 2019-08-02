@@ -41,7 +41,7 @@ class Registration extends AbstractView
      */
     public function registerUser(Request $request): Response
     {
-        if ($this->state->getStatus() == 'success') {
+        if ($this->state->isSuccessful()) {
             return $this->sendSuccessResponse($request,
                 ['status' => 'success', 'result' => $this->templating->render('pieces/contact_verification_prompt.twig',
                     ['email' => $this->session->get('email')])],
