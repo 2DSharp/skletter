@@ -70,7 +70,7 @@ class Registration implements Controller
             $this->loginService->login($identity);
 
             // remember the user
-            $this->loginService->remember($identity, new \DateTimeImmutable('PT2H'));
+            $this->loginService->remember($identity, $this->getExpiryDate());
             $this->state->setSuccess(true);
 
         } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {
@@ -78,6 +78,15 @@ class Registration implements Controller
         }
     }
 
+    /**
+     * @return \DateTimeImmutable
+     * @throws \Exception
+     */
+    private function getExpiryDate(): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        return $now->add(new \DateInterval("P2D"));
+    }
     public function handleRequest(Request $request, string $method): void
     {
         $this->{$method}($request);
