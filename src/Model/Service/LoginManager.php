@@ -34,7 +34,7 @@ class LoginManager
     /**
      * @var bool $isLoggedIn
      */
-    private $isLoggedIn = true;
+    private $isLoggedIn = false;
 
     /**
      * LoginManager constructor.
@@ -65,7 +65,7 @@ class LoginManager
      * Sets the login state, by updating db and logging data
      * @param StandardIdentity $identity
      */
-    public function login(StandardIdentity $identity)
+    private function login(StandardIdentity $identity)
     {
         $this->session->set('id', $identity->getId());
         $this->session->set('email', $identity->getEmail());
@@ -104,11 +104,22 @@ class LoginManager
             return true;
 
         $id = $this->session->get('id', 'none');
-        return true;
+
         if ($id != 'none') {
             // put logic here, this is just temporary:
             return true;
         }
         return false;
+    }
+
+    public function logout()
+    {
+        $this->isLoggedIn = false;
+        $this->session->set('id', 'none');
+    }
+
+    public function loginWithCookie(CookieIdentity $identity)
+    {
+        //$this->login($identity);
     }
 }

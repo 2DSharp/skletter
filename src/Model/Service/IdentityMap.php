@@ -17,6 +17,7 @@ use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidIdentifier;
+use Skletter\Model\Entity\CookieIdentity;
 use Skletter\Model\Entity\StandardIdentity;
 
 /**
@@ -41,15 +42,6 @@ class IdentityMap
     }
 
     /**
-     * @param StandardIdentity $identity
-     * @throws UserDoesNotExistException
-     */
-    private function populateStandardIdentity(StandardIdentity $identity)
-    {
-        $this->repository->load($identity);
-    }
-
-    /**
      * Find and create a standard identity based on an identifier
      * @param $identifier
      * @return Identity
@@ -63,7 +55,7 @@ class IdentityMap
         try {
             $identity = new StandardIdentity();
             $identity->setIdentifier($identifier);
-            $this->populateStandardIdentity($identity);
+            $this->repository->load($identity);
 
             return $identity;
         } catch (InvalidValue $e) {
@@ -71,4 +63,15 @@ class IdentityMap
         }
     }
 
+    /**
+     * @param string $token
+     * @return CookieIdentity
+     * @throws UserDoesNotExistException
+     * @throws \Skletter\Exception\InvalidCookie
+     */
+    public function getCookieIdentity(string $token): CookieIdentity
+    {
+        $identity = new CookieIdentity($token);
+        $this->repository->load($identity);
+    }
 }
