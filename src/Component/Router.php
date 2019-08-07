@@ -82,7 +82,10 @@ class Router
                 $r->addRoute($route[0], $route[1], $route[2]);
             }
         };
-        $dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback);
+        $dispatcher = \FastRoute\cachedDispatcher($routeDefinitionCallback,
+            [
+                'cacheFile' => __DIR__ . '/../../app/cache/route.cache',
+            ]);
         $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
 
         return $routeInfo;
