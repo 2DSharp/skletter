@@ -12,16 +12,19 @@ namespace Skletter\View;
 
 
 use Greentea\Exception\TemplatingException;
+use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Home extends AbstractView
 {
     private $templating;
+    private $loginManager;
 
-    public function __construct(\Twig\Environment $twig)
+    public function __construct(\Twig\Environment $twig, LoginManager $loginManager)
     {
         $this->templating = $twig;
+        $this->loginManager = $loginManager;
     }
 
     /**
@@ -29,11 +32,36 @@ class Home extends AbstractView
      * @return Response
      * @throws \Twig\Error\Error
      */
-    private function main(Request $request): Response
+    private function showLoggedOutHome(Request $request): Response
     {
+
         $html = $this->createHTMLFromTemplate($this->templating, 'pages/home.twig',
             ['title' => 'Skletter - Home']);
         return $this->respond($request, $html);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\Error
+     */
+    private function showLoggedInHome(Request $request)
+    {
+        $html = $this->createHTMLFromTemplate($this->templating, 'pages/logged_in_home.twig');
+        return $this->respond($request, $html);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Twig\Error\Error
+     */
+    public function main(Request $request): Response
+    {
+        if ($this->loginManager->isLoggedIn())
+            // Need to manage unauthorized post requests sent to this
+            return $this->showLoggedInHome($request);
+        return $this->showLoggedOutHome($request);
     }
 
     /**
@@ -50,4 +78,5 @@ class Home extends AbstractView
             throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
 }
