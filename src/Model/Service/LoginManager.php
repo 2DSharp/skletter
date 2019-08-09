@@ -65,7 +65,7 @@ class LoginManager
      * Sets the login state, by updating db and logging data
      * @param StandardIdentity $identity
      */
-    private function login(StandardIdentity $identity)
+    public function login(StandardIdentity $identity)
     {
         $this->session->set('id', $identity->getId());
         $this->session->set('email', $identity->getEmail());
