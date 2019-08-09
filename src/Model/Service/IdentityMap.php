@@ -13,7 +13,6 @@ namespace Skletter\Model\Service;
 use Phypes\Exception\EmptyRequiredValue;
 use Phypes\Exception\InvalidRule;
 use Phypes\Exception\InvalidValue;
-use Skletter\Contract\Entity\Identity;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidIdentifier;
@@ -41,27 +40,41 @@ class IdentityMap
         $this->repository = $repository;
     }
 
+
     /**
      * Find and create a standard identity based on an identifier
      * @param $identifier
-     * @return Identity
+     * @return StandardIdentity
      * @throws InvalidIdentifier
      * @throws UserDoesNotExistException
      * @throws EmptyRequiredValue
      * @throws InvalidRule
      */
-    public function getStandardIdentity($identifier): Identity
+    public function getStandardIdentityFromIdentifier($identifier): StandardIdentity
     {
         try {
             $identity = new StandardIdentity();
             $identity->setIdentifier($identifier);
             $this->repository->load($identity);
-
             return $identity;
         } catch (InvalidValue $e) {
             throw new InvalidIdentifier();
         }
     }
+
+    /**
+     * @param $id
+     * @return StandardIdentity
+     * @throws UserDoesNotExistException
+     */
+    public function getStandardIdentity($id): StandardIdentity
+    {
+        $identity = new StandardIdentity();
+        $identity->setId($id);
+        $this->repository->load($identity);
+        return $identity;
+    }
+
 
     /**
      * @param string $token
