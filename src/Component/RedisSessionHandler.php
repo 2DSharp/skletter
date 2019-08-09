@@ -46,7 +46,7 @@ class RedisSessionHandler implements SessionInterface
             bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
             bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
             bin2hex(random_bytes(6))
-        ]);
+            ]) . md5($_SERVER['REMOTE_ADDR'] . mt_rand());
     }
 
     /**
@@ -61,7 +61,7 @@ class RedisSessionHandler implements SessionInterface
         try {
             if (!isset($_COOKIE[$this->name])) {
                 $token = $this->generateRandomToken();
-                setcookie($this->name, $token);
+                setcookie($this->name, $token, 0);
             }
             $this->started = true;
             return true;
@@ -178,11 +178,11 @@ class RedisSessionHandler implements SessionInterface
      * @param mixed $default The default value if not found
      *
      * @return mixed
+     * @throws \Exception
      */
     public function get($name, $default = null)
     {
         $value = $this->predis->hmget($this->getId(), [$name]);
-        //var_dump($value);
         if (empty($value[0]))
             return $default;
 
