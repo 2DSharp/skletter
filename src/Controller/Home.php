@@ -33,13 +33,14 @@ class Home implements Controller
         if (!$this->loginManager->isLoggedIn()) {
             $token = $request->cookies->get('uid', 'none');
             // check for tampering before hitting the DB
+
             if ($token == 'none')
                 return;
+
             if (SecureTokenManager::isTampered($token))
                 $this->loginManager->logout();
 
-            $identity = $this->map->getCookieIdentity($token);
-            $this->loginManager->loginWithCookie($identity);
+            $this->loginManager->loginWithCookie($token);
         }
 
     }
