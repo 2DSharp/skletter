@@ -27,7 +27,8 @@ class RedisSessionHandler implements SessionInterface
     /**
      * @var bool $started
      */
-    private $started;
+    private $started = false;
+    private $token;
 
     public function __construct(Client $predis)
     {
@@ -60,8 +61,8 @@ class RedisSessionHandler implements SessionInterface
     {
         try {
             if (!isset($_COOKIE[$this->name])) {
-                $token = $this->generateRandomToken();
-                setcookie($this->name, $token, 0);
+                $this->token = $this->generateRandomToken();
+                setcookie($this->name, $this->token, 0);
             }
             $this->started = true;
             return true;
@@ -78,8 +79,9 @@ class RedisSessionHandler implements SessionInterface
      */
     public function getId()
     {
-        $this->start();
-        return $_COOKIE[$this->name];
+        if (isset($_COOKIE[$this->name]))
+            return $_COOKIE[$this->name];
+
     }
 
     /**
@@ -165,6 +167,7 @@ class RedisSessionHandler implements SessionInterface
      * @param string $name The attribute name
      *
      * @return bool true if the attribute is defined, false otherwise
+     * @throws \Exception
      */
     public function has($name)
     {
@@ -194,6 +197,7 @@ class RedisSessionHandler implements SessionInterface
      *
      * @param string $name
      * @param mixed $value
+     * @throws \Exception
      */
     public function set($name, $value)
     {
@@ -226,6 +230,7 @@ class RedisSessionHandler implements SessionInterface
      * @param string $name
      *
      * @return mixed The removed value or null when it does not exist
+     * @throws \Exception
      */
     public function remove($name)
     {
@@ -252,6 +257,7 @@ class RedisSessionHandler implements SessionInterface
 
     /**
      * Registers a SessionBagInterface with the session.
+     * @param SessionBagInterface $bag
      */
     public function registerBag(SessionBagInterface $bag)
     {
