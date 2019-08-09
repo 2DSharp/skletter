@@ -12,6 +12,7 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
+use Phypes\Type\Password;
 use Skletter\Exception\Domain\RegistrationFailure;
 use Skletter\Exception\Domain\ValidationError;
 use Skletter\Exception\IdentifierExistsException;
@@ -58,6 +59,8 @@ class Registration implements Controller
                 $request->request->get('username'),
                 $request->request->get('password'));
 
+            $password = $request->request->get('password');
+
             $this->manager->registerProfile($request->request->get('name'),
                 'IND',
                 new \DateTimeImmutable());
@@ -67,7 +70,7 @@ class Registration implements Controller
             $nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
 
-            $this->loginService->login($identity);
+            $this->loginService->loginWithPassword($identity, new Password($password));
 
             // remember the user
             $this->loginService->remember($identity, $this->getExpiryDate());

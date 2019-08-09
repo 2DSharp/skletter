@@ -10,6 +10,7 @@
 
 namespace Skletter\Model\Service;
 
+use Phypes\Type\Password;
 use Skletter\Contract\Entity\Identity;
 use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Model\Entity\CookieIdentity;
@@ -50,10 +51,10 @@ class LoginManager
 
     /**
      * @param StandardIdentity $identity
-     * @param string $password
+     * @param Password $password
      * @throws PasswordMismatch
      */
-    public function loginWithPassword(StandardIdentity $identity, string $password)
+    public function loginWithPassword(StandardIdentity $identity, Password $password)
     {
         if (password_verify($password, $identity->getHashedPassword()))
             $this->login($identity);
@@ -65,7 +66,7 @@ class LoginManager
      * Sets the login state, by updating db and logging data
      * @param StandardIdentity $identity
      */
-    public function login(StandardIdentity $identity)
+    private function login(StandardIdentity $identity)
     {
         $this->session->set('id', $identity->getId());
         $this->session->set('email', $identity->getEmail());
