@@ -21,7 +21,6 @@ use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidIdentifier;
 use Skletter\Model\DTO\LoginState;
-use Skletter\Model\Entity\StandardIdentity;
 use Skletter\Model\Service\IdentityMap;
 use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,14 +62,10 @@ class Login implements Controller
         try {
             $identifier = $request->request->get('identity');
             $rawPassword = new Password(new StringRequired($request->request->get('password')));
-            /**
-             * @var StandardIdentity $identity
-             */
-            $identity = $this->lookup->getStandardIdentity($identifier);
+
 
             // Set session data, log stuff, update db
-            $this->loginManager->loginWithPassword($identity, $rawPassword);
-            $this->loginManager->remember($identity, $this->getExpiryDate());
+            $this->loginManager->loginWithPassword($identifier, $rawPassword);
             $this->state->setSuccess(true);
 
         } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
@@ -81,16 +76,6 @@ class Login implements Controller
         } catch (EmptyRequiredValue $e) {
             $this->state->setError('You must fill in the all the fields');
         }
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     * @throws \Exception
-     */
-    private function getExpiryDate(): \DateTimeImmutable
-    {
-        $now = new \DateTimeImmutable();
-        return $now->add(new \DateInterval("P1M"));
     }
 
     public function handleRequest(Request $request, string $method): void
