@@ -21,7 +21,6 @@ use Skletter\Exception\Domain\PasswordMismatch;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidIdentifier;
 use Skletter\Model\DTO\LoginState;
-use Skletter\Model\Service\IdentityMap;
 use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,21 +31,16 @@ class Login implements Controller
      * @var LoginManager $loginManager
      */
     private $loginManager;
-    /**
-     * Service to look up identity based on some identifier and build a valid instance
-     * @var IdentityMap $lookup
-     */
-    private $lookup;
+
     /**
      * Data Transfer Object to carry forward the login data to the view
      * @var LoginState
      */
     private $state;
 
-    public function __construct(LoginManager $loginManager, IdentityMap $lookup, LoginState $state)
+    public function __construct(LoginManager $loginManager, LoginState $state)
     {
         $this->loginManager = $loginManager;
-        $this->lookup = $lookup;
         $this->state = $state;
     }
 
@@ -62,8 +56,6 @@ class Login implements Controller
         try {
             $identifier = $request->request->get('identity');
             $rawPassword = new Password(new StringRequired($request->request->get('password')));
-
-
             // Set session data, log stuff, update db
             $this->loginManager->loginWithPassword($identifier, $rawPassword);
             $this->state->setSuccess(true);
