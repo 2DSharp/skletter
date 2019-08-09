@@ -23,6 +23,9 @@ $dotenv->load();
  */
 $injector = require_once(__DIR__.'/Dependencies.php');
 
+$session = $injector->make(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
+$session->start();
+
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 // TODO: Find a better name replacement for fallBackHandler
 $provider = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
