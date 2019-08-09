@@ -79,7 +79,7 @@ class LoginManager
         /**
          * @var StandardIdentity $identity
          */
-        $identity = $this->map->getStandardIdentity($identifier);
+        $identity = $this->map->getStandardIdentityFromIdentifier($identifier);
         if (password_verify($password, $identity->getHashedPassword())) {
             $this->login($identity);
             $this->remember($identity, $this->getExpiryDate());
@@ -145,6 +145,11 @@ class LoginManager
         $this->session->set('id', 'none');
     }
 
+    /**
+     * @param string $token
+     * @throws \Skletter\Exception\Domain\UserDoesNotExistException
+     * @throws \Skletter\Exception\InvalidCookie
+     */
     public function loginWithCookie(string $token)
     {
         $cookie = $this->map->getCookieIdentity($token);
