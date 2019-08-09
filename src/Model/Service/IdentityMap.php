@@ -73,5 +73,6 @@ class IdentityMap
     {
         $identity = new CookieIdentity($token);
         $this->repository->load($identity);
+        return $identity;
     }
 }
