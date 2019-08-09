@@ -36,17 +36,21 @@ class LoginManager
      * @var bool $isLoggedIn
      */
     private $isLoggedIn = false;
+    private $map;
 
     /**
      * LoginManager constructor.
      * @param SessionInterface $session
      * @param CookieManager $cookieManager
+     * @param IdentityMap $map
      */
     public function __construct(SessionInterface $session,
-                                CookieManager $cookieManager)
+                                CookieManager $cookieManager,
+                                IdentityMap $map)
     {
         $this->session = $session;
         $this->cookieManager = $cookieManager;
+        $this->map = $map;
     }
 
     /**
@@ -119,8 +123,10 @@ class LoginManager
         $this->session->set('id', 'none');
     }
 
-    public function loginWithCookie(CookieIdentity $identity)
+    public function loginWithCookie(string $token)
     {
-        //$this->login($identity);
+        $cookie = $this->map->getCookieIdentity($token);
+        $identity = $this->map->getStandardIdentity($cookie->getId());
+        $this->login($identity);
     }
 }
