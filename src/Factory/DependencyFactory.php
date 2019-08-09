@@ -11,6 +11,7 @@
 namespace Skletter\Factory;
 
 use PDO;
+use Predis\Client;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +48,17 @@ function buildPDO(): callable
 
         return $obj;
     };
+}
 
+function buildPredis(): callable
+{
+    return function (): Client {
+        return new Client(array(
+            "scheme" => "tcp",
+            "host" => "localhost",
+            "port" => 6379,
+            "persistent" => "1"));
+    };
 }
 function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
 {
