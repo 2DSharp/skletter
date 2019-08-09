@@ -54,14 +54,36 @@ class LoginManager
     }
 
     /**
-     * @param StandardIdentity $identity
+     * @return \DateTimeImmutable
+     * @throws \Exception
+     */
+    private function getExpiryDate(): \DateTimeImmutable
+    {
+        $now = new \DateTimeImmutable();
+        return $now->add(new \DateInterval("P1M"));
+    }
+
+    /**
+     * @param string $identifier
      * @param Password $password
      * @throws PasswordMismatch
+     * @throws \Phypes\Exception\EmptyRequiredValue
+     * @throws \Phypes\Exception\InvalidRule
+     * @throws \Skletter\Exception\Domain\UserDoesNotExistException
+     * @throws \Skletter\Exception\InvalidIdentifier
+     * @throws \Skletter\Exception\InvalidCookie
+     * @throws \Exception
      */
-    public function loginWithPassword(StandardIdentity $identity, Password $password)
+    public function loginWithPassword(string $identifier, Password $password)
     {
-        if (password_verify($password, $identity->getHashedPassword()))
+        /**
+         * @var StandardIdentity $identity
+         */
+        $identity = $this->map->getStandardIdentity($identifier);
+        if (password_verify($password, $identity->getHashedPassword())) {
             $this->login($identity);
+            $this->remember($identity, $this->getExpiryDate());
+        }
         else
             throw new PasswordMismatch('The password you entered is invalid');
     }
