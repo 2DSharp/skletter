@@ -15,16 +15,28 @@ use Greentea\Exception\TemplatingException;
 use Skletter\Model\Service\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Home extends AbstractView
 {
     private $templating;
     private $loginManager;
+    private $session;
 
-    public function __construct(\Twig\Environment $twig, LoginManager $loginManager)
+    private $pageMap = [
+        'Temp' => 'registration.twig'
+    ];
+
+    private $paramMap = [
+
+    ];
+
+
+    public function __construct(\Twig\Environment $twig, LoginManager $loginManager, SessionInterface $session)
     {
         $this->templating = $twig;
         $this->loginManager = $loginManager;
+        $this->session = $session;
     }
 
     /**
@@ -40,14 +52,29 @@ class Home extends AbstractView
         return $this->respond($request, $html);
     }
 
+
+    private function getParams(string $status): array
+    {
+        switch ($status) {
+            case 'Temp':
+                return [
+                    'title' => 'Confirm your email - Skletter',
+                    'status' => 'Temp',
+                    'email' => $this->session->get('email')
+                ];
+        }
+    }
     /**
+     * @param string $status
      * @param Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
-    private function showLoggedInHome(Request $request)
+    private function showLoggedInHome(string $status, Request $request)
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'pages/logged_in_home.twig');
+        $html = $this->createHTMLFromTemplate($this->templating,
+            'pages/' . $this->pageMap[$status],
+            $this->getParams($status));
         return $this->respond($request, $html);
     }
 
@@ -58,9 +85,13 @@ class Home extends AbstractView
      */
     public function main(Request $request): Response
     {
-        if ($this->loginManager->isLoggedIn())
+        //TODO: The view should smartly figure out which page to land the user in, \
+        //TODO logged in but confirmation page etc.
+        if ($this->loginManager->isLoggedIn()) {
+
+            return $this->showLoggedInHome($this->session->get('status'), $request);
+        }
             // Need to manage unauthorized post requests sent to this
-            return $this->showLoggedInHome($request);
         return $this->showLoggedOutHome($request);
     }
 
