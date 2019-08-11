@@ -85,10 +85,7 @@ class Home extends AbstractView
      */
     public function main(Request $request): Response
     {
-        //TODO: The view should smartly figure out which page to land the user in, \
-        //TODO logged in but confirmation page etc.
         if ($this->loginManager->isLoggedIn()) {
-
             return $this->showLoggedInHome($this->session->get('status'), $request);
         }
             // Need to manage unauthorized post requests sent to this
