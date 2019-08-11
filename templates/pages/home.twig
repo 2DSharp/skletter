@@ -85,7 +85,7 @@
         axios.post('{{ server.base_url }}/login', form)
             .then(function (response) {
                 if (response.data['status'] === 'success') {
-                    window.location = '{{ server.base_url }}/success';
+                    window.location = '{{ server.base_url }}';
                 }
                 else {
                     loader.style.display = "none";
