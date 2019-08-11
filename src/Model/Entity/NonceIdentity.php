@@ -116,7 +116,7 @@ class NonceIdentity implements Identity
     private function generatePin(): string
     {
         do {
-            $num = sprintf('%06d', mt_rand(100, 999989));
+            $num = sprintf('%06d', mt_rand(100000, 999989));
         } while (preg_match("~^(\d)\\1\\1|(\d)\\2\\2$|000~", $num));
 
         return $num;
