@@ -38,7 +38,7 @@ class CookieIdentity implements Identity
     public function __construct(string $token)
     {
         if (SecureTokenManager::isTampered($token)) {
-            throw new InvalidCookie();
+            throw new InvalidCookie('The cookie is tampered. Possible attack.');
         }
         $this->token = $token;
     }
