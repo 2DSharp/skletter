@@ -64,8 +64,13 @@ class RedisSessionHandler implements SessionInterface
                 $this->token = $this->generateRandomToken();
                 setcookie($this->name, $this->token, 0);
             }
+
+            if (!isset($_COOKIE[$this->name]))
+                $_COOKIE[$this->name] = $this->token;
+
             $this->started = true;
             return true;
+
         } catch (\Exception $e) {
             throw new \RuntimeException('Failed to generate secure token');
         }
@@ -79,9 +84,10 @@ class RedisSessionHandler implements SessionInterface
      */
     public function getId()
     {
-        if (isset($_COOKIE[$this->name]))
-            return $_COOKIE[$this->name];
+        if (!$this->started)
+            $this->start();
 
+        return $_COOKIE[$this->name];
     }
 
     /**
