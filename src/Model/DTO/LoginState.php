@@ -15,11 +15,13 @@ class LoginState
 {
     /**
      * Login errors
+     *
      * @var string $error
      */
     private $error;
     /**
      * Status
+     *
      * @var bool $success
      */
     private $success = false;

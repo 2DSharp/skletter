@@ -16,12 +16,15 @@ use Skletter\Model\Entity\StandardIdentity;
 
 class FindIdentityByUsername extends StandardIdentityLoader implements QueryObject
 {
-    private $query = /** @lang MySQL */
+    private $query = /**
+     * @lang MySQL
+     */
         "SELECT 1 FROM Identity WHERE Username = :username";
 
     /**
      * Does the username in the entity already exist in the db?
-     * @param StandardIdentity $identity
+     *
+     * @param  StandardIdentity $identity
      * @return bool
      */
     public function find($identity): bool

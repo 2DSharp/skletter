@@ -35,8 +35,9 @@ class FallbackExceptionHandler
 
     /**
      * Store an exception into a log file and/or DB/ELK and/or Syslog
-     * @param \Throwable $exception
-     * @param Request $request
+     *
+     * @param  \Throwable $exception
+     * @param  Request $request
      * @throws \Throwable
      */
     protected function storeToLog(\Throwable $exception, Request $request): void
@@ -44,15 +45,18 @@ class FallbackExceptionHandler
         $log = new Logger('Unhandled Exception');
         $log->pushHandler(new StreamHandler($this->logConfig['LOG_FILE'], Logger::CRITICAL));
         // TODO: Push a handler to DB logs
-        $log->critical($exception->getMessage(),
+        $log->critical(
+            $exception->getMessage(),
             array(
                 'Stack Trace' => $exception->getTraceAsString(),
                 'Request path' => $request->getPathInfo()
-            ));
+            )
+        );
     }
 
     /**
      * The file/DB logger failed, alert the sysadmins!
+     *
      * @param \Throwable $exception
      * @param Request $request
      */
@@ -63,15 +67,18 @@ class FallbackExceptionHandler
         $log = new Logger('Logger Failure');
         //$log->pushHandler(new \Monolog\Handler\ErrorLogHandler('Error!', Logger::ALERT));
 
-        $log->alert($exception->getMessage(),
+        $log->alert(
+            $exception->getMessage(),
             array(
                 'Stack Trace' => $exception->getTraceAsString(),
                 'Request path' => $request->getPathInfo()
-            ));
+            )
+        );
     }
 
     /**
      * Handle an exception
+     *
      * @param \Throwable $exception the exception that'll be handled
      * @param Request $request
      */

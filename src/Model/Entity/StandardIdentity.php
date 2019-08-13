@@ -24,6 +24,7 @@ class StandardIdentity implements Identity
 
     /**
      * Type of the identifier
+     *
      * @var int $type
      */
     private $type;
@@ -58,7 +59,8 @@ class StandardIdentity implements Identity
 
     /**
      * Initialize from an identifier.
-     * @param string $identifier
+     *
+     * @param  string $identifier
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Phypes\Exception\EmptyRequiredValue
@@ -77,7 +79,7 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param string $email
+     * @param  string $email
      * @throws InvalidValue
      * @throws \Phypes\Exception\EmptyRequiredValue
      */
@@ -88,7 +90,7 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param $username
+     * @param  $username
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Phypes\Exception\EmptyRequiredValue
@@ -125,6 +127,7 @@ class StandardIdentity implements Identity
 
     /**
      * Is the account found?
+     *
      * @return bool
      */
     public function isFound(): bool
@@ -169,7 +172,7 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param string $email
+     * @param  string $email
      * @throws InvalidValue
      */
     public function setEmail(string $email): void
@@ -186,7 +189,7 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @param string $username
+     * @param  string $username
      * @throws InvalidValue
      * @throws \Phypes\Exception\InvalidRule
      */

@@ -18,6 +18,7 @@ class CookieIdentity implements Identity
 {
     /**
      * IdentityID
+     *
      * @var int $id
      */
     private $id;
@@ -32,7 +33,8 @@ class CookieIdentity implements Identity
 
     /**
      * CookieIdentity constructor.
-     * @param string $token
+     *
+     * @param  string $token
      * @throws InvalidCookie
      */
     public function __construct(string $token)

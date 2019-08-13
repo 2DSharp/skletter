@@ -21,7 +21,7 @@ $dotenv->load();
 /**
  * @var \Auryn\Injector $injector
  */
-$injector = require_once(__DIR__.'/Dependencies.php');
+$injector = include_once __DIR__ . '/Dependencies.php';
 
 $session = $injector->make(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
 $session->start();
@@ -36,7 +36,7 @@ $exceptionHandler = function ($exception) use ($provider, $request) {
 
 set_exception_handler($exceptionHandler);
 
-$routes = require_once(__DIR__ . '/Routes.php');
+$routes = include_once __DIR__ . '/Routes.php';
 
 $router = new Router($routes, \Skletter\View\ErrorPages::class);
 $requestedRoute = $router->route($request, 'Skletter\Controller\\', 'Skletter\View\\');

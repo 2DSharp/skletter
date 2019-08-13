@@ -34,6 +34,7 @@ class QueryObjectFactory implements QueryObjectFactoryInterface
 
     /**
      * Retrieve Query Object instance for read models
+     *
      * @param string $className Fully qualified class name of the QueryObject
      *
      * @throws RuntimeException if mapper's class can't be found
@@ -55,7 +56,7 @@ class QueryObjectFactory implements QueryObjectFactoryInterface
     }
 
     /**
-     * @param string $className
+     * @param  string $className
      * @throws InvalidQueryObject
      */
     private function performChecks(string $className)

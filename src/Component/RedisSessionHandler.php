@@ -41,12 +41,16 @@ class RedisSessionHandler implements SessionInterface
      */
     private function generateRandomToken(): string
     {
-        return md5(implode('-', [
-            $_SERVER['REMOTE_ADDR'],
-            bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
-            bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
-            bin2hex(random_bytes(6))
-        ]));
+        return md5(
+            implode(
+                '-', [
+                    $_SERVER['REMOTE_ADDR'],
+                    bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
+                    bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
+                    bin2hex(random_bytes(6))
+                ]
+            )
+        );
     }
 
     /**
@@ -60,12 +64,14 @@ class RedisSessionHandler implements SessionInterface
     {
         try {
             if (!isset($_COOKIE[$this->name])) {
-                while ($this->predis->exists($this->token = $this->generateRandomToken())) ;
+                while ($this->predis->exists($this->token = $this->generateRandomToken())) {
+                }
                 setcookie($this->name, $this->token, 0);
             }
 
-            if (!isset($_COOKIE[$this->name]))
+            if (!isset($_COOKIE[$this->name])) {
                 $_COOKIE[$this->name] = $this->token;
+            }
 
             $this->started = true;
             return true;
@@ -83,8 +89,9 @@ class RedisSessionHandler implements SessionInterface
      */
     public function getId()
     {
-        if (!$this->started)
+        if (!$this->started) {
             $this->start();
+        }
 
         return $_COOKIE[$this->name];
     }
@@ -191,8 +198,9 @@ class RedisSessionHandler implements SessionInterface
     public function get($name, $default = null)
     {
         $value = $this->predis->hmget($this->getId(), [$name]);
-        if (empty($value[0]))
+        if (empty($value[0])) {
             return $default;
+        }
 
         return $value[0];
     }
@@ -200,8 +208,8 @@ class RedisSessionHandler implements SessionInterface
     /**
      * Sets an attribute.
      *
-     * @param string $name
-     * @param mixed $value
+     * @param  string $name
+     * @param  mixed $value
      * @throws \Exception
      */
     public function set($name, $value)
@@ -262,6 +270,7 @@ class RedisSessionHandler implements SessionInterface
 
     /**
      * Registers a SessionBagInterface with the session.
+     *
      * @param SessionBagInterface $bag
      */
     public function registerBag(SessionBagInterface $bag)

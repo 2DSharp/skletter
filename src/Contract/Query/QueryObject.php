@@ -14,7 +14,7 @@ namespace Skletter\Contract\Query;
 interface QueryObject
 {
     /**
-     * @param $entity
+     * @param  $entity
      * @return bool if successfully found the entity in db
      */
     public function find($entity): bool;

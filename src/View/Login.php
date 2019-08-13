@@ -23,6 +23,7 @@ class Login extends AbstractView
 {
     /**
      * Shared DTO to retrieve current login state
+     *
      * @var LoginState $state
      */
     private $state;
@@ -37,7 +38,8 @@ class Login extends AbstractView
 
     public function __construct(LoginState $state,
                                 Environment $twig,
-                                LoginManager $loginManager)
+                                LoginManager $loginManager
+    )
     {
         $this->twig = $twig;
         $this->state = $state;
@@ -47,7 +49,8 @@ class Login extends AbstractView
 
     /**
      * Redirect to correct location on success otherwise show error messages
-     * @param Request $request
+     *
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
@@ -60,13 +63,15 @@ class Login extends AbstractView
 
             return $response;
         }
-        return $this->sendFailureResponse($request, $this->twig, ['status' => 'failed',
-            'error' => $this->state->getError()], 'pages/login_prompt.twig');
+        return $this->sendFailureResponse(
+            $request, $this->twig, ['status' => 'failed',
+            'error' => $this->state->getError()], 'pages/login_prompt.twig'
+        );
     }
 
     /**
-     * @param Request $request
-     * @param string $method
+     * @param  Request $request
+     * @param  string $method
      * @return Response
      * @throws TemplatingException
      */

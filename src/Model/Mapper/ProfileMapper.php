@@ -35,7 +35,9 @@ class ProfileMapper
         /**
          * @var Profile $profile
          */
-        $command = /** @lang MySQL */
+        $command = /**
+         * @lang MySQL
+         */
             "INSERT INTO Profile (Name, Birthday, Locale, IdentityID) VALUES (:name, :bday, :locale, :id)";
         $statement = $this->connection->prepare($command);
 

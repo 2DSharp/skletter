@@ -28,8 +28,8 @@ class NonceIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param Identity $identity
-     * @param array $fields
+     * @param  Identity $identity
+     * @param  array $fields
      * @throws RecordNotFound
      */
     public function fetch(Identity $identity, array $fields): void
@@ -39,7 +39,8 @@ class NonceIdentityMapper extends IdentityMapper
 
     /**
      * Persist a generated nonce identity for Recovery Codes/New registration
-     * @param Identity $identity
+     *
+     * @param  Identity $identity
      * @return bool
      */
     public function store(Identity $identity): bool
@@ -47,7 +48,9 @@ class NonceIdentityMapper extends IdentityMapper
         /**
          * @var NonceIdentity $identity
          */
-        $command = /** @lang MySQL */
+        $command = /**
+         * @lang MySQL
+         */
             "INSERT INTO NonceIdentity (IdentityID, Token, Pin, ValidTill) VALUES (:id, :token, :pin, :validity)";
         $statement = $this->connection->prepare($command);
 

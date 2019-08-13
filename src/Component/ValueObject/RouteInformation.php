@@ -30,6 +30,7 @@ class RouteInformation implements RouteVOInterface
 
     /**
      * RouteInformation constructor.
+     *
      * @param string $controller
      * @param string $view
      * @param string $method

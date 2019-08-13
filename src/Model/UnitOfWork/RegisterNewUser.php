@@ -22,12 +22,14 @@ use Skletter\Model\Mapper\ProfileMapper;
 /**
  * Class RegisterNewUser responsible for one unit of work- Registration of a new user.
  * Transaction will succeed or fail completely and rollback
+ *
  * @package Skletter\Model\Transaction
  */
 class RegisterNewUser implements Transaction
 {
     /**
      * Repository to manipulate Identity
+     *
      * @var IdentityRepositoryInterface $identityRepository
      */
     private $identityRepository;
@@ -54,6 +56,7 @@ class RegisterNewUser implements Transaction
 
     /**
      * RegisterNewUser constructor.
+     *
      * @param \PDO $pdo
      * @param IdentityRepositoryInterface $identityRepository
      * @param ProfileMapper $profileMapper

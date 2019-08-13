@@ -29,8 +29,8 @@ class StandardIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param StandardIdentity $identity
-     * @param array $fields
+     * @param  StandardIdentity $identity
+     * @param  array $fields
      * @return mixed
      */
     private function getFetchedData(StandardIdentity $identity, array $fields)
@@ -42,13 +42,15 @@ class StandardIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param Identity $identity
-     * @param array $fields
+     * @param  Identity $identity
+     * @param  array $fields
      * @throws RecordNotFound
      */
     public function fetch(Identity $identity, array $fields): void
     {
-        /** @var StandardIdentity $identity */
+        /**
+         * @var StandardIdentity $identity
+         */
 
         $data = $this->getFetchedData($identity, $fields);
 
@@ -63,7 +65,9 @@ class StandardIdentityMapper extends IdentityMapper
         /**
          * @var StandardIdentity $identity
          */
-        $command = /** @lang MySQL */
+        $command = /**
+         * @lang MySQL
+         */
             "INSERT INTO Identity (Email, Username, HashedPassword, Status) VALUES (:email, :username, :passwordHash, :currStatus)";
         $statement = $this->connection->prepare($command);
 
@@ -78,25 +82,29 @@ class StandardIdentityMapper extends IdentityMapper
         return $result;
     }
     /**
-     * @param Identity $identity
+     * @param  Identity $identity
      * @return bool
      */
     public function exists(Identity $identity): bool
     {
-        /** @var StandardIdentity $identity */
+        /**
+         * @var StandardIdentity $identity
+         */
         $data = $this->getFetchedData($identity, [1]);
         return (empty($data) === false);
     }
 
     /**
-     * @param StandardIdentity $identity
-     * @param array $fields
+     * @param  StandardIdentity $identity
+     * @param  array $fields
      * @return mixed
      */
     public function fetchByID(StandardIdentity $identity, array $fields)
     {
         $fields = implode(",", $fields);
-        $query = /** @lang MySQL */
+        $query = /**
+         * @lang MySQL
+         */
             "SELECT {$fields} FROM Identity WHERE ID = :id";
 
         return $this->bindAndFetch($this->connection, $query, [':id' => $identity->getId()]);
@@ -107,9 +115,13 @@ class StandardIdentityMapper extends IdentityMapper
         $fields = implode(",", $fields);
 
         $map = [
-            StandardIdentity::EMAIL => /** @lang MySQL */
+            StandardIdentity::EMAIL => /**
+             * @lang MySQL
+             */
                 "SELECT {$fields} FROM Identity WHERE Email = {$placeholder}",
-            StandardIdentity::USERNAME => /** @lang MySQL */
+            StandardIdentity::USERNAME => /**
+             * @lang MySQL
+             */
                 "SELECT {$fields} FROM Identity WHERE Username = {$placeholder}"
         ];
 
@@ -117,8 +129,8 @@ class StandardIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param StandardIdentity $identity
-     * @param array $fields
+     * @param  StandardIdentity $identity
+     * @param  array $fields
      * @return mixed
      */
     private function fetchByIdentifier(StandardIdentity $identity, array $fields)
@@ -132,6 +144,7 @@ class StandardIdentityMapper extends IdentityMapper
 
     /**
      * Run the setters on the entity
+     *
      * @param StandardIdentity $entity
      * @param array $data
      */
@@ -144,18 +157,20 @@ class StandardIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @todo Implement proper query builder
+     * @todo       Implement proper query builder
      * @deprecated
      * Fetch the data from DB to an array
-     * @param QueryBuilderInterface $queryBuilder
-     * @return mixed
+     * @param      QueryBuilderInterface $queryBuilder
+     * @return     mixed
      */
     private function getDataFromData(QueryBuilderInterface $queryBuilder)
     {
         $fields = $queryBuilder->getFieldsAsString();
         $filters = $queryBuilder->getFiltersAsString();
 
-        $query = /** @lang MySQL */
+        $query = /**
+         * @lang MySQL
+         */
             "SELECT {$fields} FROM Identity WHERE {$filters}";
 
         $stmt = $this->connection->prepare($query);

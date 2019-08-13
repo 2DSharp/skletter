@@ -40,15 +40,17 @@ class Home extends AbstractView
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     private function showLoggedOutHome(Request $request): Response
     {
 
-        $html = $this->createHTMLFromTemplate($this->templating, 'pages/home.twig',
-            ['title' => 'Skletter - Home']);
+        $html = $this->createHTMLFromTemplate(
+            $this->templating, 'pages/home.twig',
+            ['title' => 'Skletter - Home']
+        );
         return $this->respond($request, $html);
     }
 
@@ -65,21 +67,23 @@ class Home extends AbstractView
         }
     }
     /**
-     * @param string $status
-     * @param Request $request
+     * @param  string $status
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     private function showLoggedInHome(string $status, Request $request)
     {
-        $html = $this->createHTMLFromTemplate($this->templating,
+        $html = $this->createHTMLFromTemplate(
+            $this->templating,
             'pages/' . $this->pageMap[$status],
-            $this->getParams($status));
+            $this->getParams($status)
+        );
         return $this->respond($request, $html);
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
@@ -93,8 +97,8 @@ class Home extends AbstractView
     }
 
     /**
-     * @param Request $request
-     * @param string $method
+     * @param  Request $request
+     * @param  string $method
      * @return Response
      * @throws TemplatingException
      */

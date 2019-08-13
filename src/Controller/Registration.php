@@ -46,34 +46,34 @@ class Registration implements Controller
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Exception
      */
     public function registerUser(Request $request): void
     {
         try {
-            /** @var StandardIdentity $identity */
+            $password = $request->request->get('password');
+
+            /**
+             * @var StandardIdentity $identity
+             */
             $this->manager->registerIdentity(
                 $request->request->get('email'),
                 $request->request->get('username'),
-                $request->request->get('password'));
-
-            $password = $request->request->get('password');
-
-            $this->manager->registerProfile($request->request->get('name'),
+                $password
+            );
+            $this->manager->registerProfile(
+                $request->request->get('name'),
                 'IND',
-                new \DateTimeImmutable());
-
+                new \DateTimeImmutable()
+            );
             $this->manager->save();
 
-            $nonce = $this->manager->getNonceIdentity();
+            //$nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
-
             $this->loginService->loginWithPassword($identity, new Password($password));
 
-            // remember the user
-            $this->loginService->remember($identity, $this->getExpiryDate());
             $this->state->setSuccess(true);
 
         } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {
@@ -81,15 +81,6 @@ class Registration implements Controller
         }
     }
 
-    /**
-     * @return \DateTimeImmutable
-     * @throws \Exception
-     */
-    private function getExpiryDate(): \DateTimeImmutable
-    {
-        $now = new \DateTimeImmutable();
-        return $now->add(new \DateInterval("P2D"));
-    }
     public function handleRequest(Request $request, string $method): void
     {
         $this->{$method}($request);

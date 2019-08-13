@@ -16,6 +16,7 @@ use Skletter\Contract\Entity\Identity;
  * Class NonceIdentity
  * Allows to create one-time login identities for limited validity period.
  * Typically to be used for contact information confirmation or account recovery.
+ *
  * @package Skletter\Model\Entity
  */
 class NonceIdentity implements Identity
@@ -40,8 +41,9 @@ class NonceIdentity implements Identity
 
     /**
      * NonceIdentity constructor.
-     * @param \DateTimeImmutable $validTill
-     * @param int $tokenLength
+     *
+     * @param  \DateTimeImmutable $validTill
+     * @param  int $tokenLength
      * @throws \Exception
      */
     public function __construct(\DateTimeImmutable $validTill, int $tokenLength = 20)
@@ -123,7 +125,7 @@ class NonceIdentity implements Identity
     }
 
     /**
-     * @param $length
+     * @param  $length
      * @return string
      * @throws \Exception
      */
@@ -143,7 +145,7 @@ class NonceIdentity implements Identity
     }
 
     /**
-     * @param int $tokenLength
+     * @param  int $tokenLength
      * @throws \Exception
      */
     private function generateSecrets(int $tokenLength)

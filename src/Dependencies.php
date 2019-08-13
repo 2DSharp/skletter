@@ -47,8 +47,10 @@ $templatesCacheDir = __DIR__ . '/../app/cache/templates';
 $injector->delegate(Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
 $injector->share(Environment::class);
 
-$injector->define(FallbackExceptionHandler::class,
-    [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]);
+$injector->define(
+    FallbackExceptionHandler::class,
+    [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
+);
 
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);

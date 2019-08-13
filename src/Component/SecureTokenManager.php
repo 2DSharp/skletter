@@ -18,6 +18,7 @@ class SecureTokenManager implements TokenManager
 {
     /**
      * Generates a secure random cookie string with hmac
+     *
      * @return string
      */
     public static function generate(): string
@@ -31,7 +32,8 @@ class SecureTokenManager implements TokenManager
 
     /**
      * Check the hmac to find any tampering
-     * @param string $token
+     *
+     * @param  string $token
      * @return bool
      */
     public static function isTampered(string $token): bool

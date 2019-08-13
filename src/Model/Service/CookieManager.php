@@ -29,7 +29,8 @@ class CookieManager
 
     /**
      * TODO: Check for uniqueness
-     * @param CookieIdentity $cookie
+     *
+     * @param  CookieIdentity $cookie
      * @return void
      */
     public function store(CookieIdentity $cookie): void
@@ -38,8 +39,8 @@ class CookieManager
     }
 
     /**
-     * @param Identity $identity
-     * @param \DateTimeImmutable $validTill
+     * @param  Identity $identity
+     * @param  \DateTimeImmutable $validTill
      * @return CookieIdentity
      * @throws \Skletter\Exception\InvalidCookie
      */

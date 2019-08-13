@@ -16,8 +16,8 @@ use Skletter\Exception\Mapper\RecordNotFound;
 abstract class IdentityMapper
 {
     /**
-     * @param Identity $identity
-     * @param array $fields
+     * @param  Identity $identity
+     * @param  array $fields
      * @throws RecordNotFound
      */
     public abstract function fetch(Identity $identity, array $fields): void;

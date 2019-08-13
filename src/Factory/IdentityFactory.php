@@ -35,6 +35,7 @@ class IdentityFactory
 {
     /**
      * Map of error codes to error messages
+     *
      * @var array $errorMap
      */
     private $errorMap = [
@@ -54,8 +55,9 @@ class IdentityFactory
 
     /**
      * Generates a one time use NonceIdentity
-     * @param \DateTimeImmutable $validTill
-     * @param int $tokenLength
+     *
+     * @param  \DateTimeImmutable $validTill
+     * @param  int $tokenLength
      * @return NonceIdentity
      * @throws \Exception
      */
@@ -66,9 +68,10 @@ class IdentityFactory
 
     /**
      * Create a new standard identity, check for uniqueness on identifiers
-     * @param string $email
-     * @param string $username
-     * @param string $password
+     *
+     * @param  string $email
+     * @param  string $username
+     * @param  string $password
      * @return StandardIdentity
      * @throws IdentifierExistsException
      * @throws ValidationError
@@ -86,7 +89,9 @@ class IdentityFactory
 
             return $identity;
         } catch (InvalidValue $exception) {
-            /** @var Error $error */
+            /**
+             * @var Error $error
+             */
             $error = $exception->getErrors()[0];
             throw new ValidationError(UserFriendlyError::getError($this->errorMap[$error->getCode()]));
         } catch (EmptyRequiredValue $exception) {
@@ -95,8 +100,8 @@ class IdentityFactory
     }
 
     /**
-     * @param Identity $identity
-     * @param \DateTimeImmutable $validTill
+     * @param  Identity $identity
+     * @param  \DateTimeImmutable $validTill
      * @return Identity|CookieIdentity
      * @throws \Skletter\Exception\InvalidCookie
      */
@@ -111,20 +116,23 @@ class IdentityFactory
 
     /**
      * Check DB records for already registered identifiers
-     * @param StandardIdentity $identity
+     *
+     * @param  StandardIdentity $identity
      * @throws IdentifierExistsException if identifier is already registered
      */
     private function checkRedundancies(StandardIdentity $identity): void
     {
         $query = $this->factory->create(FindIdentityByEmail::class);
 
-        if ($query->find($identity))
+        if ($query->find($identity)) {
             throw new IdentifierExistsException(UserFriendlyError::getError(UserFriendlyError::EMAIL_ALREADY_REGISTERED));
+        }
 
         $query = $this->factory->create(FindIdentityByUsername::class);
 
-        if ($query->find($identity))
+        if ($query->find($identity)) {
             throw new IdentifierExistsException(UserFriendlyError::getError(UserFriendlyError::USERNAME_ALREADY_REGISTERED));
+        }
     }
 
 }

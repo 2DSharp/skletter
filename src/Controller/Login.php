@@ -28,12 +28,14 @@ class Login implements Controller
 {
     /**
      * LoginManager service to handle authentication and log in system
+     *
      * @var LoginManager $loginManager
      */
     private $loginManager;
 
     /**
      * Data Transfer Object to carry forward the login data to the view
+     *
      * @var LoginState
      */
     private $state;
@@ -45,11 +47,11 @@ class Login implements Controller
     }
 
     /**
-     * @param Request $request
+     * @param        Request $request
      * @request_type POST
-     * @throws \Phypes\Exception\InvalidRule
-     * @throws \Skletter\Exception\InvalidCookie
-     * @throws \Exception
+     * @throws       \Phypes\Exception\InvalidRule
+     * @throws       \Skletter\Exception\InvalidCookie
+     * @throws       \Exception
      */
     public function attemptLogin(Request $request)
     {

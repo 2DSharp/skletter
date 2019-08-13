@@ -25,34 +25,38 @@ class ErrorPages extends AbstractView implements ErrorPageView
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     public function pageNotFound(Request $request) : Response
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'error.twig',
+        $html = $this->createHTMLFromTemplate(
+            $this->templating, 'error.twig',
             ['title' => 'Page not found!',
-                'message' => "Whoops! The page you requested either doesn't exist or you don't have the permission to view it."]);
+                'message' => "Whoops! The page you requested either doesn't exist or you don't have the permission to view it."]
+        );
         return $this->respond($request, $html, 404);
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     public function methodNotAllowed(Request $request) : Response
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'error.twig',
+        $html = $this->createHTMLFromTemplate(
+            $this->templating, 'error.twig',
             ['title' => 'Invalid Method',
-                'message' => "The requested method is not allowed for this page."]);
+                'message' => "The requested method is not allowed for this page."]
+        );
 
         return $this->respond($request, $html, 401);
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      */
     public function internalError(Request $request) : Response
@@ -63,8 +67,8 @@ class ErrorPages extends AbstractView implements ErrorPageView
     }
 
     /**
-     * @param Request $request
-     * @param string $method
+     * @param  Request $request
+     * @param  string $method
      * @return Response
      * @throws TemplatingException
      */

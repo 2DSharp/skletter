@@ -28,9 +28,9 @@ abstract class AbstractView implements View
     }
 
     /**
-     * @param Environment $twig
-     * @param string $template
-     * @param array $params
+     * @param  Environment $twig
+     * @param  string $template
+     * @param  array $params
      * @return Response
      * @throws \Twig\Error\Error
      */
@@ -41,9 +41,10 @@ abstract class AbstractView implements View
 
     /**
      * Redirect the user on success, or let JS handle it in case its an AJAX request
-     * @param Request $request
-     * @param array $params
-     * @param string $redirectLocation
+     *
+     * @param  Request $request
+     * @param  array $params
+     * @param  string $redirectLocation
      * @return Response
      */
     protected function sendSuccessResponse(Request $request, array $params, string $redirectLocation): Response
@@ -56,10 +57,11 @@ abstract class AbstractView implements View
 
     /**
      * Send a response with error messages
-     * @param Request $request
-     * @param Environment $twig
-     * @param array $params
-     * @param string $template
+     *
+     * @param  Request $request
+     * @param  Environment $twig
+     * @param  array $params
+     * @param  string $template
      * @return Response
      * @throws \Twig\Error\Error
      */

@@ -32,6 +32,7 @@ class MapperFactory implements MapperFactoryInterface
 
     /**
      * Retrieve SQL data mapper instance for repositories
+     *
      * @param string $className Fully qualified class name of the mapper
      *
      * @throws RuntimeException if mapper's class can't be found

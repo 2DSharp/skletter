@@ -25,6 +25,7 @@ class CookieIdentityMapper extends IdentityMapper
 
     /**
      * CookieIdentityMapper constructor.
+     *
      * @param \PDO $connection
      */
     public function __construct(\PDO $connection)
@@ -33,14 +34,16 @@ class CookieIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param Identity $identity
-     * @param array $fields
+     * @param  Identity $identity
+     * @param  array $fields
      * @throws RecordNotFound
      * @throws \Exception
      */
     public function fetch(Identity $identity, array $fields): void
     {
-        /** @var CookieIdentity $identity */
+        /**
+         * @var CookieIdentity $identity
+         */
         $query = "SELECT IdentityID, ValidTill FROM CookieIdentity WHERE Token = :token";
         $data = $this->bindAndFetch($this->connection, $query, [':token' => $identity->getToken()]);
 
@@ -51,8 +54,8 @@ class CookieIdentityMapper extends IdentityMapper
     }
 
     /**
-     * @param CookieIdentity $identity
-     * @param $data
+     * @param  CookieIdentity $identity
+     * @param  $data
      * @throws \Exception
      */
     private function setFetchedData(CookieIdentity $identity, $data)
@@ -63,7 +66,8 @@ class CookieIdentityMapper extends IdentityMapper
 
     /**
      * Store cookie data identified by token
-     * @param Identity $identity
+     *
+     * @param  Identity $identity
      * @return bool
      */
     public function store(Identity $identity): bool
@@ -71,7 +75,9 @@ class CookieIdentityMapper extends IdentityMapper
         /**
          * @var CookieIdentity $identity
          */
-        $command = /** @lang MySQL */
+        $command = /**
+         * @lang MySQL
+         */
             "INSERT INTO CookieIdentity (IdentityID, Token, ValidTill) VALUES (:id, :token, :validity)";
         $statement = $this->connection->prepare($command);
 

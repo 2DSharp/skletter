@@ -26,6 +26,7 @@ class SensiblePDOExceptionBuilder
     /**
      * Maps generic PDO Exception message errors to sensible exceptions
      * SensiblePDOException constructor.
+     *
      * @param \PDOException $exception
      */
     public function __construct(\PDOException $exception, $exceptionMap = null)
@@ -47,8 +48,8 @@ class SensiblePDOExceptionBuilder
         $code = $exception->getCode();
         if (array_key_exists($code, $this->map)) {
             return new $this->map[$code];
+        } else {
+            return $exception;
         }
-
-        else return $exception;
     }
 }

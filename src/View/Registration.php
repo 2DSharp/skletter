@@ -35,43 +35,51 @@ class Registration extends AbstractView
     }
 
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     public function registerUser(Request $request): Response
     {
         if ($this->state->isSuccessful()) {
-            return $this->sendSuccessResponse($request,
-                ['status' => 'success', 'result' => $this->templating->render('pieces/contact_verification_prompt.twig',
-                    ['email' => $this->session->get('email')])],
-                $_ENV['base_url'] . '/register');
+            return $this->sendSuccessResponse(
+                $request,
+                ['status' => 'success', 'result' => $this->templating->render(
+                    'pieces/contact_verification_prompt.twig',
+                    ['email' => $this->session->get('email')]
+                )],
+                $_ENV['base_url'] . '/register'
+            );
         }
         $postData = [
             'name' => $request->request->get('name'),
             'email' => $request->request->get('email'),
             'username' => $request->request->get('username')
         ];
-        return $this->sendFailureResponse($request, $this->templating, ['status' => 'failed',
-            'error' => $this->state->getError(), 'post' => $postData], 'pages/registration.twig');
+        return $this->sendFailureResponse(
+            $request, $this->templating, ['status' => 'failed',
+            'error' => $this->state->getError(), 'post' => $postData], 'pages/registration.twig'
+        );
     }
     /**
-     * @param Request $request
+     * @param  Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
     private function displayForm(Request $request): Response
     {
-        $html = $this->createHTMLFromTemplate($this->templating, 'pages/registration.twig',
+        $html = $this->createHTMLFromTemplate(
+            $this->templating, 'pages/registration.twig',
             ['title' => 'Skletter - Registration',
                 'status' => $this->session->get('status'),
-                'email' => $this->session->get('email')]);
+                'email' => $this->session->get('email')]
+        );
         return $this->respond($request, $html);
     }
 
     /**
-     * @param Request $request
-     * @param string $method
+     * @param  Request $request
+     * @param  string $method
      * @return Response
      * @throws TemplatingException
      */

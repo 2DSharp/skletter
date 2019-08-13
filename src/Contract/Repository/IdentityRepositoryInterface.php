@@ -24,12 +24,13 @@ use Skletter\Exception\Domain\UserDoesNotExistException;
  * The repository provides generic methods to mutate data on an entity and persist it using a data mapper.
  *
  * Interface IdentityRepositoryInterface
+ *
  * @package Skletter\Contract\Repository
  */
 interface IdentityRepositoryInterface
 {
     /**
-     * @param Identity $identity
+     * @param  Identity $identity
      * @return mixed
      * @throws UserDoesNotExistException
      */

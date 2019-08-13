@@ -22,6 +22,7 @@ use Skletter\Model\Entity\StandardIdentity;
 /**
  * TODO: Turn it into a StandardIdentity query
  * Class IdentityMap
+ *
  * @package Skletter\Model\Service
  */
 class IdentityMap
@@ -33,6 +34,7 @@ class IdentityMap
 
     /**
      * IdentityLookup constructor.
+     *
      * @param IdentityRepositoryInterface $repository
      */
     public function __construct(IdentityRepositoryInterface $repository)
@@ -43,7 +45,8 @@ class IdentityMap
 
     /**
      * Find and create a standard identity based on an identifier
-     * @param $identifier
+     *
+     * @param  $identifier
      * @return StandardIdentity
      * @throws InvalidIdentifier
      * @throws UserDoesNotExistException
@@ -63,7 +66,7 @@ class IdentityMap
     }
 
     /**
-     * @param $id
+     * @param  $id
      * @return StandardIdentity
      * @throws UserDoesNotExistException
      */
@@ -77,7 +80,7 @@ class IdentityMap
 
 
     /**
-     * @param string $token
+     * @param  string $token
      * @return CookieIdentity
      * @throws UserDoesNotExistException
      * @throws \Skletter\Exception\InvalidCookie

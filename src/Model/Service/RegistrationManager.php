@@ -40,6 +40,7 @@ class RegistrationManager
     private $profile;
     /**
      * Mapping service for identity look ups
+     *
      * @var IdentityMap $factory
      */
     private $factory;
@@ -54,6 +55,7 @@ class RegistrationManager
 
     /**
      * IdentityManager constructor.
+     *
      * @param IdentityFactory $factory
      * @param RegisterNewUser $transaction
      */
@@ -64,9 +66,9 @@ class RegistrationManager
     }
 
     /**
-     * @param string $email
-     * @param string $username
-     * @param string $password
+     * @param  string $email
+     * @param  string $username
+     * @param  string $password
      * @return void
      * @throws IdentifierExistsException
      * @throws ValidationError
@@ -115,6 +117,7 @@ class RegistrationManager
 
     /**
      * Commit to persistence
+     *
      * @return bool
      * @throws RegistrationFailure
      */

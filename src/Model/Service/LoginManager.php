@@ -40,13 +40,15 @@ class LoginManager
 
     /**
      * LoginManager constructor.
+     *
      * @param SessionInterface $session
      * @param CookieManager $cookieManager
      * @param IdentityMap $map
      */
     public function __construct(SessionInterface $session,
                                 CookieManager $cookieManager,
-                                IdentityMap $map)
+                                IdentityMap $map
+    )
     {
         $this->session = $session;
         $this->cookieManager = $cookieManager;
@@ -64,8 +66,8 @@ class LoginManager
     }
 
     /**
-     * @param string $identifier
-     * @param Password $password
+     * @param  string $identifier
+     * @param  Password $password
      * @throws PasswordMismatch
      * @throws \Phypes\Exception\EmptyRequiredValue
      * @throws \Phypes\Exception\InvalidRule
@@ -83,13 +85,14 @@ class LoginManager
         if (password_verify($password, $identity->getHashedPassword())) {
             $this->login($identity);
             $this->remember($identity, $this->getExpiryDate());
-        }
-        else
+        } else {
             throw new PasswordMismatch('The password you entered is invalid');
+        }
     }
 
     /**
      * Sets the login state, by updating db and logging data
+     *
      * @param StandardIdentity $identity
      */
     private function login(StandardIdentity $identity)
@@ -104,8 +107,9 @@ class LoginManager
 
     /**
      * Generate a cookie for remembering the user based on the cookie identity
-     * @param Identity $identity
-     * @param \DateTimeImmutable $validTill
+     *
+     * @param  Identity $identity
+     * @param  \DateTimeImmutable $validTill
      * @return void
      * @throws \Skletter\Exception\InvalidCookie
      */
@@ -127,8 +131,9 @@ class LoginManager
 
     public function isLoggedIn(): bool
     {
-        if ($this->isLoggedIn)
+        if ($this->isLoggedIn) {
             return true;
+        }
 
         $id = $this->session->get('id', 'none');
 
@@ -146,7 +151,7 @@ class LoginManager
     }
 
     /**
-     * @param string $token
+     * @param  string $token
      * @throws \Skletter\Exception\Domain\UserDoesNotExistException
      * @throws \Skletter\Exception\InvalidCookie
      */

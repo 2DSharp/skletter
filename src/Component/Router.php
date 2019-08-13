@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class Router
+ *
  * @package Skletter
  *
  * This class works as a wrapper around FastRoute to implement the RouteInterface
@@ -43,8 +44,9 @@ class Router
 
     /**
      * RouteFactory constructor.
-     * @param array $routes
-     * @param string $errorPage
+     *
+     * @param  array $routes
+     * @param  string $errorPage
      * @throws InvalidErrorPage
      */
     public function __construct(array $routes, string $errorPage)
@@ -82,10 +84,12 @@ class Router
                 $r->addRoute($route[0], $route[1], $route[2]);
             }
         };
-        $dispatcher = \FastRoute\cachedDispatcher($routeDefinitionCallback,
+        $dispatcher = \FastRoute\cachedDispatcher(
+            $routeDefinitionCallback,
             [
                 'cacheFile' => __DIR__ . '/../../app/cache/route.cache',
-            ]);
+            ]
+        );
         $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
 
         return $routeInfo;
