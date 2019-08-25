@@ -35,14 +35,17 @@ class Registration implements Controller
      * @var Service\LoginManager $loginService
      */
     private $loginService;
+    private $mailer;
 
     public function __construct(Service\RegistrationManager $registrationManager,
                                 RegistrationState $state,
+                                Service\TransactionalMailer $mailer,
                                 Service\LoginManager $loginManager)
     {
         $this->manager = $registrationManager;
         $this->state = $state;
         $this->loginService = $loginManager;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -70,9 +73,9 @@ class Registration implements Controller
             );
             $this->manager->save();
 
-            //$nonce = $this->manager->getNonceIdentity();
             $identity = $this->manager->getStandardIdentity();
-            $this->loginService->loginWithPassword($identity, new Password($password));
+            $this->mailer->sendAccountConfirmationEmail($identity->getId());
+            $this->loginService->loginWithPassword($request->request->get('email'), new Password($password));
 
             $this->state->setSuccess(true);
 
