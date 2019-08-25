@@ -10,9 +10,12 @@
 namespace Skletter;
 
 use Auryn\Injector;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
+use Skletter\Component\EmailQueuer;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\RedisSessionHandler;
+use Skletter\Contract\Component\Mailer;
 use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Contract\Repository\IdentityRepositoryInterface;
@@ -28,6 +31,7 @@ use Twig\Environment;
 use function Skletter\Factory\buildLazyLoader;
 use function Skletter\Factory\buildPDO;
 use function Skletter\Factory\buildPredis;
+use function Skletter\Factory\buildRabbitMQ;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
 
@@ -56,12 +60,15 @@ $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
 $injector->alias(IdentityRepositoryInterface::class, IdentityRepository::class);
+$injector->alias(Mailer::class, EmailQueuer::class);
+
 $injector->share(LoginState::class);
 $injector->share(LoginManager::class);
 $injector->share(RegistrationState::class);
 
 $injector->delegate(\PDO::class, buildPDO());
 $injector->delegate(Client::class, buildPredis());
+$injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
 
 
 return $injector;
