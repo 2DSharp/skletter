@@ -11,6 +11,7 @@
 namespace Skletter\Factory;
 
 use PDO;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
@@ -105,4 +106,11 @@ function buildLazyLoader(string $proxyDir, bool $generate = false): LazyLoadingV
     spl_autoload_register($config->getProxyAutoloader());
 
     return new LazyLoadingValueHolderFactory($config);
+}
+
+function buildRabbitMQ(): callable
+{
+    return function (): AMQPStreamConnection {
+        return new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+    };
 }
