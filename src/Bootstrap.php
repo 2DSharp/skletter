@@ -23,8 +23,6 @@ $dotenv->load();
  */
 $injector = include_once __DIR__ . '/Dependencies.php';
 
-$session = $injector->make(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
-$session->start();
 
 $request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
 // TODO: Find a better name replacement for fallBackHandler
@@ -35,6 +33,9 @@ $exceptionHandler = function ($exception) use ($provider, $request) {
 };
 
 set_exception_handler($exceptionHandler);
+
+$session = $injector->make(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
+$session->start();
 
 $routes = include_once __DIR__ . '/Routes.php';
 

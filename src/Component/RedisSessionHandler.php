@@ -29,10 +29,14 @@ class RedisSessionHandler implements SessionInterface
      */
     private $started = false;
     private $token;
+    private $config =
+        ['namespace' => 'session'];
 
-    public function __construct(Client $predis)
+    public function __construct(Client $predis, $config = [])
     {
         $this->predis = $predis;
+        if (!empty($config))
+            $this->config = $config;
     }
 
     /**
@@ -41,16 +45,16 @@ class RedisSessionHandler implements SessionInterface
      */
     private function generateRandomToken(): string
     {
-        return md5(
+        return
             implode(
                 '-', [
-                    $_SERVER['REMOTE_ADDR'],
-                    bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
-                    bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
-                    bin2hex(random_bytes(6))
+
+                    hash('sha256', bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)) .
+                        bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)) .
+                        bin2hex(random_bytes(6)))
+                    , md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'])
                 ]
-            )
-        );
+            );
     }
 
     /**
@@ -59,26 +63,21 @@ class RedisSessionHandler implements SessionInterface
      * @return bool True if session started
      *
      * @throws \RuntimeException if session fails to start
+     * @throws \Exception
      */
     public function start()
     {
-        try {
-            if (!isset($_COOKIE[$this->name])) {
-                while ($this->predis->exists($this->token = $this->generateRandomToken())) {
-                }
-                setcookie($this->name, $this->token, 0);
-            }
-
-            if (!isset($_COOKIE[$this->name])) {
-                $_COOKIE[$this->name] = $this->token;
-            }
-
-            $this->started = true;
-            return true;
-
-        } catch (\Exception $e) {
-            throw new \RuntimeException('Failed to generate secure token');
+        if (!isset($_COOKIE[$this->name])) {
+            while ($this->predis->exists($this->token = $this->generateRandomToken())) ;
+            setcookie($this->name, $this->token, 0);
         }
+
+        if (!isset($_COOKIE[$this->name])) {
+            $_COOKIE[$this->name] = $this->token;
+        }
+
+        $this->started = true;
+        return true;
     }
 
     /**
@@ -197,7 +196,7 @@ class RedisSessionHandler implements SessionInterface
      */
     public function get($name, $default = null)
     {
-        $value = $this->predis->hmget($this->getId(), [$name]);
+        $value = $this->predis->hmget($this->config['namespace'] . ':' . $this->getId(), [$name]);
         if (empty($value[0])) {
             return $default;
         }
@@ -214,7 +213,7 @@ class RedisSessionHandler implements SessionInterface
      */
     public function set($name, $value)
     {
-        $this->predis->hmset($this->getId(), [$name => $value]);
+        $this->predis->hmset($this->config['namespace'] . ':' . $this->getId(), [$name => $value]);
     }
 
     /**
