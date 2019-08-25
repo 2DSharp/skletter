@@ -66,21 +66,18 @@ class LoginManager
     }
 
     /**
-     * @param  string $identifier
+     * @param string $identifier
      * @param  Password $password
      * @throws PasswordMismatch
      * @throws \Phypes\Exception\EmptyRequiredValue
      * @throws \Phypes\Exception\InvalidRule
      * @throws \Skletter\Exception\Domain\UserDoesNotExistException
-     * @throws \Skletter\Exception\InvalidIdentifier
      * @throws \Skletter\Exception\InvalidCookie
-     * @throws \Exception
+     * @throws \Skletter\Exception\InvalidIdentifier
      */
     public function loginWithPassword(string $identifier, Password $password)
     {
-        /**
-         * @var StandardIdentity $identity
-         */
+
         $identity = $this->map->getStandardIdentityFromIdentifier($identifier);
         if (password_verify($password, $identity->getHashedPassword())) {
             $this->login($identity);

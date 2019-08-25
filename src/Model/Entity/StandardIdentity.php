@@ -41,7 +41,7 @@ class StandardIdentity implements Identity
      */
     private $hashedPassword;
     /**
-     * @var Type $email
+     * @var Email $email
      */
     private $email;
     /**
@@ -164,9 +164,9 @@ class StandardIdentity implements Identity
     }
 
     /**
-     * @return Type
+     * @return Email
      */
-    public function getEmail(): Type
+    public function getEmail(): Email
     {
         return $this->email;
     }
