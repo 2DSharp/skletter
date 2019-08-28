@@ -1,5 +1,5 @@
 namespace java com.skletter.service
-namespace php Skletter.RemoteService.UserService
+namespace php Skletter.Model.RemoteService.UserService
 
 enum Status
 {
