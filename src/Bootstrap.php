@@ -44,3 +44,8 @@ $requestedRoute = $router->route($request, 'Skletter\Controller\\', 'Skletter\Vi
 
 $app = new Application($injector);
 $app->run($request, $requestedRoute);
+
+$tTransport = $injector->make(\Thrift\Transport\TTransport::class);
+
+if ($tTransport->isOpen())
+    $tTransport->close();
