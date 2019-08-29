@@ -24,7 +24,7 @@ use Skletter\Factory\QueryObjectFactory;
 use Skletter\Model\DTO\LoginState;
 use Skletter\Model\DTO\RegistrationState;
 use Skletter\Model\Repository\IdentityRepository;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\ServiceMediator\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig\Environment;
