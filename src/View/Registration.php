@@ -11,7 +11,6 @@
 namespace Skletter\View;
 
 
-use Greentea\Exception\TemplatingException;
 use Skletter\Model\DTO\RegistrationState;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +35,13 @@ class Registration extends AbstractView
 
     /**
      * @param  Request $request
+     * @param array $dto
      * @return Response
      * @throws \Twig\Error\Error
      */
-    public function registerUser(Request $request): Response
+    public function registerUser(Request $request, array $dto): Response
     {
-        if ($this->state->isSuccessful()) {
+        if ($dto['result']) {
             return $this->sendSuccessResponse(
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
@@ -58,7 +58,7 @@ class Registration extends AbstractView
         ];
         return $this->sendFailureResponse(
             $request, $this->templating, ['status' => 'failed',
-            'error' => $this->state->getError(), 'post' => $postData], 'pages/registration.twig'
+            'error' => $dto['error'], 'post' => $postData], 'pages/registration.twig'
         );
     }
     /**
@@ -77,18 +77,5 @@ class Registration extends AbstractView
         return $this->respond($request, $html);
     }
 
-    /**
-     * @param  Request $request
-     * @param  string $method
-     * @return Response
-     * @throws TemplatingException
-     */
-    public function createResponse(Request $request, string $method): Response
-    {
-        try {
-            return $this->{$method}($request);
-        } catch (\Twig\Error\Error $e) {
-            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
+
 }
