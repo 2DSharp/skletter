@@ -12,80 +12,63 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
-use Phypes\Type\Password;
-use Skletter\Exception\Domain\RegistrationFailure;
-use Skletter\Exception\Domain\ValidationError;
-use Skletter\Exception\IdentifierExistsException;
-use Skletter\Model\DTO\RegistrationState;
-use Skletter\Model\Entity\StandardIdentity;
-use Skletter\Model\Service;
+use Skletter\Model\RemoteService\Exception\UserExists;
+use Skletter\Model\RemoteService\Exception\ValidationError;
+use Skletter\Model\ServiceMediator;
 use Symfony\Component\HttpFoundation\Request;
+
 
 class Registration implements Controller
 {
     /**
-     * @var Service\RegistrationManager $manager
+     * @var ServiceMediator\SessionManager $sessionManager
      */
-    private $manager;
-    /**
-     * @var RegistrationState $state
-     */
-    private $state;
-    /**
-     * @var Service\LoginManager $loginService
-     */
-    private $loginService;
+    private $sessionManager;
     private $mailer;
+    private $registration;
 
-    public function __construct(Service\RegistrationManager $registrationManager,
-                                RegistrationState $state,
-                                Service\TransactionalMailer $mailer,
-                                Service\LoginManager $loginManager)
+    public function __construct(ServiceMediator\AccountService $registration,
+                                ServiceMediator\TransactionalMailer $mailer,
+                                ServiceMediator\SessionManager $sessionManager)
     {
-        $this->manager = $registrationManager;
-        $this->state = $state;
-        $this->loginService = $loginManager;
+        $this->registration = $registration;
+        $this->sessionManager = $sessionManager;
         $this->mailer = $mailer;
     }
 
     /**
-     * @param  Request $request
-     * @throws \Phypes\Exception\InvalidRule
-     * @throws \Exception
+     * @param Request $request
+     * @return array
+     * @throws \Skletter\Model\RemoteService\Exception\NonExistentUser
      */
-    public function registerUser(Request $request): void
+    public function registerUser(Request $request)
     {
         try {
-            $password = $request->request->get('password');
+            $account = [
+                'name' => $request->request->get('name'),
+                'username' => $request->request->get('username'),
+                'email' => $request->request->get('email'),
+                'password' => $request->request->get('password')
+            ];
+            $this->registration->register($account);
 
-            /**
-             * @var StandardIdentity $identity
-             */
-            $this->manager->registerIdentity(
-                $request->request->get('email'),
-                $request->request->get('username'),
-                $password
+            $this->mailer->sendAccountConfirmationEmail($account['email']);
+
+            $this->sessionManager->loginWithPassword(
+                $account['email'],
+                $account['password'],
+                $request->headers->get('HTTP_USER_AGENT')
             );
-            $this->manager->registerProfile(
-                $request->request->get('name'),
-                'IND',
-                new \DateTimeImmutable()
-            );
-            $this->manager->save();
 
-            $identity = $this->manager->getStandardIdentity();
-            $this->mailer->sendAccountConfirmationEmail($identity->getId());
-            $this->loginService->loginWithPassword($request->request->get('email'), new Password($password));
+            return ['success' => true];
 
-            $this->state->setSuccess(true);
-
-        } catch (IdentifierExistsException | ValidationError | RegistrationFailure $e) {
-            $this->state->setError($e->getMessage());
+        } catch (UserExists | ValidationError $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    public function handleRequest(Request $request, string $method): void
+    public function handleRequest(Request $request, string $method): array
     {
-        $this->{$method}($request);
+        return $this->{$method}($request);
     }
 }
