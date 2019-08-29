@@ -27,11 +27,18 @@ use Skletter\Model\Repository\IdentityRepository;
 use Skletter\Model\ServiceMediator\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Twig\Environment;
+use Thrift\Protocol\TBinaryProtocol;
+use Thrift\Protocol\TProtocol;
+use Thrift\Transport\TFramedTransport;
+use Thrift\Transport\TTransport;
+use Twig;
 use function Skletter\Factory\buildLazyLoader;
 use function Skletter\Factory\buildPDO;
 use function Skletter\Factory\buildPredis;
 use function Skletter\Factory\buildRabbitMQ;
+use function Skletter\Factory\buildTFramedTransport;
+use function Skletter\Factory\buildThriftSocket;
+use function Skletter\Factory\buildThriftTransport;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
 
@@ -48,27 +55,34 @@ $lazyloader = buildLazyLoader(__DIR__ . '/../app/cache/proxies');
 $templatesDir = __DIR__ . '/../templates';
 $templatesCacheDir = __DIR__ . '/../app/cache/templates';
 
-$injector->delegate(Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
-$injector->share(Environment::class);
+$injector->delegate(Twig\Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
+$injector->delegate(TFramedTransport::class, buildTFramedTransport($lazyloader, 'localhost', 9090));
+$injector->delegate(\PDO::class, buildPDO());
+$injector->delegate(Client::class, buildPredis());
+$injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
+
+
+$injector->share(Twig\Environment::class);
+$injector->share(TFramedTransport::class);
 
 $injector->define(
     FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
 );
+$injector->define(TBinaryProtocol::class, ['trans' => TFramedTransport::class]);
 
+$injector->alias(TProtocol::class, TBinaryProtocol::class);
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
 $injector->alias(IdentityRepositoryInterface::class, IdentityRepository::class);
 $injector->alias(Mailer::class, EmailQueuer::class);
+$injector->alias(TTransport::class, TFramedTransport::class);
 
 $injector->share(LoginState::class);
 $injector->share(LoginManager::class);
 $injector->share(RegistrationState::class);
 
-$injector->delegate(\PDO::class, buildPDO());
-$injector->delegate(Client::class, buildPredis());
-$injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
 
 
 return $injector;
