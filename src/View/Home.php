@@ -11,8 +11,7 @@
 namespace Skletter\View;
 
 
-use Greentea\Exception\TemplatingException;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\ServiceMediator\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -96,19 +95,5 @@ class Home extends AbstractView
         return $this->showLoggedOutHome($request);
     }
 
-    /**
-     * @param  Request $request
-     * @param  string $method
-     * @return Response
-     * @throws TemplatingException
-     */
-    public function createResponse(Request $request, string $method): Response
-    {
-        try {
-            return $this->{$method}($request);
-        } catch (\Twig\Error\Error $e) {
-            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 
 }

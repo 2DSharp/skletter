@@ -11,7 +11,6 @@
 namespace Skletter\View;
 
 
-use Greentea\Exception\TemplatingException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,18 +65,4 @@ class ErrorPages extends AbstractView implements ErrorPageView
         return $this->respond($request, $html, 500);
     }
 
-    /**
-     * @param  Request $request
-     * @param  string $method
-     * @return Response
-     * @throws TemplatingException
-     */
-    public function createResponse(Request $request, string $method): Response
-    {
-        try {
-            return $this->{$method}($request);
-        } catch (\Twig\Error\Error $e) {
-            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 }
