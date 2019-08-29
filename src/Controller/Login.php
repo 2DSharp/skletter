@@ -12,16 +12,9 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
-use Phypes\Exception\EmptyRequiredValue;
-use Phypes\Exception\InvalidValue;
-use Phypes\Type\Password;
-use Phypes\Type\StringRequired;
-use Skletter\Component\UserFriendlyError;
-use Skletter\Exception\Domain\PasswordMismatch;
-use Skletter\Exception\Domain\UserDoesNotExistException;
-use Skletter\Exception\InvalidIdentifier;
-use Skletter\Model\DTO\LoginState;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Exception\Domain\AuthenticationFailure;
+use Skletter\Model\RemoteService\Exception\NonExistentUser;
+use Skletter\Model\ServiceMediator\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class Login implements Controller
@@ -29,51 +22,36 @@ class Login implements Controller
     /**
      * LoginManager service to handle authentication and log in system
      *
-     * @var LoginManager $loginManager
+     * @var SessionManager $sessionManager
      */
-    private $loginManager;
+    private $sessionManager;
 
-    /**
-     * Data Transfer Object to carry forward the login data to the view
-     *
-     * @var LoginState
-     */
-    private $state;
-
-    public function __construct(LoginManager $loginManager, LoginState $state)
+    public function __construct(SessionManager $sessionManager)
     {
-        $this->loginManager = $loginManager;
-        $this->state = $state;
+        $this->sessionManager = $sessionManager;
     }
 
     /**
-     * @param        Request $request
+     * @param Request $request
+     * @return array
      * @request_type POST
-     * @throws       \Phypes\Exception\InvalidRule
-     * @throws       \Skletter\Exception\InvalidCookie
-     * @throws       \Exception
      */
     public function attemptLogin(Request $request)
     {
         try {
             $identifier = $request->request->get('identity');
-            $rawPassword = new Password(new StringRequired($request->request->get('password')));
-            // Set session data, log stuff, update db
-            $this->loginManager->loginWithPassword($identifier, $rawPassword);
-            $this->state->setSuccess(true);
+            $password = $request->request->get('password');
 
-        } catch (UserDoesNotExistException | InvalidIdentifier $exception) {
-            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::NONEXISTENT_IDENTIFIER));
+            $token = $this->sessionManager->loginWithPassword($identifier, $password, $request->headers->get('HTTP_USER_AGENT'));
+            return ['success' => true, 'cookie' => $token];
 
-        } catch (PasswordMismatch | InvalidValue $e) {
-            $this->state->setError(UserFriendlyError::getError(UserFriendlyError::INVALID_PASSWORD_VAGUE));
-        } catch (EmptyRequiredValue $e) {
-            $this->state->setError('You must fill in the all the fields');
+        } catch (NonExistentUser | AuthenticationFailure $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
-    public function handleRequest(Request $request, string $method): void
+    public function handleRequest(Request $request, string $method): array
     {
-        $this->{$method}($request);
+        return $this->{$method}($request);
     }
 }
