@@ -12,6 +12,7 @@ namespace Skletter\View;
 
 
 use Greentea\Core\View;
+use Greentea\Exception\TemplatingException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,21 @@ abstract class AbstractView implements View
             return new JsonResponse($params);
         }
         return $this->respond($request, $this->createHTMLFromTemplate($twig, $template, $params));
+    }
+
+    /**
+     * @param  Request $request
+     * @param  string $method
+     * @param null $dto
+     * @return Response
+     */
+    public function createResponse(Request $request, string $method, $dto = null): Response
+    {
+        try {
+            return $this->{$method}($request, $dto);
+        } catch (\Twig\Error\Error $e) {
+            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
 }
