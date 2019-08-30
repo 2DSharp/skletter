@@ -1,4 +1,4 @@
-namespace java com.skletter.service.Authentication
+namespace java com.skletter.Service
 namespace php Skletter.Model.RemoteService.Authentication
 
 include "Exception.thrift"

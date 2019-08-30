@@ -1,4 +1,4 @@
-namespace java com.skletter.service.UserService
+namespace java com.skletter.Service
 namespace php Skletter.Model.RemoteService.UserService
 
 include "Entity.thrift"

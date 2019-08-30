@@ -1,4 +1,4 @@
-namespace java com.skletter.Model.Entity
+namespace java com.skletter.Entity
 namespace php Skletter.Model.RemoteService.Entity
 
 enum Status
