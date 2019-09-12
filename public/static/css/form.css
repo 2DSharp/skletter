@@ -19,6 +19,10 @@
     border-radius: 5px;
     padding: 7px;
 }
+
+.errored-input {
+    border-bottom: 2px solid rgb(145, 12, 31) !important;
+}
 .text:focus {
     border-bottom: 2px solid rgba(207, 22, 113, 1) !important;
 }
@@ -67,10 +71,10 @@ button.std.small {
 }
 
 .error-box {
-    color: #cf1671;
-    padding: 8px;
-    font-size: 13px;
+    color: rgb(145, 12, 31);
+    font-size: 14px;
     text-align: left;
+    margin-bottom: 10px;
 }
 
 .processor {
