@@ -11,8 +11,7 @@
 namespace Skletter\Model\ServiceMediator;
 
 use Skletter\Model\RemoteService\Authentication\AuthenticationClient;
-use Skletter\Model\RemoteService\Entity\Profile;
-use Skletter\Model\RemoteService\Entity\User;
+use Skletter\Model\RemoteService\DTO\UserDTO;
 use Skletter\Model\RemoteService\UserService\UserServiceClient;
 
 /**
@@ -48,18 +47,18 @@ class AccountService
      * Create a new user account
      *
      * @param array $data
-     * @throws \Skletter\Model\RemoteService\Exception\NonExistentUser
      * @throws \Skletter\Model\RemoteService\Exception\UserExists
      * @throws \Skletter\Model\RemoteService\Exception\ValidationError
      */
     public function register(array $data)
     {
-        $user = new User(['email' => $data['email'], 'username' => $data['username']]);
-        $profile = new Profile(['username' => $data['username'], 'name' => $data['name']]);
+        $user = new UserDTO();
+        $user->name = $data['name'];
+        $user->username = $data['username'];
+        $user->email = $data['email'];
+        $user->password = $data['password'];
+        $user->ipAddr = $data['ipAddr'];
 
-        $this->userService->registerNew($user, $profile);
-        $user = $this->userService->getUserByEmail($user->getEmail());
-
-        $this->auth->createStandardIdentity($user->getId(), $data['password']);
+        $this->userService->registerNew($user);
     }
 }
