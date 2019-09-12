@@ -41,7 +41,7 @@ class Registration extends AbstractView
      */
     public function registerUser(Request $request, array $dto): Response
     {
-        if ($dto['result']) {
+        if ($dto['success']) {
             return $this->sendSuccessResponse(
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
@@ -58,7 +58,7 @@ class Registration extends AbstractView
         ];
         return $this->sendFailureResponse(
             $request, $this->templating, ['status' => 'failed',
-            'error' => $dto['error'], 'post' => $postData], 'pages/registration.twig'
+            'errors' => $dto['errors'], 'post' => $postData], 'pages/registration.twig'
         );
     }
     /**
@@ -66,7 +66,7 @@ class Registration extends AbstractView
      * @return Response
      * @throws \Twig\Error\Error
      */
-    private function displayForm(Request $request): Response
+    public function displayForm(Request $request): Response
     {
         $html = $this->createHTMLFromTemplate(
             $this->templating, 'pages/registration.twig',

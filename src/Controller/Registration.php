@@ -48,22 +48,34 @@ class Registration implements Controller
                 'name' => $request->request->get('name'),
                 'username' => $request->request->get('username'),
                 'email' => $request->request->get('email'),
-                'password' => $request->request->get('password')
+                'password' => $request->request->get('password'),
+                'ipAddr' => $request->getClientIp()
+
             ];
+
             $this->registration->register($account);
 
             $this->mailer->sendAccountConfirmationEmail($account['email']);
 
+            /*
             $this->sessionManager->loginWithPassword(
                 $account['email'],
                 $account['password'],
                 $request->headers->get('HTTP_USER_AGENT')
             );
+            */
 
             return ['success' => true];
 
-        } catch (UserExists | ValidationError $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
+        } catch (ValidationError $e) {
+            // Remove exception, let the mediator return a value object,
+            // That way we can capture all the errors
+            // Business layers throw exceptions cuz they fail
+            // Handle it and return VOs to process them
+            // Not so exceptional for the controller
+            return ['success' => false, 'errors' => $e->errors];
+        } catch (UserExists $e) {
+            return ['success' => false, 'errors' => [$e->field => $e->error]];
         }
     }
 
