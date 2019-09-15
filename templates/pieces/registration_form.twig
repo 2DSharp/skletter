@@ -34,14 +34,18 @@
         <label for="email" id="name" class="tooltip">
             Password:
         </label>
-        <input name="password" id="password" tabindex="4"
+        <input onfocus="initStrengthCheck()" onblur="hideStrength()" name="password" id="password" tabindex="4"
                placeholder="Min. 8 characters, mixed case, alphanumeric" type="password" class="std text">
         <div class="error-box" id="password-errbox">
             {{ error }}
         </div>
+        <div id="password-strength">
+            <meter max="4" id="password-strength-meter"></meter>
+            <span id="password-strength-text"></span>
+        </div>
         <div><p class="info">By signing up, you are agreeing to the terms of service and privacy policy.</p>
         </div>
-        <button class="std primary-btn">Sign up</button>
+        <button onclick="register(event, '{{ server.base_url }}/register')" class="std primary-btn">Sign up</button>
     </form>
 
     <div {% if status == 'failed' %} style="display: block" {% endif %} class="processor" id="reg-processor">
@@ -51,5 +55,4 @@
             {{ error }}
         </div>
     </div>
-</div>
 </div>

@@ -85,3 +85,68 @@ button.std.small {
 .loader {
     display: none;
 }
+
+#password-strength {
+    display: none;
+    height: 12px;
+}
+
+#password-strength-text {
+    float: right;
+    font-size: 12px;
+}
+
+meter {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    vertical-align: middle;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    margin: 0 auto;
+    width: 200px;
+    height: 8px;
+
+    /* Applicable only to Firefox */
+    background: rgba(0, 0, 0, 0.1) none;
+}
+
+meter::-webkit-meter-bar {
+    background: rgba(0, 0, 0, 0.1) none;
+    border-radius: 5px;
+
+}
+
+/* Webkit based browsers */
+meter[value="1"]::-webkit-meter-optimum-value {
+    background: red;
+}
+
+meter[value="2"]::-webkit-meter-optimum-value {
+    background: yellow;
+}
+
+meter[value="3"]::-webkit-meter-optimum-value {
+    background: orange;
+}
+
+meter[value="4"]::-webkit-meter-optimum-value {
+    background: green;
+}
+
+/* Gecko based browsers */
+meter[value="1"]::-moz-meter-bar {
+    background: red;
+}
+
+meter[value="2"]::-moz-meter-bar {
+    background: yellow;
+}
+
+meter[value="3"]::-moz-meter-bar {
+    background: orange;
+}
+
+meter[value="4"]::-moz-meter-bar {
+    background: green;
+}
