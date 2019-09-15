@@ -4,18 +4,26 @@ namespace php Skletter.Model.RemoteService.Exception
 exception NonExistentUser
 {
   1: string	message
-  2: i16	code
- }
+}
+
+exception PasswordMismatch
+{
+    1: string message
+}
 
 
 exception UserExists
 {
-  1: string message
-  2: i16	code
+  1: string field
+  2: string error
 }
 
 exception ValidationError
 {
-    1: string message
-    2: i16    code
+    1: map<string, string> errors
+}
+
+exception NullDTOException
+{
+    1: string error
 }
