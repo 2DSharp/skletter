@@ -4,8 +4,30 @@
 {% block head %}
     <link href="{{ server.css_assets }}/registration.css" rel="stylesheet">
     <link href="{{ server.css_assets }}/form.css" rel="stylesheet">
-    <script src="{{ server.js_assets }}/axios.min.js"></script>
-    <script src="{{ server.js_assets }}/register.js"></script>
+    <script>
+
+        (function () {
+
+            var ZXCVBN_SRC = "{{ server.js_assets }}/zxcvbn.js";
+
+            var async_load = function () {
+                var first, s;
+                s = document.createElement('script');
+                s.src = ZXCVBN_SRC;
+                s.type = 'text/javascript';
+                s.async = true;
+                first = document.getElementsByTagName('script')[0];
+                return first.parentNode.insertBefore(s, first);
+            };
+
+            if (window.attachEvent != null) {
+                window.attachEvent('onload', async_load);
+            } else {
+                window.addEventListener('load', async_load, false);
+            }
+
+        }).call(this);
+    </script>
 {% endblock %}
 {% block content %}
     <div id="main-container" class="container">
@@ -15,4 +37,6 @@
             {% include('pieces/registration_form.twig') %}
         {% endif %}
     </div>
+    <script src="{{ server.js_assets }}/axios.min.js"></script>
+    <script src="{{ server.js_assets }}/register.js"></script>
 {% endblock %}
