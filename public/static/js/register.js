@@ -64,3 +64,48 @@ function resetErroredInput() {
 
 }
 
+var strength = {
+    0: "Bad",
+    1: "Weak",
+    2: "Average",
+    3: "Good",
+    4: "Strong"
+};
+
+var color = {
+    0: "darkred",
+    1: "red",
+    2: "orange",
+    3: "darkorange",
+    4: "green"
+}
+
+const password = document.getElementById("password");
+var text = document.getElementById('password-strength-text');
+var meter = document.getElementById('password-strength-meter');
+
+password.addEventListener('input', function () {
+    var val = password.value;
+    var result = zxcvbn(val);
+
+    // Update the password strength meter
+    meter.value = result.score;
+
+    // Update the text indicator
+    if (val !== "") {
+        text.innerHTML = "Strength: <b>" + strength[result.score] + "</b>";
+        text.style.color = color[result.score];
+    } else {
+        text.innerHTML = "";
+    }
+});
+
+function initStrengthCheck() {
+    document.getElementById('password-strength').style.display = "block";
+    document.getElementById('password-strength').style.color = "red";
+
+}
+
+function hideStrength() {
+    document.getElementById('password-strength').style.display = "none";
+}
