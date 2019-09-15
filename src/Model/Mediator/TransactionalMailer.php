@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Model\ServiceMediator;
+namespace Skletter\Model\Mediator;
 
 
 use Skletter\Contract\Component\Mailer;
