@@ -22,4 +22,20 @@ class RegistrationResult
         $this->errors = $errors;
     }
 
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuccess(): bool
+    {
+        return $this->success;
+    }
+
 }
