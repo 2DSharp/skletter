@@ -11,10 +11,9 @@
 namespace Skletter\View;
 
 
-use Skletter\Model\DTO\RegistrationState;
+use Skletter\Model\LocalService\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig\Environment;
 
 class Registration extends AbstractView
@@ -25,7 +24,7 @@ class Registration extends AbstractView
     private $templating;
     private $session;
 
-    public function __construct(Environment $twig, SessionInterface $session)
+    public function __construct(Environment $twig, SessionManager $session)
     {
         $this->templating = $twig;
         $this->session = $session;
@@ -44,7 +43,7 @@ class Registration extends AbstractView
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
                     'pieces/contact_verification_prompt.twig',
-                    ['email' => $this->session->get('email')]
+                    ['email' => $this->session->getLoginDetails()->email]
                 )],
                 $_ENV['base_url'] . '/register'
             );
@@ -69,8 +68,8 @@ class Registration extends AbstractView
         $html = $this->createHTMLFromTemplate(
             $this->templating, 'pages/registration.twig',
             ['title' => 'Skletter - Registration',
-                'status' => $this->session->get('status'),
-                'email' => $this->session->get('email')]
+                'status' => $this->session->getLoginDetails()->status,
+                'email' => $this->session->getLoginDetails()->email]
         );
         return $this->respond($request, $html);
     }
