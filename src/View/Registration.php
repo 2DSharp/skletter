@@ -23,13 +23,11 @@ class Registration extends AbstractView
      * @var Environment $templating
      */
     private $templating;
-    private $state;
     private $session;
 
-    public function __construct(Environment $twig, RegistrationState $state, SessionInterface $session)
+    public function __construct(Environment $twig, SessionInterface $session)
     {
         $this->templating = $twig;
-        $this->state = $state;
         $this->session = $session;
     }
 
