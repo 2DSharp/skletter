@@ -119,6 +119,22 @@ function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, st
     };
 }
 
+function getLazyLoadingPDO(LazyLoadingValueHolderFactory $lazyloader): callable
+{
+    return function () use ($lazyloader) : VirtualProxyInterface {
+        $factory = $lazyloader;
+        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+                                 $method,
+                                 array $parameters,
+                                 & $initializer
+        ) {
+            $wrappedObject = buildPDO();
+            $initializer = null; // disable initialization
+            return true;
+        };
+        return $factory->createProxy(PDO::class, $initializer);
+    };
+}
 
 function buildTFramedTransport(LazyLoadingValueHolderFactory $lazyloader, string $address, int $port): callable
 {
@@ -129,7 +145,9 @@ function buildTFramedTransport(LazyLoadingValueHolderFactory $lazyloader, string
                                  array $parameters,
                                  & $initializer
         ) use ($address, $port) {
+            $timeout = 20; // in seconds.
             $socket = new TSocket($address, $port);
+            $socket->setRecvTimeout($timeout * 1000);
             $transport = new TFramedTransport($socket, 1024, 1024);
             $transport->open();
             $wrappedObject = $transport;
