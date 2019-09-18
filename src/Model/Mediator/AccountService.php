@@ -10,7 +10,7 @@
 
 namespace Skletter\Model\Mediator;
 
-use Skletter\Model\RemoteService\Authentication\AuthenticationClient;
+use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\RemoteService\DTO\UserDTO;
 use Skletter\Model\RemoteService\Exception\DTONullException;
 use Skletter\Model\RemoteService\Exception\NonExistentUser;
@@ -19,7 +19,7 @@ use Skletter\Model\RemoteService\Exception\PasswordMismatch;
 use Skletter\Model\RemoteService\Exception\UserExists;
 use Skletter\Model\RemoteService\Exception\ValidationError;
 use Skletter\Model\RemoteService\UserService\UserServiceClient;
-use Skletter\Model\ValueObject\RegistrationResult;
+use Skletter\Model\ValueObject\Result;
 
 /**
  * A mediator between the Remote services to enable registration
@@ -34,25 +34,27 @@ class AccountService
      */
     private $userService;
     /**
-     * Remote authentication service
-     * @var AuthenticationClient $auth
+     * Local session management service
+     * @var SessionManager $session
      */
-    private $auth;
+    private $session;
 
     /**
      * AccountService constructor.
      * @param UserServiceClient $userService
+     * @param SessionManager $session
      */
-    public function __construct(UserServiceClient $userService)
+    public function __construct(UserServiceClient $userService, SessionManager $session)
     {
         $this->userService = $userService;
+        $this->session = $session;
     }
 
     /**
      * Create a new user account
      *
      * @param array $data
-     * @return RegistrationResult
+     * @return Result
      */
     public function register(array $data)
     {
@@ -66,22 +68,23 @@ class AccountService
 
             $this->userService->registerNew($user);
 
-            return new RegistrationResult(true);
+            return new Result(true);
         } catch (ValidationError $e) {
-            return new RegistrationResult(false, $e->errors);
+            return new Result(false, $e->errors);
         } catch (UserExists $e) {
-            return new RegistrationResult(false, [$e->field => $e->error]);
+            return new Result(false, [$e->field => $e->error]);
         } catch (NullDTOException $e) {
-            return new RegistrationResult(false, ["global" => "Something went wrong. Try again."]);
+            return new Result(false, ["global" => "Something went wrong. Try again."]);
         }
     }
 
-    public function loginWithPassword(string $identifier, string $password): UserDTO
+    public function loginWithPassword(string $identifier, string $password): Result
     {
         try {
-            return $this->userService->loginWithPassword($identifier, $password);
+            $this->session->storeLoginDetails($this->userService->loginWithPassword($identifier, $password));
+            return new Result(true);
         } catch (NonExistentUser | PasswordMismatch $e) {
-
+            return new Result(false, $e->getMessage());
         }
     }
 }
