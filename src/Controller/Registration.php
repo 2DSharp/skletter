@@ -12,24 +12,19 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
-use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\Mediator;
 use Symfony\Component\HttpFoundation\Request;
 
 
 class Registration implements Controller
 {
-
-    private $session;
     private $mailer;
     private $account;
 
     public function __construct(Mediator\AccountService $account,
-                                Mediator\TransactionalMailer $mailer,
-                                SessionManager $session)
+                                Mediator\TransactionalMailer $mailer)
     {
         $this->account = $account;
-        $this->session = $session;
         $this->mailer = $mailer;
     }
 
@@ -50,8 +45,7 @@ class Registration implements Controller
         $result = $this->account->register($account);
         if ($result->isSuccess()) {
             $this->mailer->sendAccountConfirmationEmail($account['email']);
-            $this->session->storeLoginDetails($this->account->loginWithPassword($account['email'],
-                                                                                $account['password']));
+            $this->account->loginWithPassword($account['email'], $account['password']);
         }
 
         return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
