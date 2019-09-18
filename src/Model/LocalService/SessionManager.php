@@ -45,5 +45,12 @@ class SessionManager
         $dto->email = $this->persistence->get("email");
         $dto->username = $this->persistence->get("username");
         $dto->id = $this->persistence->get("id");
+
+        return $dto;
+    }
+
+    public function isLoggedIn(): bool
+    {
+        return null !== ($this->persistence->get('id'));
     }
 }
