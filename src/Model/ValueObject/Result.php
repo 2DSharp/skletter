@@ -11,7 +11,7 @@
 namespace Skletter\Model\ValueObject;
 
 
-class RegistrationResult
+class Result
 {
     private $errors = [];
     private $success;
