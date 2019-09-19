@@ -148,6 +148,8 @@ function buildTFramedTransport(LazyLoadingValueHolderFactory $lazyloader, string
             $timeout = 20; // in seconds.
             $socket = new TSocket($address, $port);
             $socket->setRecvTimeout($timeout * 1000);
+            $socket->setSendTimeout($timeout * 1000);
+
             $transport = new TFramedTransport($socket, 1024, 1024);
             $transport->open();
             $wrappedObject = $transport;
