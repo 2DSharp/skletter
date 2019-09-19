@@ -64,17 +64,17 @@ $injector->define(
     FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
 );
-$injector->define(TBinaryProtocol::class, [':trans' => $injector->make(TFramedTransport::class)]);
+
+$injector->alias(TTransport::class, TFramedTransport::class);
+
+$injector->define(TBinaryProtocol::class, [':trans' => $injector->make(TTransport::class)]);
 $injector->alias(TProtocol::class, TBinaryProtocol::class);
-$injector->define(UserServiceClient::class, [':input' => $injector->make(TBinaryProtocol::class)]);
-$injector->define(AuthenticationClient::class, [':input' => $injector->make(TBinaryProtocol::class)]);
+$injector->define(UserServiceClient::class, [':input' => $injector->make(TProtocol::class)]);
+$injector->define(AuthenticationClient::class, [':input' => $injector->make(TProtocol::class)]);
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
 $injector->alias(Mailer::class, EmailQueuer::class);
-$injector->alias(TTransport::class, TFramedTransport::class);
-
-
 
 
 return $injector;
