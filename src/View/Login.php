@@ -13,37 +13,24 @@ namespace Skletter\View;
 
 use Greentea\Exception\TemplatingException;
 use Skletter\Factory\CookieFactory;
-use Skletter\Model\DTO\LoginState;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\Mediator\AccountService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
 class Login extends AbstractView
 {
-    /**
-     * Shared DTO to retrieve current login state
-     *
-     * @var LoginState $state
-     */
-    private $state;
+
     /**
      * @var Environment $twig
      */
     private $twig;
-    /**
-     * @var LoginManager $loginManager
-     */
-    private $loginManager;
+    private $account;
 
-    public function __construct(LoginState $state,
-                                Environment $twig,
-                                LoginManager $loginManager
-    )
+    public function __construct(Environment $twig, AccountService $account)
     {
         $this->twig = $twig;
-        $this->state = $state;
-        $this->loginManager = $loginManager;
+        $this->account = $account;
     }
 
 

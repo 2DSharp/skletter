@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Skletter\Model\Service;
+namespace Skletter\Model\Mediator;
 
 
 use Skletter\Contract\Component\Mailer;
@@ -22,11 +22,11 @@ class TransactionalMailer
         $this->mailer = $mailer;
     }
 
-    public function sendAccountConfirmationEmail(int $id)
+    public function sendAccountConfirmationEmail(string $email)
     {
         $data = json_encode(
             [
-                'id' => $id,
+                'address' => $email,
                 'type' => 'confirmation'
             ]
         );

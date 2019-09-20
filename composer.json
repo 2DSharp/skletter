@@ -37,7 +37,7 @@
     "psr/log": "1.*",
     "ext-mbstring": "*",
     "twodee/phypes": "dev-master#68d667",
-    "twodee/greentea": "dev-master",
+    "twodee/greentea": "dev-master#3735cfe",
     "twig/twig": "^2.0",
     "symfony/http-foundation": "^4.2",
     "nikic/fast-route": "^1.2",
@@ -48,7 +48,8 @@
     "ocramius/proxy-manager": "^2.2",
     "ext-json": "*",
     "predis/predis": "^1.1",
-    "php-amqplib/php-amqplib": "^2.10"
+    "php-amqplib/php-amqplib": "^2.10",
+    "apache/thrift": "^0.12.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^7",

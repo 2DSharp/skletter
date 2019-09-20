@@ -11,11 +11,9 @@
 namespace Skletter\View;
 
 
-use Greentea\Exception\TemplatingException;
-use Skletter\Model\DTO\RegistrationState;
+use Skletter\Model\LocalService\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Twig\Environment;
 
 class Registration extends AbstractView
@@ -24,29 +22,28 @@ class Registration extends AbstractView
      * @var Environment $templating
      */
     private $templating;
-    private $state;
     private $session;
 
-    public function __construct(Environment $twig, RegistrationState $state, SessionInterface $session)
+    public function __construct(Environment $twig, SessionManager $session)
     {
         $this->templating = $twig;
-        $this->state = $state;
         $this->session = $session;
     }
 
     /**
      * @param  Request $request
+     * @param array $dto
      * @return Response
      * @throws \Twig\Error\Error
      */
-    public function registerUser(Request $request): Response
+    public function registerUser(Request $request, array $dto): Response
     {
-        if ($this->state->isSuccessful()) {
+        if ($dto['success']) {
             return $this->sendSuccessResponse(
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
                     'pieces/contact_verification_prompt.twig',
-                    ['email' => $this->session->get('email')]
+                    ['email' => $this->session->getLoginDetails()->email]
                 )],
                 $_ENV['base_url'] . '/register'
             );
@@ -58,7 +55,7 @@ class Registration extends AbstractView
         ];
         return $this->sendFailureResponse(
             $request, $this->templating, ['status' => 'failed',
-            'error' => $this->state->getError(), 'post' => $postData], 'pages/registration.twig'
+            'errors' => $dto['errors'], 'post' => $postData], 'pages/registration.twig'
         );
     }
     /**
@@ -66,29 +63,16 @@ class Registration extends AbstractView
      * @return Response
      * @throws \Twig\Error\Error
      */
-    private function displayForm(Request $request): Response
+    public function displayForm(Request $request): Response
     {
         $html = $this->createHTMLFromTemplate(
             $this->templating, 'pages/registration.twig',
             ['title' => 'Skletter - Registration',
-                'status' => $this->session->get('status'),
-                'email' => $this->session->get('email')]
+                'status' => $this->session->getLoginDetails()->status,
+                'email' => $this->session->getLoginDetails()->email]
         );
         return $this->respond($request, $html);
     }
 
-    /**
-     * @param  Request $request
-     * @param  string $method
-     * @return Response
-     * @throws TemplatingException
-     */
-    public function createResponse(Request $request, string $method): Response
-    {
-        try {
-            return $this->{$method}($request);
-        } catch (\Twig\Error\Error $e) {
-            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
+
 }

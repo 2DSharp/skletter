@@ -16,6 +16,8 @@ use Predis\Client;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Thrift\Transport\TFramedTransport;
+use Thrift\Transport\TSocket;
 use Twig\Environment;
 
 function addTwigGlobals(Environment $twig)
@@ -28,17 +30,6 @@ function addTwigGlobals(Environment $twig)
         'js_assets' => $_ENV['js_assets']
         ]
     );
-}
-function buildTwig(string $templatesDir, string $cacheDir)
-{
-    $loader = new \Twig\Loader\FilesystemLoader($templatesDir);
-    $twig = new Environment(
-        $loader, [
-        //  'cache' => $cacheDir,
-        ]
-    );
-    addTwigGlobals($twig);
-    return $twig;
 }
 
 function buildPDO(): callable
@@ -65,22 +56,6 @@ function buildPredis(): callable
             "port" => 6379,
                 "persistent" => "1")
         );
-    };
-}
-function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
-{
-    return function () use ($lazyloader, $templatesDir, $cacheDir) : VirtualProxyInterface {
-        $factory = $lazyloader;
-        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
-                                 $method,
-                                 array $parameters,
-                                 & $initializer
-        ) use ($templatesDir, $cacheDir) {
-            $initializer = null; // disable initialization
-            $wrappedObject = buildTwig($templatesDir, $cacheDir);
-            return true;
-        };
-        return $factory->createProxy(Environment::class, $initializer);
     };
 }
 
@@ -112,5 +87,76 @@ function buildRabbitMQ(): callable
 {
     return function (): AMQPStreamConnection {
         return new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+    };
+}
+
+function buildTwig(string $templatesDir, string $cacheDir)
+{
+    $loader = new \Twig\Loader\FilesystemLoader($templatesDir);
+    $twig = new Environment(
+        $loader, [
+            //  'cache' => $cacheDir,
+        ]
+    );
+    addTwigGlobals($twig);
+    return $twig;
+}
+
+function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
+{
+    return function () use ($lazyloader, $templatesDir, $cacheDir) : VirtualProxyInterface {
+        $factory = $lazyloader;
+        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+                                 $method,
+                                 array $parameters,
+                                 & $initializer
+        ) use ($templatesDir, $cacheDir) {
+            $initializer = null; // disable initialization
+            $wrappedObject = buildTwig($templatesDir, $cacheDir);
+            return true;
+        };
+        return $factory->createProxy(Environment::class, $initializer);
+    };
+}
+
+function getLazyLoadingPDO(LazyLoadingValueHolderFactory $lazyloader): callable
+{
+    return function () use ($lazyloader) : VirtualProxyInterface {
+        $factory = $lazyloader;
+        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+                                 $method,
+                                 array $parameters,
+                                 & $initializer
+        ) {
+            $wrappedObject = buildPDO();
+            $initializer = null; // disable initialization
+            return true;
+        };
+        return $factory->createProxy(PDO::class, $initializer);
+    };
+}
+
+function buildTFramedTransport(LazyLoadingValueHolderFactory $lazyloader, string $address, int $port): callable
+{
+    return function () use ($lazyloader, $address, $port) : VirtualProxyInterface {
+        $factory = $lazyloader;
+        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+                                 $method,
+                                 array $parameters,
+                                 & $initializer
+        ) use ($address, $port) {
+            $timeout = 20; // in seconds.
+            $socket = new TSocket($address, $port);
+            $socket->setRecvTimeout($timeout * 1000);
+            $socket->setSendTimeout($timeout * 1000);
+
+            $transport = new TFramedTransport($socket, 1024, 1024);
+            $transport->open();
+            $wrappedObject = $transport;
+
+            $initializer = null; // disable initialization
+            return true;
+        };
+        return $factory->createProxy(TFramedTransport::class, $initializer);
     };
 }

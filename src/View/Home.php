@@ -11,11 +11,9 @@
 namespace Skletter\View;
 
 
-use Greentea\Exception\TemplatingException;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\LocalService\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Home extends AbstractView
 {
@@ -32,10 +30,9 @@ class Home extends AbstractView
     ];
 
 
-    public function __construct(\Twig\Environment $twig, LoginManager $loginManager, SessionInterface $session)
+    public function __construct(\Twig\Environment $twig, SessionManager $session)
     {
         $this->templating = $twig;
-        $this->loginManager = $loginManager;
         $this->session = $session;
     }
 
@@ -62,9 +59,11 @@ class Home extends AbstractView
                 return [
                     'title' => 'Confirm your email - Skletter',
                     'status' => 'Temp',
-                    'email' => $this->session->get('email')
+                    'email' => $this->session->getLoginDetails()->email
                 ];
         }
+
+        return [];
     }
     /**
      * @param  string $status
@@ -89,26 +88,12 @@ class Home extends AbstractView
      */
     public function main(Request $request): Response
     {
-        if ($this->loginManager->isLoggedIn()) {
-            return $this->showLoggedInHome($this->session->get('status'), $request);
+        if ($this->session->isLoggedIn()) {
+            return $this->showLoggedInHome($this->session->getLoginDetails()->status, $request);
         }
             // Need to manage unauthorized post requests sent to this
         return $this->showLoggedOutHome($request);
     }
 
-    /**
-     * @param  Request $request
-     * @param  string $method
-     * @return Response
-     * @throws TemplatingException
-     */
-    public function createResponse(Request $request, string $method): Response
-    {
-        try {
-            return $this->{$method}($request);
-        } catch (\Twig\Error\Error $e) {
-            throw new TemplatingException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 
 }

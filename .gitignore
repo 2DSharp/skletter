@@ -2,3 +2,5 @@
 vendor/
 app/
 *.env
+gen-*
+RemoteService/

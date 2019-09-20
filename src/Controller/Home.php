@@ -15,8 +15,8 @@ use Greentea\Core\Controller;
 use Skletter\Component\SecureTokenManager;
 use Skletter\Exception\Domain\UserDoesNotExistException;
 use Skletter\Exception\InvalidCookie;
-use Skletter\Model\Service\IdentityMap;
-use Skletter\Model\Service\LoginManager;
+use Skletter\Model\Mediator\IdentityMap;
+use Skletter\Model\Mediator\LoginManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class Home implements Controller
@@ -30,7 +30,7 @@ class Home implements Controller
         $this->map = $map;
     }
 
-    public function main(Request $request)
+    public function mainBak(Request $request)
     {
 
         try {
