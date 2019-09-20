@@ -89,7 +89,6 @@ class Home extends AbstractView
     public function main(Request $request): Response
     {
         if ($this->session->isLoggedIn()) {
-            var_dump($this->session->getLoginDetails());
             return $this->showLoggedInHome($this->session->getLoginDetails()->status, $request);
         }
             // Need to manage unauthorized post requests sent to this

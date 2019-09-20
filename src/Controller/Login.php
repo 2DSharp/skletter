@@ -13,8 +13,8 @@ namespace Skletter\Controller;
 
 use Greentea\Core\Controller;
 use Skletter\Exception\Domain\AuthenticationFailure;
+use Skletter\Model\Mediator\AccountService;
 use Skletter\Model\RemoteService\Exception\NonExistentUser;
-use Skletter\Model\ServiceMediator\SessionManager;
 use Symfony\Component\HttpFoundation\Request;
 
 class Login implements Controller
@@ -22,13 +22,13 @@ class Login implements Controller
     /**
      * LoginManager service to handle authentication and log in system
      *
-     * @var SessionManager $sessionManager
+     * @var AccountService $account
      */
-    private $sessionManager;
+    private $account;
 
-    public function __construct(SessionManager $sessionManager)
+    public function __construct(AccountService $account)
     {
-        $this->sessionManager = $sessionManager;
+        $this->account = $account;
     }
 
     /**
@@ -42,7 +42,10 @@ class Login implements Controller
             $identifier = $request->request->get('identity');
             $password = $request->request->get('password');
 
-            $token = $this->sessionManager->loginWithPassword($identifier, $password, $request->headers->get('HTTP_USER_AGENT'));
+            // NEED TO PASS A METADATA DTO
+
+            $token = $this->account->loginWithPassword($identifier, $password,
+                                                       $request->headers->get('HTTP_USER_AGENT'));
             return ['success' => true, 'cookie' => $token];
 
         } catch (NonExistentUser | AuthenticationFailure $e) {
