@@ -11,6 +11,7 @@
 namespace Skletter\Model\Mediator;
 
 use Skletter\Model\LocalService\SessionManager;
+use Skletter\Model\RemoteService\DTO\LoginMetadata;
 use Skletter\Model\RemoteService\DTO\UserDTO;
 use Skletter\Model\RemoteService\Exception\DTONullException;
 use Skletter\Model\RemoteService\Exception\NonExistentUser;
@@ -78,10 +79,15 @@ class AccountService
         }
     }
 
-    public function loginWithPassword(string $identifier, string $password): Result
+    public function loginWithPassword(string $identifier, string $password, array $params): Result
     {
         try {
-            $this->session->storeLoginDetails($this->userService->loginWithPassword($identifier, $password));
+            $meta = new LoginMetadata();
+            $meta->ipAddr = $params['ipAddr'];
+            $meta->headers = $params['headers'];
+            $meta->localSessionId = $this->session->getId();
+
+            $this->session->storeLoginDetails($this->userService->loginWithPassword($identifier, $password, $meta));
             return new Result(true);
         } catch (NonExistentUser | PasswordMismatch $e) {
             return new Result(false, $e->getMessage());
