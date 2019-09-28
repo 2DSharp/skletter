@@ -1,4 +1,4 @@
-namespace java com.skletter.DTO
+namespace java com.skletter.Romeo.DTO
 namespace php Skletter.Model.RemoteService.DTO
 
 
@@ -26,4 +26,11 @@ struct UserDTO
   5: optional Status status
   6: optional string password
   7: optional string ipAddr
+}
+
+struct LoginMetadata
+{
+    1: required string ipAddr
+    2: required string headers,
+    3: required string localSessionId,
 }
