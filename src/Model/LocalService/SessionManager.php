@@ -29,6 +29,10 @@ class SessionManager
         $this->persistence = $session;
     }
 
+    public function getId(): string
+    {
+        return $this->persistence->getId();
+    }
     public function storeLoginDetails(UserDTO $dto): void
     {
         $this->persistence->set("name", $dto->name);

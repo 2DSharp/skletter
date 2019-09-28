@@ -1,4 +1,4 @@
-namespace java com.skletter.Exception
+namespace java com.skletter.Romeo.Exception
 namespace php Skletter.Model.RemoteService.Exception
 
 exception NonExistentUser
