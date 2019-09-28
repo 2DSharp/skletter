@@ -18,14 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Registration implements Controller
 {
-    private $mailer;
     private $account;
 
-    public function __construct(Mediator\AccountService $account,
-                                Mediator\TransactionalMailer $mailer)
+    public function __construct(Mediator\AccountService $account)
     {
         $this->account = $account;
-        $this->mailer = $mailer;
     }
 
     /**
@@ -44,8 +41,11 @@ class Registration implements Controller
 
         $result = $this->account->register($account);
         if ($result->isSuccess()) {
-            $this->mailer->sendAccountConfirmationEmail($account['email']);
-            $this->account->loginWithPassword($account['email'], $account['password']);
+            $meta = [
+                'ipAddr' => $request->getClientIp(),
+                'headers' => $request->headers->get('User-Agent')
+            ];
+            $this->account->loginWithPassword($account['email'], $account['password'], $meta);
         }
 
         return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
