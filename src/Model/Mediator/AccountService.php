@@ -10,6 +10,7 @@
 
 namespace Skletter\Model\Mediator;
 
+use Skletter\Factory\CookieFactory;
 use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\RemoteService\DTO\LoginMetadata;
 use Skletter\Model\RemoteService\DTO\UserDTO;
@@ -64,7 +65,7 @@ class AccountService
             $user->username = $data['username'];
             $user->email = $data['email'];
             $user->password = $data['password'];
-            $user->ipAddr = $data['ipAddr'];
+            $user->ipAddr = $data['ip-address'];
 
             $this->userService->registerNew($user);
 
@@ -82,12 +83,20 @@ class AccountService
     {
         try {
             $meta = new LoginMetadata();
-            $meta->ipAddr = $params['ipAddr'];
-            $meta->headers = $params['headers'];
+            $meta->ipAddr = $params['ip-address'];
+            $meta->headers = $params['user-agent'];
             $meta->localSessionId = $this->session->getId();
 
-            $this->session->storeLoginDetails($this->userService->loginWithPassword($identifier, $password, $meta));
-            return new Result(true);
+            $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
+            $this->session->storeLoginDetails($cookieDTO->user);
+
+            $cookie = CookieFactory::createSignedCookie($cookieDTO, "persistence", $params['user-agent']);
+
+            $result = new Result(true);
+            $result->setValueObject($cookie);
+
+            return $result;
+
         } catch (NonExistentUser | PasswordMismatch $e) {
             return new Result(false, $e->getMessage());
         }
