@@ -79,6 +79,7 @@ abstract class AbstractView implements View
      * @param  string $method
      * @param null $dto
      * @return Response
+     * @throws TemplatingException
      */
     public function createResponse(Request $request, string $method, $dto = null): Response
     {
