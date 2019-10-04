@@ -39,6 +39,7 @@ class SessionManager
         $this->persistence->set("email", $dto->email);
         $this->persistence->set("username", $dto->username);
         $this->persistence->set("id", $dto->id);
+        $this->persistence->set("status", $dto->status);
     }
 
     public function getLoginDetails(): UserDTO
@@ -49,6 +50,7 @@ class SessionManager
         $dto->email = $this->persistence->get("email");
         $dto->username = $this->persistence->get("username");
         $dto->id = $this->persistence->get("id");
+        $dto->status = $this->persistence->get("status");
 
         return $dto;
     }
