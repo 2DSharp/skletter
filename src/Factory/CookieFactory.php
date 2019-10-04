@@ -23,6 +23,7 @@ class CookieFactory
      * @param string $name
      * @param string $userAgent
      * @return Cookie
+     * @throws \Exception
      */
     public static function createSignedCookie(CookieDTO $identity, string $name, string $userAgent): Cookie
     {
@@ -31,8 +32,6 @@ class CookieFactory
 
         $signedCookie = $cookieData . ":" . $signature;
 
-        return Cookie::create($name, $signedCookie,
-                              \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC1123,
-                                                                   $identity->expiry));
+        return Cookie::create($name, $signedCookie, new \DateTimeImmutable($identity->expiry));
     }
 }
