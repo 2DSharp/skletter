@@ -11,21 +11,19 @@
 namespace Skletter\Component;
 
 
-use Skletter\Component\ValueObject\TokenKeyPair;
-use Skletter\Contract\Component\TokenManager;
-
-class SecureTokenManager implements TokenManager
+class SecureTokenManager
 {
     /**
      * Generates a secure random cookie string with hmac
      *
+     * @param string $token
+     * @param string $userAgent
      * @return string
      */
-    public static function generate(): string
+    public static function signCookie(string $token, string $userAgent): string
     {
-        $token = openssl_random_pseudo_bytes(32);
         $key = base64_decode($_ENV['COOKIE_HMAC_KEY']);
-        $token .= ':' . hash_hmac('sha256', $token, $key);
+        $token .= '::' . hash_hmac('sha256', $token . $userAgent, $key);
 
         return $token;
     }
@@ -34,11 +32,12 @@ class SecureTokenManager implements TokenManager
      * Check the hmac to find any tampering
      *
      * @param  string $token
+     * @param string $userAgent
      * @return bool
      */
-    public static function isTampered(string $token): bool
+    public static function isTampered(string $token, string $userAgent): bool
     {
-        list($tokenValue, $hmac) = explode(':', $token, 2);
-        return ($hmac != hash_hmac('sha256', $tokenValue, base64_decode($_ENV['COOKIE_HMAC_KEY'])));
+        list($id, $tokenValue, $hmac) = explode('::', $token, 2);
+        return ($hmac != hash_hmac('sha256', $tokenValue . $userAgent, base64_decode($_ENV['COOKIE_HMAC_KEY'])));
     }
 }
