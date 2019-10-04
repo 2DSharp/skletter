@@ -11,13 +11,28 @@
 namespace Skletter\Factory;
 
 
-use Skletter\Model\Entity\CookieIdentity;
+use Skletter\Component\SecureTokenManager;
+use Skletter\Model\RemoteService\DTO\CookieDTO;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class CookieFactory
 {
-    public static function createFromCookieIdentity(CookieIdentity $identity, string $name): Cookie
+    /**
+     * Generates a signed Symfony Cookie based on a cookie DTO model
+     * @param CookieDTO $identity
+     * @param string $name
+     * @param string $userAgent
+     * @return Cookie
+     */
+    public static function createSignedCookie(CookieDTO $identity, string $name, string $userAgent): Cookie
     {
-        return Cookie::create($name, $identity->getToken(), $identity->getValidTill());
+        $cookieData = $identity->id . ":" . $identity->token;
+        $signature = SecureTokenManager::signCookie($cookieData, $userAgent);
+
+        $signedCookie = $cookieData . ":" . $signature;
+
+        return Cookie::create($name, $signedCookie,
+                              \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC1123,
+                                                                   $identity->expiry));
     }
 }
