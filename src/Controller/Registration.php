@@ -40,15 +40,17 @@ class Registration implements Controller
         ];
 
         $result = $this->account->register($account);
+        $loginResult = null;
+
         if ($result->isSuccess()) {
             $meta = [
-                'ipAddr' => $request->getClientIp(),
-                'headers' => $request->headers->get('User-Agent')
+                'ip-address' => $request->getClientIp(),
+                'user-agent' => $request->headers->get('User-Agent')
             ];
-            $this->account->loginWithPassword($account['email'], $account['password'], $meta);
+            $loginResult = $this->account->loginWithPassword($account['email'], $account['password'], $meta);
         }
 
-        return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
+        return ['success' => $result->isSuccess(), 'errors' => $result->getErrors(), 'cookie' => $loginResult->getValueObject()];
     }
 
     public function handleRequest(Request $request, string $method): array
