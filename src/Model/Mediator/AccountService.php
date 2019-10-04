@@ -105,7 +105,8 @@ class AccountService
             return $result;
 
         } catch (NonExistentUser | PasswordMismatch $e) {
-            return new Result(false, $e->getMessage());
+
+            return new Result(false, ['global' => $e->getMessage()]);
         }
     }
 }

@@ -90,7 +90,7 @@
                 else {
                     loader.style.display = "none";
                     error_box.style.display = "block";
-                    error_box.innerText = response.data['error'];
+                    error_box.innerText = response.data['error']['global'];
                 }
             })
             .catch(function (error) {
