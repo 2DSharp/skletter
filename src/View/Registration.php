@@ -39,8 +39,7 @@ class Registration extends AbstractView
     public function registerUser(Request $request, array $dto): Response
     {
         if ($dto['success']) {
-            $cookie = $dto['vo'];
-
+            $cookie = $dto['cookie'];
             $response = $this->sendSuccessResponse(
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(

@@ -48,9 +48,10 @@ class Registration implements Controller
                 'user-agent' => $request->headers->get('User-Agent')
             ];
             $loginResult = $this->account->loginWithPassword($account['email'], $account['password'], $meta);
+            return ['success' => $result->isSuccess(), 'cookie' => $loginResult->getValueObject()];
         }
 
-        return ['success' => $result->isSuccess(), 'errors' => $result->getErrors(), 'cookie' => $loginResult->getValueObject()];
+        return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
     }
 
     public function handleRequest(Request $request, string $method): array
