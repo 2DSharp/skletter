@@ -13,13 +13,12 @@ namespace Skletter\Model\Mediator;
 use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\RemoteService\DTO\LoginMetadata;
 use Skletter\Model\RemoteService\DTO\UserDTO;
-use Skletter\Model\RemoteService\Exception\DTONullException;
 use Skletter\Model\RemoteService\Exception\NonExistentUser;
 use Skletter\Model\RemoteService\Exception\NullDTOException;
 use Skletter\Model\RemoteService\Exception\PasswordMismatch;
 use Skletter\Model\RemoteService\Exception\UserExists;
 use Skletter\Model\RemoteService\Exception\ValidationError;
-use Skletter\Model\RemoteService\UserService\UserServiceClient;
+use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\ValueObject\Result;
 
 /**
@@ -31,7 +30,7 @@ class AccountService
 {
     /**
      * Remote user management service
-     * @var UserServiceClient $userService
+     * @var RomeoClient $userService
      */
     private $userService;
     /**
@@ -42,10 +41,10 @@ class AccountService
 
     /**
      * AccountService constructor.
-     * @param UserServiceClient $userService
+     * @param RomeoClient $userService
      * @param SessionManager $session
      */
-    public function __construct(UserServiceClient $userService, SessionManager $session)
+    public function __construct(RomeoClient $userService, SessionManager $session)
     {
         $this->userService = $userService;
         $this->session = $session;

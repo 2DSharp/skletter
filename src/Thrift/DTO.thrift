@@ -17,6 +17,13 @@ enum Status
   SUSPENDED
 }
 
+struct CookieDTO
+{
+    1: required i32 id
+    2: required string token
+    3: required string expiry
+    4: optional UserDTO user
+}
 struct UserDTO
 {
   1: optional i32 id
