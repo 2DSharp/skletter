@@ -79,6 +79,13 @@ class AccountService
         }
     }
 
+    /**
+     * @param string $identifier
+     * @param string $password
+     * @param array $params
+     * @return Result
+     * @throws \Exception
+     */
     public function loginWithPassword(string $identifier, string $password, array $params): Result
     {
         try {

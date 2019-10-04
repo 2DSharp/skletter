@@ -28,6 +28,7 @@ class Registration implements Controller
     /**
      * @param Request $request
      * @return array
+     * @throws \Exception
      */
     public function registerUser(Request $request)
     {
