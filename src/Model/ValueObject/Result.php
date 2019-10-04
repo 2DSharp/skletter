@@ -15,6 +15,7 @@ class Result
 {
     private $errors = [];
     private $success;
+    private $vo;
 
     public function __construct(bool $success, array $errors = [])
     {
@@ -22,6 +23,15 @@ class Result
         $this->errors = $errors;
     }
 
+    public function setValueObject($vo)
+    {
+        $this->vo = $vo;
+    }
+
+    public function getValueObject()
+    {
+        return $this->vo;
+    }
     /**
      * @return array
      */
