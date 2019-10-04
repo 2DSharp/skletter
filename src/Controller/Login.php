@@ -12,9 +12,7 @@ namespace Skletter\Controller;
 
 
 use Greentea\Core\Controller;
-use Skletter\Exception\Domain\AuthenticationFailure;
 use Skletter\Model\Mediator\AccountService;
-use Skletter\Model\RemoteService\Exception\NonExistentUser;
 use Symfony\Component\HttpFoundation\Request;
 
 class Login implements Controller
@@ -35,22 +33,23 @@ class Login implements Controller
      * @param Request $request
      * @return array
      * @request_type POST
+     * @throws \Exception
      */
     public function attemptLogin(Request $request)
     {
-        try {
-            $identifier = $request->request->get('identity');
-            $password = $request->request->get('password');
+        $identifier = $request->request->get('identity');
+        $password = $request->request->get('password');
 
-            // NEED TO PASS A METADATA DTO
+        $meta = [
+            'ip-address' => $request->getClientIp(),
+            'user-agent' => $request->headers->get('User-Agent')
+        ];
+        $result = $this->account->loginWithPassword($identifier, $password, $meta);
 
-            $token = $this->account->loginWithPassword($identifier, $password,
-                                                       $request->headers->get('HTTP_USER_AGENT'));
-            return ['success' => true, 'cookie' => $token];
-
-        } catch (NonExistentUser | AuthenticationFailure $e) {
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
+        if ($result->isSuccess())
+            return ['success' => true, 'cookie' => $result->getValueObject()];
+        else
+            return ['success' => false, 'errors' => $result->getErrors()];
     }
 
     public function handleRequest(Request $request, string $method): array
