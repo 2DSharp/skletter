@@ -44,7 +44,7 @@ class Login extends AbstractView
     public function attemptLogin(Request $request): Response
     {
         if ($this->loginManager->isLoggedIn()) {
-            $cookie = CookieFactory::createFromCookieIdentity($this->loginManager->getCookieIdentity(), 'uid');
+            $cookie = CookieFactory::createSignedCookie($this->loginManager->getCookieIdentity(), 'uid');
             $response = $this->sendSuccessResponse($request, ['status' => 'success'], $_ENV['base_url']);
             $response->headers->setCookie($cookie);
 

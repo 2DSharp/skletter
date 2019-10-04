@@ -36,7 +36,7 @@ class Registration implements Controller
             'username' => $request->request->get('username'),
             'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
-            'ipAddr' => $request->getClientIp()
+            'ip-address' => $request->getClientIp()
         ];
 
         $result = $this->account->register($account);
