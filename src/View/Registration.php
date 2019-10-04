@@ -39,7 +39,9 @@ class Registration extends AbstractView
     public function registerUser(Request $request, array $dto): Response
     {
         if ($dto['success']) {
-            return $this->sendSuccessResponse(
+            $cookie = $dto['vo'];
+
+            $response = $this->sendSuccessResponse(
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
                     'pieces/contact_verification_prompt.twig',
@@ -47,6 +49,10 @@ class Registration extends AbstractView
                 )],
                 $_ENV['base_url'] . '/register'
             );
+
+            $response->headers->setCookie($cookie);
+
+            return $response;
         }
         $postData = [
             'name' => $request->request->get('name'),
