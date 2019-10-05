@@ -58,7 +58,7 @@ $injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
 
 $injector->share(Twig\Environment::class);
 $injector->share(TFramedTransport::class);
-
+$injector->share(SessionInterface::class);
 $injector->define(
     FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
