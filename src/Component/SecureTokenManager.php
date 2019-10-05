@@ -23,9 +23,9 @@ class SecureTokenManager
     public static function signCookie(string $token, string $userAgent): string
     {
         $key = base64_decode($_ENV['COOKIE_HMAC_KEY']);
-        $token .= '::' . hash_hmac('sha256', $token . $userAgent, $key);
+        $signature = '::' . hash_hmac('sha256', $token . $userAgent, $key);
 
-        return $token;
+        return $signature;
     }
 
     /**
