@@ -13,5 +13,7 @@ return [
     ['POST', '/login', ['Login', 'attemptLogin']],
     ['GET', '/login', ['Login', 'renderLoginPage']],
     ['GET', '/register', ['Registration', 'displayForm']],
-    ['POST', '/register', ['Registration', 'registerUser']]
+    ['POST', '/register', ['Registration', 'registerUser']],
+    ['GET', '/confirm', ['Confirmation', 'confirmRegistrationWithToken']],
+    ['POST', '/confirm', ['Confirmation', 'confirmRegistrationWithPin']]
     ];
