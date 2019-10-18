@@ -12,13 +12,9 @@ namespace Skletter\Model\Mediator;
 
 use Skletter\Factory\CookieFactory;
 use Skletter\Model\LocalService\SessionManager;
+use Skletter\Model\RemoteService\DTO\Error;
 use Skletter\Model\RemoteService\DTO\LoginMetadata;
 use Skletter\Model\RemoteService\DTO\UserDTO;
-use Skletter\Model\RemoteService\Exception\NonExistentUser;
-use Skletter\Model\RemoteService\Exception\NullDTOException;
-use Skletter\Model\RemoteService\Exception\PasswordMismatch;
-use Skletter\Model\RemoteService\Exception\UserExists;
-use Skletter\Model\RemoteService\Exception\ValidationError;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\ValueObject\Result;
 
@@ -67,15 +63,14 @@ class AccountService
             $user->password = $data['password'];
             $user->ipAddr = $data['ip-address'];
 
-            $this->userService->registerNew($user);
+            $returnedUser = $this->userService->registerNew($user);
+            if ($returnedUser->notification->hasError) {
+                return new Result(false, $returnedUser->notification->errors);
+            }
 
             return new Result(true);
-        } catch (ValidationError $e) {
-            return new Result(false, $e->errors);
-        } catch (UserExists $e) {
-            return new Result(false, [$e->field => $e->error]);
-        } catch (NullDTOException $e) {
-            return new Result(false, ["global" => "Something went wrong. Try again."]);
+        } catch (\TException $e) {
+            return new Result(false, ["global" => (new Error())->message = "Something went wrong. Try again."]);
         }
     }
 
@@ -95,6 +90,11 @@ class AccountService
             $meta->localSessionId = $this->session->getId();
 
             $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
+
+            if ($cookieDTO->notification->hasError) {
+                return new Result(false, $cookieDTO->notification->errors);
+            }
+
             $this->session->storeLoginDetails($cookieDTO->user);
 
             $cookie = CookieFactory::createSignedCookie($cookieDTO, "persistence", $params['user-agent']);
@@ -104,9 +104,9 @@ class AccountService
 
             return $result;
 
-        } catch (NonExistentUser | PasswordMismatch $e) {
+        } catch (\TException $e) {
 
-            return new Result(false, ['global' => $e->getMessage()]);
+            return new Result(false, ['global' => new Error($e->getMessage())]);
         }
     }
 }
