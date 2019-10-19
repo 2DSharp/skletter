@@ -64,13 +64,16 @@ class AccountService
             $user->ipAddr = $data['ip-address'];
 
             $returnedUser = $this->userService->registerNew($user);
-            if ($returnedUser->notification->hasError) {
+
+            if ($returnedUser->notification != null) {
                 return new Result(false, $returnedUser->notification->errors);
             }
 
             return new Result(true);
         } catch (\TException $e) {
-            return new Result(false, ["global" => (new Error())->message = "Something went wrong. Try again."]);
+            $err = new Error();
+            $err->message = "Something went wrong. Try again.";
+            return new Result(false, ["global" => $err]);
         }
     }
 
@@ -90,8 +93,7 @@ class AccountService
             $meta->localSessionId = $this->session->getId();
 
             $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
-
-            if ($cookieDTO->notification->hasError) {
+            if ($cookieDTO->notification != null) {
                 return new Result(false, $cookieDTO->notification->errors);
             }
 
@@ -103,10 +105,10 @@ class AccountService
             $result->setValueObject($cookie);
 
             return $result;
-
         } catch (\TException $e) {
-
-            return new Result(false, ['global' => new Error($e->getMessage())]);
+            $err = new Error();
+            $err->message = "Something went wrong. Try again.";
+            return new Result(false, ["global" => $err]);
         }
     }
 }
