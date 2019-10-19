@@ -24,9 +24,9 @@ function register(event, actionLocation) {
             else {
                 loader.style.display = "none";
                 let errors = response.data["errors"];
-
+                console.log(errors);
                 for (let key in errors) {
-                    displayError(key, errors[key]);
+                    displayError(key, errors[key].message);
                 }
 
                 console.log(response)
