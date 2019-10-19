@@ -12,10 +12,8 @@ namespace Skletter;
 use Auryn\Injector;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
-use Skletter\Component\EmailQueuer;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\RedisSessionHandler;
-use Skletter\Contract\Component\Mailer;
 use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Factory\MapperFactory;
@@ -72,7 +70,6 @@ $injector->define(RomeoClient::class, [':input' => $injector->make(TProtocol::cl
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
-$injector->alias(Mailer::class, EmailQueuer::class);
 
 
 return $injector;
