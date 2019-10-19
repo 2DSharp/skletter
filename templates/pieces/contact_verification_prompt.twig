@@ -12,9 +12,8 @@
         <p>Please note that it can take some time for the email to be delivered. If you don't get it in 15 minutes,
             <a href="#">click here to resend the email</a>.</p>
         <p>If you still don't get it, check your spam folder and see if it somehow ended up there.</p>
-        <p>The link and the verification code is active for the next 2 hours, hurry!</p>
         <p>Enter the verification code: </p>
-        <form action="{{ server.base_url }}/confirm" onsubmit="confirmEmail()">
+        <form action="{{ server.base_url }}/confirm" method="post" onsubmit="confirmEmail()">
             <div>
                 <p>
                     <input type="text" name="code" placeholder="6 digit code" class="text boxed">
