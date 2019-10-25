@@ -25,6 +25,8 @@ use Skletter\Model\ValueObject\Result;
  */
 class AccountService
 {
+    const CONFIRMATION_TOKEN = 0;
+    const CONFIRMATION_PIN = 1;
     /**
      * Remote user management service
      * @var RomeoClient $userService
@@ -110,5 +112,30 @@ class AccountService
             $err->message = "Something went wrong. Try again.";
             return new Result(false, ["global" => $err]);
         }
+    }
+
+    public function confirmAccount(int $id, string $token, int $type)
+    {
+        try {
+            switch ($type) {
+                case self::CONFIRMATION_PIN:
+                    $dto = $this->userService->verifyPin($id, $token);
+                    break;
+                case self::CONFIRMATION_TOKEN:
+                    $dto = $this->userService->verifyToken($id, $token);
+                    break;
+            }
+
+            if ($dto->notification != null) {
+                return new Result(false, $dto->notification->errors);
+            }
+
+            return new Result(true);
+        } catch (\TException $e) {
+            $err = new Error();
+            $err->message = "Something went wrong. Try again.";
+            return new Result(false, ["global" => $err]);
+        }
+
     }
 }
