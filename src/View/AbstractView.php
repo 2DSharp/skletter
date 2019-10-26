@@ -53,6 +53,7 @@ abstract class AbstractView implements View
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse($params);
         }
+
         return new RedirectResponse($redirectLocation);
     }
 

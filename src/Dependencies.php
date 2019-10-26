@@ -71,7 +71,4 @@ $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
 
-
 return $injector;
-
-
