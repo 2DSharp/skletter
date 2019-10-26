@@ -130,7 +130,10 @@ class AccountService
                 return new Result(false, $dto->notification->errors);
             }
 
-            return new Result(true);
+            $result = new Result(true);
+            $result->setValueObject($dto);
+
+            return $result;
         } catch (\TException $e) {
             $err = new Error();
             $err->message = "Something went wrong. Try again.";

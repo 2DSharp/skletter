@@ -13,6 +13,7 @@ namespace Skletter\Controller;
 
 use Greentea\Core\Controller;
 use Skletter\Model\Mediator\AccountService;
+use Skletter\Model\RemoteService\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class Confirmation implements Controller
@@ -30,8 +31,12 @@ class Confirmation implements Controller
         $token = $request->query->get("token", "0");
 
         $result = $this->accountService->confirmAccount($id, $token, AccountService::CONFIRMATION_TOKEN);
+        /**
+         * @var UserDTO $user
+         */
+        $user = $result->getValueObject();
 
-        return ['success' => $result->isSuccess(), 'email' => $request->query->get('email'), 'errors' => $result->getErrors()];
+        return ['success' => $result->isSuccess(), 'email' => $user->email, 'errors' => $result->getErrors()];
     }
 
     public function confirmRegistrationWithPin(Request $request)
