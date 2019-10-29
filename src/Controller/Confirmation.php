@@ -36,13 +36,13 @@ class Confirmation implements Controller
          */
         $user = $result->getValueObject();
 
-        return ['success' => $result->isSuccess(), 'email' => $user->email, 'errors' => $result->getErrors()];
+        return ['success' => $result->isSuccess(), 'username' => $user->username, 'errors' => $result->getErrors()];
     }
 
     public function confirmRegistrationWithPin(Request $request)
     {
-        $id = $request->query->get("uid", -1);
-        $token = $request->query->get("token", "0");
+        $id = $this->accountService->getSessionUser()->id;
+        $token = $request->request->get("token", "0");
 
         $result = $this->accountService->confirmAccount($id, $token, AccountService::CONFIRMATION_PIN);
 
