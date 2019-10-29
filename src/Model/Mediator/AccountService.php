@@ -120,6 +120,7 @@ class AccountService
             switch ($type) {
                 case self::CONFIRMATION_PIN:
                     $dto = $this->userService->verifyPin($id, $token);
+                    $this->session->storeLoginDetails($dto);
                     break;
                 case self::CONFIRMATION_TOKEN:
                     $dto = $this->userService->verifyToken($id, $token);
@@ -140,5 +141,10 @@ class AccountService
             return new Result(false, ["global" => $err]);
         }
 
+    }
+
+    public function getSessionUser()
+    {
+        return $this->session->getLoginDetails();
     }
 }
