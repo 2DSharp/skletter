@@ -34,7 +34,7 @@ class Confirmation extends AbstractView
     public function confirmRegistrationWithToken(Request $request, array $dto)
     {
         if ($dto['success']) {
-            return $this->sendSuccessResponse($request, [], '/login?email=' . $dto['email']);
+            return $this->sendSuccessResponse($request, [], '/login?username=' . $dto['username']);
         } else {
             $html = $this->twig->render("pages/staticinfo.twig",
                                         ['message' => $dto['errors']['global']->message,
@@ -43,9 +43,16 @@ class Confirmation extends AbstractView
         }
     }
 
-    public function confirmRegistrationWithPin(Request $request)
+    public function confirmRegistrationWithPin(Request $request, array $dto)
     {
-
+        if ($dto['success']) {
+            return $this->sendSuccessResponse($request, [], '/');
+        } else {
+            $html = $this->twig->render("pages/staticinfo.twig",
+                                        ['message' => $dto['errors']['global']->message,
+                                            'title' => 'Confirmation']);
+            return $this->respond($request, $html);
+        }
     }
 
 }
