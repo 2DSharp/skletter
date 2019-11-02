@@ -22,7 +22,8 @@ class Home extends AbstractView
     private $session;
 
     private $pageMap = [
-        Status::TEMP => 'registration.twig'
+        Status::TEMP => 'registration.twig',
+        Status::ACTIVE => 'feed.twig'
     ];
 
     public function __construct(\Twig\Environment $twig, SessionManager $session)
@@ -54,6 +55,11 @@ class Home extends AbstractView
                     'title' => 'Confirm your email - Skletter',
                     'status' => 'Temp',
                     'email' => $this->session->getLoginDetails()->email
+                ];
+            case Status::ACTIVE:
+                return [
+                    'title' => 'Activated',
+                    'status' => 'Temp',
                 ];
         }
 

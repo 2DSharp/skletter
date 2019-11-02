@@ -1,0 +1,103 @@
+$primary-font-stack: Roboto, sans-serif;
+$primary-color: #000;
+$accent-color: rgba(207, 22, 113, 0.7);
+$focus-color: #0b4bff;
+/* This CSS will print because %message-shared is extended. */
+%accented-field {
+  padding: 7px;
+  min-width: 300px;
+  border: 2px solid rgba(207, 22, 113, 0.7);
+  color: #333333;
+  font-size: 16px;
+}
+
+#suggestions {
+}
+
+//$glow-color:
+body {
+  font: 100% $primary-font-stack;
+  color: $primary-color;
+  margin: 0 auto;
+}
+
+.search-box:focus {
+  outline: none;
+  width: 280px;
+  //box-shadow: 0 0 7px $accent-color;
+}
+
+#header {
+  height: 60px;
+  background-color: #fff;
+  width: 100%;
+  top: 0;
+  margin: 0 auto;
+  position: fixed;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+.header-block {
+  margin-top: 10px;
+  min-width: 200px;
+  display: inline-block;
+}
+
+#content {
+  margin-top: 80px;
+}
+
+.search-box {
+  //  @extend %accented-textfield;
+  border: none;
+}
+
+.search-block {
+  @extend %accented-field;
+  border-radius: 20px;
+}
+
+#suggestions {
+  background-color: #fff;
+  padding: 5px;
+}
+
+.suggest-list {
+  list-style-type: none;
+  padding: 5px;
+}
+
+#suggestions-ul {
+  margin-left: 0;
+  padding: 0;
+}
+
+.suggest-list:focus, .suggest-list:hover {
+  background-color: $focus-color;
+  color: #fff;
+}
+
+.action-menu {
+  list-style-type: none;
+}
+
+.action-menu .action {
+  padding: 10px 15px 10px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 20px;
+  margin: 10px 0 10px 0;
+  font-weight: 300;
+  width: inherit;
+  float: left;
+  clear: both;
+}
+
+.action-menu .action:hover {
+  color: #fff;
+  background-color: $accent-color;
+}
+
+.icon {
+  margin-right: 10px;
+}
