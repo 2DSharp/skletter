@@ -19,6 +19,7 @@ use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Factory\MapperFactory;
 use Skletter\Factory\QueryObjectFactory;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
+use Skletter\Model\RemoteService\Search\SearchClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Thrift\Protocol\TBinaryProtocol;
@@ -48,7 +49,7 @@ $templatesDir = __DIR__ . '/../templates';
 $templatesCacheDir = __DIR__ . '/../app/cache/templates';
 
 $injector->delegate(Twig\Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
-$injector->delegate(TFramedTransport::class, buildTFramedTransport($lazyloader, 'localhost', 9090));
+$injector->delegate(TFramedTransport::class, buildTFramedTransport($lazyloader, 'localhost', 9091));
 $injector->delegate(\PDO::class, getLazyLoadingPDO($lazyloader));
 $injector->delegate(Client::class, buildPredis());
 $injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
@@ -67,6 +68,8 @@ $injector->alias(TTransport::class, TFramedTransport::class);
 $injector->define(TBinaryProtocol::class, [':trans' => $injector->make(TTransport::class)]);
 $injector->alias(TProtocol::class, TBinaryProtocol::class);
 $injector->define(RomeoClient::class, [':input' => $injector->make(TProtocol::class)]);
+$injector->define(SearchClient::class, [':input' => $injector->make(TProtocol::class)]);
+
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
