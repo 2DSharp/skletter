@@ -1,14 +1,17 @@
 $primary-font-stack: Roboto, sans-serif;
 $primary-color: #000;
 $accent-color: rgba(207, 22, 113, 0.7);
-$focus-color: #0b4bff;
+$focus-color: #3a4acf;
 /* This CSS will print because %message-shared is extended. */
+$gray-bg: rgba(0, 0, 0, 0.1);
+
 %accented-field {
   padding: 7px;
   min-width: 300px;
-  border: 2px solid rgba(207, 22, 113, 0.7);
+  //  border: 1px solid rgba(207, 22, 113, 0.7);
   color: #333333;
   font-size: 16px;
+  background-color: $gray-bg;
 }
 
 #suggestions {
@@ -21,14 +24,20 @@ body {
   margin: 0 auto;
 }
 
-.search-box:focus {
+.search-box {
   outline: none;
+  background-color: transparent;
   width: 280px;
+
   //box-shadow: 0 0 7px $accent-color;
 }
 
+.central-block {
+  min-width: 700px;
+}
+
 #header {
-  height: 60px;
+  height: 55px;
   background-color: #fff;
   width: 100%;
   top: 0;
@@ -36,6 +45,7 @@ body {
   position: fixed;
   box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
 }
+
 
 .header-block {
   margin-top: 10px;
@@ -55,26 +65,53 @@ body {
 .search-block {
   @extend %accented-field;
   border-radius: 20px;
+  width: 340px;
 }
 
+.embed-icon {
+  float: left;
+  margin-left: 5px;
+  margin-right: 10px;
+  color: $accent-color;
+  margin-top: 2px;
+}
 #suggestions {
   background-color: #fff;
   padding: 5px;
 }
 
+.stack-bg {
+  color: rgba(0, 0, 0, 0.1);
+}
+
+.fa-stack {
+  font-size: 20px;;
+}
+
+.fa-stack-1x {
+  color: #000;
+  font-size: 18px;
+}
+
+.stack-ico {
+  font-size: 24px;
+  color: #000;
+}
 .suggest-list {
   list-style-type: none;
-  padding: 5px;
+  cursor: pointer;
+  padding: 10px;
 }
 
 #suggestions-ul {
-  margin-left: 0;
+  margin: 0;
   padding: 0;
 }
 
 .suggest-list:focus, .suggest-list:hover {
   background-color: $focus-color;
   color: #fff;
+  border-radius: 5px;
 }
 
 .action-menu {
@@ -93,11 +130,83 @@ body {
   clear: both;
 }
 
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+
 .action-menu .action:hover {
   color: #fff;
   background-color: $accent-color;
+  @include transition(all 0.3s ease-in-out);
 }
 
 .icon {
   margin-right: 10px;
+  list-style-type: none;
+}
+
+.nav-icon {
+  font-size: 24px;
+  margin: 10px;
+}
+
+#suggestions {
+  display: none;
+  margin: 5px 10px 5px 10px;
+  padding: 5px;
+  width: 325px;
+  border: 1px solid $gray-bg;
+  border-radius: 10px;
+}
+
+.page-wrapper {
+  display: flex;
+  margin: 5px;
+  align-items: flex-start;
+  //background-color: red;
+}
+
+.header-wrapper {
+  display: inline-flex;
+  margin: 10px;
+
+}
+
+.head-text {
+  width: 304px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.main-left {
+  flex-grow: 1;
+}
+
+.main-center {
+  //  overflow-y: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.nav-menu {
+  width: 300px;
+}
+
+.nav-icon {
+  width: 50px;
+  background-color: rgba(0, 0, 0, 0.1);
+
+  display: inline-block;
 }

@@ -55,7 +55,8 @@
         function showResult(str) {
             if (str.length == 0) {
                 document.getElementById("suggestions").innerHTML = "";
-                document.getElementById("suggestions").style.border = "0px";
+                document.getElementById("suggestions").style.display = "none";
+
                 return;
             }
             if (window.XMLHttpRequest) {
@@ -67,6 +68,7 @@
             xmlhttp.onreadystatechange = function () {
 
                 if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("suggestions").style.display = "block";
                     document.getElementById("main-search").onkeydown = checkKey;
                     var result = JSON.parse(this.responseText);
                     var suggestion = "<ul id='suggestions-ul'>";
@@ -92,7 +94,6 @@
 
                     document.getElementById("suggestions").innerHTML = suggestion + "</ul>";
                     scrollList();
-                    document.getElementById("suggestions").style.border = "1px solid #A5ACB2";
                 }
             }
             xmlhttp.open("GET", "search?q=" + str, true);
@@ -104,20 +105,43 @@
 </head>
 <body>
 <div id="header">
-    <div class="header-block head-text">
-    </div>
-    <div class="header-block">
-        <div class="search-block">
-            <input type="text" onkeyup="showResult(this.value)" id="main-search" class="search-box"
-                   placeholder="Search stories, topics, users...">
+    <div class="header-wrapper">
+        <div class="row">
+            <div class="column">
+                <div class="header-block head-text">
+                </div>
+            </div>
+
+            <div class="column central-block">
+                <div class="search-block">
+                    <i class="fas fa-search embed-icon"></i>
+                    <input type="text" onkeyup="showResult(this.value)" id="main-search" class="search-box"
+                           placeholder="Search Skletter">
+
+                </div>
+                <div id="suggestions"></div>
+            </div>
+
+            <div class="column" style="align-items: flex-end">
+                <div>
+                    <span class="fa-stack" style="vertical-align: top;">
+                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                      <i class="far fa-envelope fa-stack-1x fa-inverse stacked-ico"></i>
+                    </span>
+                    <span class="fa-stack" style="vertical-align: top;">
+                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                      <i class="far fa-bell fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <span class="fa-stack" style="vertical-align: top;">
+                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                      <i class="fas fa-chevron-down fa-stack-1x fa-inverse"></i>
+                    </span>
+                </div>
+
+            </div>
         </div>
-        <div id="suggestions"></div>
     </div>
-    <div class="header-block">
-        <li class="fas "></li>
-        Settings
-        Notifications
-    </div>
+
 </div>
 
 <div id="content">
@@ -125,8 +149,13 @@
 
         <div class='page-wrapper'>
             <div class='row'>
-                {{ include('pieces/action_menu.twig') }}
-                {% block content %}{% endblock %}
+                <div class='column main-left'>
+                    {{ include('pieces/action_menu.twig') }}
+                </div>
+                <div class='column main-center'>
+                    {% block content %}{% endblock %}
+                </div>
+
                 <div class='column'>
                     <div class='right-block'>
                         <div class="row">
