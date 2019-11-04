@@ -58,8 +58,8 @@ class Home extends AbstractView
                 ];
             case Status::ACTIVE:
                 return [
-                    'title' => 'Activated',
-                    'status' => 'Temp',
+                    'title' => 'Home - Skletter',
+                    'status' => 'Active',
                 ];
         }
 
