@@ -1,10 +1,10 @@
 $primary-font-stack: Roboto, sans-serif;
 $primary-color: #000;
 $accent-color: rgba(207, 22, 113, 0.7);
+$accent-hard: rgba(207, 6, 91, 0.84);
 $focus-color: #3a4acf;
 /* This CSS will print because %message-shared is extended. */
-$gray-bg: rgba(0, 0, 0, 0.1);
-
+$gray-bg: #f0f1f3;
 %accented-field {
   padding: 7px;
   min-width: 300px;
@@ -28,6 +28,7 @@ body {
   outline: none;
   background-color: transparent;
   width: 280px;
+  height: 23px;
 
   //box-shadow: 0 0 7px $accent-color;
 }
@@ -73,7 +74,7 @@ body {
   margin-left: 5px;
   margin-right: 10px;
   color: $accent-color;
-  margin-top: 2px;
+  margin-top: 5px;
 }
 #suggestions {
   background-color: #fff;
@@ -81,7 +82,7 @@ body {
 }
 
 .stack-bg {
-  color: rgba(0, 0, 0, 0.1);
+  color: #F2F3F5;
 }
 
 .fa-stack {
@@ -89,7 +90,7 @@ body {
 }
 
 .fa-stack-1x {
-  color: #000;
+  color: #333333;
   font-size: 18px;
 }
 
@@ -116,6 +117,8 @@ body {
 
 .action-menu {
   list-style-type: none;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .action-menu .action {
@@ -129,7 +132,6 @@ body {
   float: left;
   clear: both;
 }
-
 @mixin transition($transition) {
   -webkit-transition: $transition;
   -moz-transition: $transition;
@@ -138,19 +140,30 @@ body {
 }
 
 .action-menu .action:hover {
-  color: #fff;
-  background-color: $accent-color;
+  color: #cf065b;
+  background-color: rgba(207, 22, 113, 0.075);
+  @include transition(all 0.3s ease-in-out);
+}
+
+.composer {
+  color: #F2F3F5;
+  background-color: $accent-hard;
+}
+
+.action.active {
+  color: $accent-hard;
+  //background-color: rgba(207, 22, 113, 0.075);
   @include transition(all 0.3s ease-in-out);
 }
 
 .icon {
-  margin-right: 10px;
+  margin-right: 15px;
   list-style-type: none;
 }
 
+
 .nav-icon {
-  font-size: 24px;
-  margin: 10px;
+  //margin: 0 20px 0 20px;
 }
 
 #suggestions {
@@ -160,6 +173,10 @@ body {
   width: 325px;
   border: 1px solid $gray-bg;
   border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  color: #333333;
+  // font-family: Arial, sans-serif;
 }
 
 .page-wrapper {
@@ -177,6 +194,9 @@ body {
 
 .head-text {
   width: 304px;
+  font-family: Roboto, sans-serif;
+  font-size: 24px;
+  color: $accent-color;
 }
 
 .row {
@@ -188,6 +208,7 @@ body {
 
 .main-left {
   flex-grow: 1;
+  margin-left: 40px;
 }
 
 .main-center {
@@ -205,8 +226,9 @@ body {
 }
 
 .nav-icon {
-  width: 50px;
-  background-color: rgba(0, 0, 0, 0.1);
+  width: 45px;
+  margin: 0 3px 0 3px;
+  // background-color: rgba(0, 0, 0, 0.1);
 
   display: inline-block;
 }
