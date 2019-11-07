@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 namespace Skletter;
-
 use Auryn\Injector;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\RedisSessionHandler;
+use Skletter\Component\TransportCollector;
 use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Factory\MapperFactory;
@@ -22,15 +22,12 @@ use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\RemoteService\Search\SearchClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Thrift\Protocol\TBinaryProtocol;
-use Thrift\Protocol\TProtocol;
 use Thrift\Transport\TFramedTransport;
-use Thrift\Transport\TTransport;
 use Twig;
+use function Skletter\Factory\buildBinaryProtocol;
 use function Skletter\Factory\buildLazyLoader;
 use function Skletter\Factory\buildPredis;
 use function Skletter\Factory\buildRabbitMQ;
-use function Skletter\Factory\buildTFramedTransport;
 use function Skletter\Factory\getLazyLoadingPDO;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
@@ -40,21 +37,18 @@ $injector = new Injector;
  * Dependencies go here
  * Add factories by delegating functions to their ctors
  */
-
 $injector->delegate(Request::class, getRequestFactory());
-
 $lazyloader = buildLazyLoader(__DIR__ . '/../app/cache/proxies');
-
 $templatesDir = __DIR__ . '/../templates';
 $templatesCacheDir = __DIR__ . '/../app/cache/templates';
-
 $injector->delegate(Twig\Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
-$injector->delegate(TFramedTransport::class, buildTFramedTransport($lazyloader, 'localhost', 9091));
+
+$injector->share(TransportCollector::class);
+$collector = $injector->make(TransportCollector::class);
+
 $injector->delegate(\PDO::class, getLazyLoadingPDO($lazyloader));
 $injector->delegate(Client::class, buildPredis());
 $injector->delegate(AMQPStreamConnection::class, buildRabbitMQ());
-
-
 $injector->share(Twig\Environment::class);
 $injector->share(TFramedTransport::class);
 $injector->share(SessionInterface::class);
@@ -63,15 +57,20 @@ $injector->define(
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
 );
 
-$injector->alias(TTransport::class, TFramedTransport::class);
+$injector->delegate(RomeoClient::class, function () use (&$collector) {
+    $protocol = buildBinaryProtocol("localhost", 9090, $collector);
+    return new RomeoClient($protocol);
+});
 
-$injector->define(TBinaryProtocol::class, [':trans' => $injector->make(TTransport::class)]);
-$injector->alias(TProtocol::class, TBinaryProtocol::class);
-$injector->define(RomeoClient::class, [':input' => $injector->make(TProtocol::class)]);
-$injector->define(SearchClient::class, [':input' => $injector->make(TProtocol::class)]);
+$injector->delegate(SearchClient::class, function () use (&$collector) {
+    $protocol = buildBinaryProtocol("localhost", 9091, $collector);
+    return new SearchClient($protocol);
+});
+
+$injector->share(RomeoClient::class);
+
 
 $injector->alias(SessionInterface::class, RedisSessionHandler::class);
 $injector->alias(QueryObjectFactoryInterface::class, QueryObjectFactory::class);
 $injector->alias(MapperFactoryInterface::class, MapperFactory::class);
-
 return $injector;
