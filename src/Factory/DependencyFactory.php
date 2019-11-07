@@ -15,7 +15,9 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
+use Skletter\Component\TransportCollector;
 use Symfony\Component\HttpFoundation\Request;
+use Thrift\Protocol\TBinaryProtocol;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TSocket;
 use Twig\Environment;
@@ -136,27 +138,21 @@ function getLazyLoadingPDO(LazyLoadingValueHolderFactory $lazyloader): callable
     };
 }
 
-function buildTFramedTransport(LazyLoadingValueHolderFactory $lazyloader, string $address, int $port): callable
+function buildTFramedTransport(string $address, int $port): TFramedTransport
 {
-    return function () use ($lazyloader, $address, $port) : VirtualProxyInterface {
-        $factory = $lazyloader;
-        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
-                                 $method,
-                                 array $parameters,
-                                 & $initializer
-        ) use ($address, $port) {
-            $timeout = 20; // in seconds.
-            $socket = new TSocket($address, $port);
-            $socket->setRecvTimeout($timeout * 1000);
-            $socket->setSendTimeout($timeout * 1000);
 
-            $transport = new TFramedTransport($socket, 1024, 1024);
-            $transport->open();
-            $wrappedObject = $transport;
+    $timeout = 20; // in seconds.
+    $socket = new TSocket($address, $port);
+    $socket->setRecvTimeout($timeout * 1000);
+    $socket->setSendTimeout($timeout * 1000);
 
-            $initializer = null; // disable initialization
-            return true;
-        };
-        return $factory->createProxy(TFramedTransport::class, $initializer);
-    };
+    return new TFramedTransport($socket, 1024, 1024);
+}
+
+function buildBinaryProtocol(string $address, int $port, TransportCollector &$collector): TBinaryProtocol
+{
+    $transport = buildTFramedTransport($address, $port);
+    $transport->open();
+    $collector->add($transport);
+    return new TBinaryProtocol($transport);
 }
