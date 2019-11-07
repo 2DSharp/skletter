@@ -90,7 +90,10 @@
                 else {
                     loader.style.display = "none";
                     error_box.style.display = "block";
-                    error_box.innerText = response.data['error']['global'];
+                    if (response.data['error']['email'] != null)
+                        error_box.innerText = response.data['error']['email'].message;
+                    else
+                        error_box.innerText = response.data['error']['password'].message;
                 }
             })
             .catch(function (error) {
