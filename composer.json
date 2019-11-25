@@ -31,7 +31,7 @@
     "url": "https://github.com/2dsharp/greentea.git"
   }],
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "ext-pdo": "*",
     "ext-openssl": "*",
     "psr/log": "1.*",
@@ -59,10 +59,10 @@
 
   "config": {
     "platform": {
-      "php": "7.2.9"
+      "php": "7.4.0RC4"
     },
     "platform-dev": {
-      "php": "7.2.9"
+      "php": "7.4.0RC4"
     }
   }
 }
