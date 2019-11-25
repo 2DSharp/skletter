@@ -6,39 +6,16 @@
 {% endblock %}
 {% block content %}
 
-        <div class='page-content'>
+    <div id="feed-root" class='page-content'>
             <div class="post-card">
-                <div class="profile-image" style="background-image: url('{{ server.img_assets }}/test.jpg');"></div>
-                <div class="post-text">
-                    <div class="subject">Lorem ipsum dolor sit amet, consectetur adipiscing</div>
-                    <div class="byline">
-                        <div class="profile-meta"><b>Dedipyaman Das</b> (@twodee23)</div>
-                    </div>
-                    <div class="post-content">
-                        <p style="margin-top: 5px">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                            laboris nisi ut aliquip ex ea commodo consequat.
-                        </p>
-                        <p>
-                            Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                            cupidatat
-                            non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                    </div>
-                </div>
-                <div class="post-action">
-                    <span style="font-size: 14px" class="fas fa-ellipsis-v"></span>
-                </div>
-            </div>
-            <div class="post-card">
-
-            </div>
-            <div class="post-card">
-
+                Loading
             </div>
         </div>
 
+{% endblock %}
+{% block costly_imports %}
     <script src="{{ server.js_assets }}/axios.min.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="{{ server.js_assets }}/react-components/Feed.js" type="module"></script>
 {% endblock %}
