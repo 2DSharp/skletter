@@ -70,6 +70,7 @@
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("suggestions").style.display = "block";
                     document.getElementById("main-search").onkeydown = checkKey;
+                    console.log(this.responseText)
                     var result = JSON.parse(this.responseText);
                     var suggestion = "<ul id='suggestions-ul'>";
                     var i = 0;
@@ -78,7 +79,7 @@
                         //var data =  JSON.parse((JSON.parse(result[k]).user).data)
                         //console.log(JSON.parse(user.data));
                         //console.log(JSON.parse((result[k]).user).data.name);
-                        var answer = (data.user.data.name);
+                        var answer = (data.data.name);
                         var find = str;
                         var re = new RegExp(find, 'ig');
 
@@ -173,4 +174,6 @@
 </div>
 
 </body>
+{% block costly_imports %}
+{% endblock %}
 </html>
