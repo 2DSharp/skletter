@@ -1,10 +1,16 @@
-import PostCard from "./PostCard.js";
+import React from "react";
+import PostCard from "./PostCard";
 
 'use strict';
 
 const e = React.createElement;
 
 class Feed extends React.Component {
+
+    componentDidMount() {
+        console.log("Component mounted")
+    }
+
     state = {
         posts: [
             {
@@ -48,5 +54,3 @@ class Feed extends React.Component {
 }
 
 export default Feed;
-const domContainer = document.querySelector('#feed-root');
-ReactDOM.render(e(Feed), domContainer);
