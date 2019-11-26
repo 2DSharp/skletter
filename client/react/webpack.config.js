@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        feed: './src/home-feed.js',
+        feed: './src/feed.js',
         // pageTwo: './src/pageTwo/index.js',
         // pageThree: './src/pageThree/index.js'
     },
