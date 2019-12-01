@@ -15,6 +15,6 @@ return [
     ['POST', '/register', ['Registration', 'registerUser']],
     ['GET', '/confirm', ['Confirmation', 'confirmRegistrationWithToken']],
     ['POST', '/confirm', ['Confirmation', 'confirmRegistrationWithPin']],
-    ['GET', '/search', ['Search', 'look']],
-    ['GET', '/test', ['Search', 'testSearch']]
-    ];
+    ['GET', '/search', ['SearchService', 'look']],
+    ['GET', '/test', ['SearchService', 'testSearch']]
+];
