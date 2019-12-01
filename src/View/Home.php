@@ -18,10 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Home extends AbstractView
 {
-    private $templating;
-    private $session;
+    private \Twig\Environment $templating;
+    private SessionManager $session;
 
-    private $pageMap = [
+    private array $pageMap = [
         Status::TEMP => 'registration.twig',
         Status::ACTIVE => 'feed.twig'
     ];
@@ -89,7 +89,6 @@ class Home extends AbstractView
      */
     public function main(Request $request): Response
     {
-
         if ($this->session->isLoggedIn())
             return $this->showLoggedInHome($this->session->getLoginDetails()->status, $request);
         //Need to manage unauthorized post requests sent to this

@@ -8,8 +8,14 @@
  * file that was distributed with this source code.
  */
 
+use Auryn\Injector;
 use Greentea\Core\Application;
+use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\Router;
+use Skletter\Component\TransportCollector;
+use Skletter\View\ErrorPages;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -19,14 +25,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::create(__DIR__ . "/../app/config");
 $dotenv->load();
 /**
- * @var \Auryn\Injector $injector
+ * @var Injector $injector
  */
 $injector = include_once __DIR__ . '/Dependencies.php';
 
 
-$request = $injector->make(\Symfony\Component\HttpFoundation\Request::class);
+$request = $injector->make(Request::class);
 // TODO: Find a better name replacement for fallBackHandler
-$provider = $injector->make(\Skletter\Component\FallbackExceptionHandler::class);
+$provider = $injector->make(FallbackExceptionHandler::class);
 
 $exceptionHandler = function ($exception) use ($provider, $request) {
     $provider->handle($exception, $request);
@@ -34,16 +40,16 @@ $exceptionHandler = function ($exception) use ($provider, $request) {
 
 set_exception_handler($exceptionHandler);
 
-$session = $injector->make(\Symfony\Component\HttpFoundation\Session\SessionInterface::class);
+$session = $injector->make(SessionInterface::class);
 $session->start();
 
 $routes = include_once __DIR__ . '/Routes.php';
 
-$router = new Router($routes, \Skletter\View\ErrorPages::class);
+$router = new Router($routes, ErrorPages::class);
 $requestedRoute = $router->route($request, 'Skletter\Controller\\', 'Skletter\View\\');
 
 $app = new Application($injector);
 $app->run($request, $requestedRoute);
 
-$collector = $injector->make(\Skletter\Component\TransportCollector::class);
+$collector = $injector->make(TransportCollector::class);
 $collector->closeAll();
