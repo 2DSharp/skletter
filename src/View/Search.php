@@ -11,33 +11,24 @@
 namespace Skletter\View;
 
 
-use Skletter\Model\RemoteService\Search\SearchClient;
+use Skletter\Model\Mediator\SearchService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
 
 class Search extends AbstractView
 {
-    /**
-     * @var Environment $twig
-     */
-    private $twig;
-    private $search;
+    private SearchService $search;
 
-    public function __construct(Environment $twig, SearchClient $search)
+    public function __construct(SearchService $search)
     {
-        $this->twig = $twig;
         $this->search = $search;
     }
-
 
     /**
      * Redirect to correct location on success otherwise show error messages
      *
      * @param  Request $request
-     * @param array $dto
      * @return Response
-     * @throws \Twig\Error\Error
      */
     public function look(Request $request): Response
     {
@@ -46,7 +37,9 @@ class Search extends AbstractView
 
         foreach ($res as &$value) {
             $value = json_decode($value);
-            $value->user->data = json_decode($value->user->data);
+            //  echo $value;
+            $value = $value->user_result;
+            $value->data = json_decode($value->data);
         }
         $response = new Response(json_encode($res));
         $response->headers->set('Content-Type', 'application/json');
@@ -54,9 +47,4 @@ class Search extends AbstractView
         return $response;
     }
 
-    public function testSearch(Request $request): Response
-    {
-        $html = $this->twig->render('pages/search.twig');
-        return new Response($html);
-    }
 }
