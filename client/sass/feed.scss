@@ -17,7 +17,7 @@
 .post-card {
   padding: 15px 10px 10px 10px;
   margin: 5px 0 10px 0;
-  min-height: 150px;
+  min-height: 140px;
   border-radius: 10px;
   display: flex;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
@@ -114,31 +114,34 @@ $faintgray: rgba(0, 0, 0, 0.125);
 .skeleton-feed:empty {
   margin: auto;
   width: 700px;
-  height: 600px; /* change height to see repeat-y behavior */
+  height: 180px; /* change height to see repeat-y behavior */
 
   background-image: radial-gradient(circle 24px at 32px 32px, $faintgray 100%, transparent 0),
   linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%),
   linear-gradient($faintgray 20px, transparent 0),
   linear-gradient($faintgray 15px, transparent 0),
   linear-gradient($faintgray 15px, transparent 0),
+  linear-gradient($faintgray 15px, transparent 0),
   linear-gradient($faintgray 15px, transparent 0);
 
 
-  background-repeat: repeat-y;
+  background-repeat: no-repeat;
 
   background-size: 100px 170px, /* circle */
   100px 170px, /* highlight */
   400px 170px,
   250px 170px,
-  450px 170px,
-  150px 170px;
+  550px 170px,
+  520px 170px,
+  210px 170px;
 
   background-position: 0 0, /* circle */
   0 0, /* highlight */
   70px 10px,
-  70px 50px,
-  70px 80px,
-  70px 110px;
+  70px 45px,
+  70px 90px,
+  70px 120px,
+  70px 150px;
 
   animation: shine 2s infinite;
 }
@@ -148,8 +151,9 @@ $faintgray: rgba(0, 0, 0, 0.125);
     background-position: 0 0,
     100% 0, /* move highlight to right */
     70px 10px,
-    70px 50px,
-    70px 80px,
-    70px 110px;
+    70px 45px,
+    70px 90px,
+    70px 120px,
+    70px 150px;
   }
 }
