@@ -10,19 +10,27 @@
 
 namespace Skletter\Controller;
 
-
 use Greentea\Core\Controller;
 use Skletter\Model\Mediator\AccountService;
+use Skletter\Model\Mediator\SearchService;
 use Skletter\Model\RemoteService\DTO\UserDTO;
 use Symfony\Component\HttpFoundation\Request;
 
 class Confirmation implements Controller
 {
-    private $accountService;
+    /**
+     * @var SearchService
+     */
+    private SearchService $search;
+    /**
+     * @var AccountService
+     */
+    private AccountService $accountService;
 
-    public function __construct(AccountService $accountService)
+    public function __construct(AccountService $accountService, SearchService $search)
     {
         $this->accountService = $accountService;
+        $this->search = $search;
     }
 
     public function confirmRegistrationWithToken(Request $request)
@@ -35,7 +43,7 @@ class Confirmation implements Controller
          * @var UserDTO $user
          */
         $user = $result->getValueObject();
-
+        $this->search->initiateIndexing($user);
         return ['success' => $result->isSuccess(), 'username' => $user->username, 'errors' => $result->getErrors()];
     }
 
@@ -45,6 +53,11 @@ class Confirmation implements Controller
         $token = $request->request->get("token", "0");
 
         $result = $this->accountService->confirmAccount($id, $token, AccountService::CONFIRMATION_PIN);
+        /**
+         * @var UserDTO $user
+         */
+        $user = $result->getValueObject();
+        $this->search->initiateIndexing($user);
 
         return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
     }
