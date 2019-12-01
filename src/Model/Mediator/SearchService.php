@@ -14,6 +14,7 @@ namespace Skletter\Model\Mediator;
 use Skletter\Model\RemoteService\DTO\UserDTO;
 use Skletter\Model\RemoteService\Search\DTO\SearchProfile;
 use Skletter\Model\RemoteService\Search\SearchClient;
+use Skletter\Model\ValueObject\ProfileSuggestion;
 
 class SearchService
 {
@@ -38,8 +39,20 @@ class SearchService
         $this->search->registerIndex($profile);
     }
 
-    public function suggest(string $query)
+    /**
+     * Return an array of suggestions wrapped in VOs
+     * @param string $query
+     * @return array
+     */
+    public function suggest(string $query): array
     {
-        return $this->search->suggest($query);
+        $results = $this->search->suggest($query);
+        $suggestions = [];
+        $i = 0;
+        foreach ($results as $result) {
+            $profile = new ProfileSuggestion($result->name, $result->username);
+            $suggestions[$i++] = $profile;
+        }
+        return $suggestions;
     }
 }
