@@ -12,6 +12,7 @@ namespace Skletter\View;
 
 
 use Skletter\Model\Mediator\SearchService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,19 +33,7 @@ class Search extends AbstractView
      */
     public function look(Request $request): Response
     {
-
         $res = $this->search->suggest($request->query->get("q"));
-
-        foreach ($res as &$value) {
-            $value = json_decode($value);
-            //  echo $value;
-            $value = $value->user_result;
-            $value->data = json_decode($value->data);
-        }
-        $response = new Response(json_encode($res));
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response;
+        return new JsonResponse($res);
     }
-
 }
