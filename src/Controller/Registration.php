@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Registration implements Controller
 {
-    private $account;
+    use ControllerTrait;
+
+    private Mediator\AccountService $account;
 
     public function __construct(Mediator\AccountService $account)
     {
@@ -53,10 +55,5 @@ class Registration implements Controller
         }
 
         return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
-    }
-
-    public function handleRequest(Request $request, string $method): array
-    {
-        return $this->{$method}($request);
     }
 }

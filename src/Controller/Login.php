@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Login implements Controller
 {
+    use ControllerTrait;
     /**
      * LoginManager service to handle authentication and log in system
      *
@@ -50,10 +51,5 @@ class Login implements Controller
             return ['success' => true, 'cookie' => $result->getValueObject()];
         else
             return ['success' => false, 'errors' => $result->getErrors()];
-    }
-
-    public function handleRequest(Request $request, string $method): array
-    {
-        return $this->{$method}($request);
     }
 }

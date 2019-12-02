@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Confirmation implements Controller
 {
+    use ControllerTrait;
     /**
      * @var SearchService
      */
@@ -60,10 +61,5 @@ class Confirmation implements Controller
         $this->search->initiateIndexing($user);
 
         return ['success' => $result->isSuccess(), 'errors' => $result->getErrors()];
-    }
-
-    public function handleRequest(Request $request, string $method)
-    {
-        return $this->{$method}($request);
     }
 }
