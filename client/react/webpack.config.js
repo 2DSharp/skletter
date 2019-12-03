@@ -1,9 +1,10 @@
 const webpack = require('webpack');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
+
     entry: {
         feed: './src/feed.js',
-        // pageTwo: './src/pageTwo/index.js',
         // pageThree: './src/pageThree/index.js'
     },
     module: {
@@ -33,7 +34,16 @@ module.exports = {
         publicPath: '/static/js/react-components/',
         filename: '[name]-bundle.js'
     },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+    },
     plugins: [
+        new Dotenv({
+            path: '../../app/config/.env',
+            expand: true
+        }),
         new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
