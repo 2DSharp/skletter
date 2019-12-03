@@ -11,7 +11,7 @@
 namespace Skletter\Controller;
 
 
-use Greentea\Core\Controller;
+use Skletter\Component\Core\Controller;
 use Skletter\Model\Mediator\AccountService;
 use Symfony\Component\HttpFoundation\Request;
 

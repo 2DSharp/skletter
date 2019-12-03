@@ -10,7 +10,7 @@
 
 namespace Skletter\Controller;
 
-use Greentea\Core\Controller;
+use Skletter\Component\Core\Controller;
 use Skletter\Model\Mediator\AccountService;
 use Skletter\Model\Mediator\SearchService;
 use Skletter\Model\RemoteService\DTO\UserDTO;

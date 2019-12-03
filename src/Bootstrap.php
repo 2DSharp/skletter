@@ -9,7 +9,7 @@
  */
 
 use Auryn\Injector;
-use Greentea\Core\Application;
+use Skletter\Component\Core\Application;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\Router;
 use Skletter\Component\TransportCollector;

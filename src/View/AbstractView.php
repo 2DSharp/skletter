@@ -10,9 +10,8 @@
 
 namespace Skletter\View;
 
-
-use Greentea\Core\View;
-use Greentea\Exception\TemplatingException;
+use Skletter\Component\Core\Exception\TemplatingException;
+use Skletter\Component\Core\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
