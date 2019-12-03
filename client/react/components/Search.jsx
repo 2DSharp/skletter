@@ -18,7 +18,6 @@ class Search extends Component {
                     <i className="fas fa-search embed-icon"/>
                     <input
                         type="text"
-                        value={this.state.key}
                         onChange={this.updateSearch.bind(this)}
                         id="main-search"
                         className="search-box"
@@ -31,7 +30,6 @@ class Search extends Component {
     }
 
     updateSearch(event) {
-        this.setState({key: event.target.value});
         Axios.get("/search?q=" + event.target.value)
             .then(response => {
                 this.setState({searched: true, results: response.data});
