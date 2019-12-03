@@ -46,7 +46,7 @@ class Confirmation extends AbstractView
     public function confirmRegistrationWithPin(Request $request, array $dto)
     {
         if ($dto['success']) {
-            return $this->sendSuccessResponse($request, [], '/');
+            return $this->sendSuccessResponse($request, [], '/?accountSetupWizard=1');
         } else {
             $html = $this->twig->render("pages/staticinfo.twig",
                                         ['message' => $dto['errors']['global']->message,
