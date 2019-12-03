@@ -30,7 +30,7 @@ class Search extends Component {
     }
 
     updateSearch(event) {
-        Axios.get("/search?q=" + event.target.value)
+        Axios.get(process.env.API_URL + "/suggest?q=" + event.target.value)
             .then(response => {
                 this.setState({searched: true, results: response.data});
             })
