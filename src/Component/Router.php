@@ -12,7 +12,7 @@ namespace Skletter\Component;
 
 
 use FastRoute\Dispatcher;
-use Greentea\Component\RouteVOInterface;
+use Skletter\Component\Core\RouteVOInterface;
 use Skletter\Component\ValueObject\RouteInformation;
 use Skletter\Exception\InvalidErrorPage;
 use Skletter\View\ErrorPageView;
@@ -66,15 +66,16 @@ class Router
         $controller = null;
 
         if ($routeInfo[0] != Dispatcher::FOUND) {
-            $method = $this->errorPageMap[$routeInfo[0]];
+            $viewMethod = $controllerMethod = $this->errorPageMap[$routeInfo[0]];
             $view = $this->errorPage;
         } else {
-            $method = $routeInfo[1][1];
+            $controllerMethod = $routeInfo[1][1];
+            $viewMethod = (array_key_exists(2, $routeInfo[1])) ? $routeInfo[1][2] : $controllerMethod;
             $controller = $controllerNamespace . $routeInfo[1][0];
             $view = $viewNamespace . $routeInfo[1][0];
         }
 
-        return new RouteInformation($controller, $view, $method);
+        return new RouteInformation($controller, $view, $controllerMethod, $viewMethod);
     }
 
     private function getRouteInfo(array $routes, Request $request) : array
@@ -90,9 +91,7 @@ class Router
                 'cacheFile' => __DIR__ . '/../../app/cache/route.cache',
             ]
         );
-        $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
-
-        return $routeInfo;
+        return $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
     }
 
 }

@@ -11,58 +11,62 @@
 namespace Skletter\Component\ValueObject;
 
 
-use Greentea\Component\RouteVOInterface;
+use Skletter\Component\Core\RouteVOInterface;
 
 class RouteInformation implements RouteVOInterface
 {
     /**
      * @var string $controller - Controller class path
      */
-    private $controller;
+    private ?string $controller;
     /**
      * @var string $view - View class path
      */
-    private $view;
+    private ?string $view;
     /**
-     * @var string $method - method to be invoked in both controller and interface
+     * @var string $controllerMethod - method to be invoked in both controller and interface
      */
-    private $method;
+    private string $controllerMethod;
+    /**
+     * @var string|null
+     *
+     */
+    private ?string $viewMethod;
 
     /**
      * RouteInformation constructor.
      *
      * @param string $controller
      * @param string $view
-     * @param string $method
+     * @param string $controllerMethod
+     * @param string $viewMethod
      */
-    public function __construct(?string $controller, ?string $view, string $method)
+    public function __construct(?string $controller, ?string $view, string $controllerMethod, string $viewMethod)
     {
         $this->controller = $controller;
         $this->view = $view;
-        $this->method = $method;
+        $this->controllerMethod = $controllerMethod;
+        $this->viewMethod = $viewMethod;
     }
 
-    /**
-     * @return string
-     */
     public function resolveController(): ?string
     {
         return $this->controller;
     }
 
-    /**
-     * @return string
-     */
     public function resolveView(): ?string
     {
         return $this->view;
     }
 
-    /**
-     * @return string
-     */
-    public function resolveMethod(): string
+    public function resolveControllerMethod(): string
     {
-        return $this->method;
+        return $this->controllerMethod;
     }
+
+    public function resolveViewMethod(): string
+    {
+        return $this->viewMethod;
+    }
+
 }
