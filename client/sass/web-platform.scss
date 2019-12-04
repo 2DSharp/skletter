@@ -5,6 +5,18 @@ $accent-hard: rgba(207, 6, 91, 0.84);
 $focus-color: #3a4acf;
 /* This CSS will print because %message-shared is extended. */
 $gray-bg: #f0f1f3;
+
+@mixin prefix($declarations, $prefixes: ()) {
+  @each $property, $value in $declarations {
+    @each $prefix in $prefixes {
+      #{'-' + $prefix + '-' + $property}: $value;
+    }
+
+    // Output standard non-prefixed declaration
+    #{$property}: $value;
+  }
+}
+
 %accented-field {
   padding: 7px;
   min-width: 300px;
@@ -44,9 +56,8 @@ body {
   top: 0;
   margin: 0 auto;
   position: fixed;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
-
 
 .header-block {
   margin-top: 10px;
@@ -82,11 +93,11 @@ body {
 }
 
 .stack-bg {
-  color: #F2F3F5;
+  color: #f2f3f5;
 }
 
 .fa-stack {
-  font-size: 20px;;
+  font-size: 20px;
 }
 
 .fa-stack-1x {
@@ -109,7 +120,8 @@ body {
   padding: 0;
 }
 
-.suggest-list:focus, .suggest-list:hover {
+.suggest-list:focus,
+.suggest-list:hover {
   background-color: $focus-color;
   color: #fff;
   border-radius: 5px;
@@ -146,7 +158,7 @@ body {
 }
 
 .composer {
-  color: #F2F3F5;
+  color: #f2f3f5;
   background-color: $accent-hard;
 }
 
@@ -159,8 +171,25 @@ body {
 .icon {
   margin-right: 15px;
   list-style-type: none;
+
+  &.not-far {
+    margin-right: 10px;
+  }
 }
 
+.spacer {
+  &.small {
+    height: 10px;
+  }
+
+  &.medium {
+    height: 15px;
+  }
+
+  &.large {
+    height: 20px;
+  }
+}
 
 .nav-icon {
   //margin: 0 20px 0 20px;
@@ -177,7 +206,6 @@ body {
   // font-family: Arial, sans-serif;
 }
 
-
 .page-wrapper {
   display: flex;
   margin: 5px;
@@ -188,7 +216,6 @@ body {
 .header-wrapper {
   display: inline-flex;
   margin: 10px;
-
 }
 
 .head-text {
@@ -232,32 +259,130 @@ body {
   display: inline-block;
 }
 
+.overlay {
+  position: fixed; /* Positioning and size */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* color */
+}
+
+.centered {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.dialog-content {
+  margin: 15px 0 15px 0;
+}
+
 .dialog-container {
   z-index: 10;
   width: 600px;
   max-width: 100%;
-  height: 400px;
+  min-height: 200px;
+  height: 200px;
+  position: fixed;
   max-height: 100%;
   background-color: #fff;
+  border-radius: 12px;
   border-color: black;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 20px;
+
+  .header {
+    width: 100%;
+    margin-bottom: 30px;
+
+    h1 {
+      font-weight: 400;
+      font-size: 24px;
+      margin: 5px 0 10px 0;
+    }
+  }
+
+  .dialog-subhead {
+    margin: 5px 0 5px 0;
+  }
+
+  @include prefix(
+                  (
+                          box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3),
+                          background-clip: padding-box,
+                  ),
+                  webkit moz
+  );
 
   .close-button {
     position: absolute;
     z-index: 1;
-    top: 10px;
-    right: 20px;
+    top: 5px;
+    right: 5px;
     border: 0;
     background: none;
     padding: 5px 10px;
     font-size: 1.3rem;
 
-    .close-icon {
-      fill: #0b4bff;
+    &:focus {
+      outline: 0 !important;
+      -webkit-appearance: none !important;
     }
+
+    .close-icon {
+      fill: #333333;
+      height: 24px;
+      width: 24px;
+      @include prefix(
+                      (
+                              transition: all 0.2s ease-in-out
+                      ),
+                      webkit moz
+      );
+
+      &:hover {
+        fill: #cf065b;
+        @include prefix(
+                        (
+                                transform: scale(1.2)
+                        ),
+                        webkit moz
+        );
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+button:focus {
+  outline: 0 !important;
+}
+
+*:focus {
+  outline: 0 !important;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+
+  button {
+    margin: 0;
+  }
+
+  input[type=file] {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
   }
 
 }

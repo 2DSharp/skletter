@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="EN">
 <head>
     <title>{% block title %}{% endblock %}</title>
     {{ include('base_includes.twig') }}
     <script src="https://kit.fontawesome.com/7bd7bcf156.js" crossorigin="anonymous"></script>
     <link href="{{ server.css_assets }}/web-platform.css" rel="stylesheet">
-
+    <link href="{{ server.css_assets }}/form.css" rel="stylesheet">
     {% block head %}
     {% endblock %}
 </head>
@@ -22,21 +22,20 @@
             <div class="column central-block">
                 <div id="search-root"></div>
             </div>
-
             <div class="column" style="align-items: flex-end">
                 <div style="margin-left: 50px">
+                        <span class="fa-stack nav-icon" style="vertical-align: top;">
+                          <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                          <i class="fas fa-comments fa-stack-1x fa-inverse stacked-ico"></i>
+                        </span>
                     <span class="fa-stack nav-icon" style="vertical-align: top;">
-                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
-                      <i class="fas fa-comments fa-stack-1x fa-inverse stacked-ico"></i>
-                    </span>
+                          <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                          <i class="fas fa-bell fa-stack-1x fa-inverse"></i>
+                        </span>
                     <span class="fa-stack nav-icon" style="vertical-align: top;">
-                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
-                      <i class="fas fa-bell fa-stack-1x fa-inverse"></i>
-                    </span>
-                    <span class="fa-stack nav-icon" style="vertical-align: top;">
-                      <i class="fas fa-circle fa-stack-2x stack-bg"></i>
-                      <i class="fas fa-ellipsis-h fa-stack-1x fa-inverse"></i>
-                    </span>
+                          <i class="fas fa-circle fa-stack-2x stack-bg"></i>
+                          <i class="fas fa-ellipsis-h fa-stack-1x fa-inverse"></i>
+                        </span>
                 </div>
 
             </div>
@@ -47,7 +46,6 @@
 
 <div id="content">
     <div id="main-container" class="container">
-        <div id="dialog-root"></div>
         <div class='page-wrapper'>
             <div class='row'>
                 <div class='column main-left'>
@@ -70,8 +68,12 @@
         </div>
     </div>
 </div>
+<div id="dialog-root">
+
+</div>
 {% block costly_imports %}
 
 {% endblock %}
+
 </body>
 </html>
