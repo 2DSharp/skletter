@@ -9,12 +9,15 @@
  */
 return [
     ['GET', '/', ['Home', 'main']],
+    ['GET', '/api/home', ['Home', 'main', 'jsonMain']],
     ['POST', '/login', ['Login', 'attemptLogin']],
     ['GET', '/login', ['Login', 'renderLoginPage']],
     ['GET', '/register', ['Registration', 'displayForm']],
     ['POST', '/register', ['Registration', 'registerUser']],
     ['GET', '/confirm', ['Confirmation', 'confirmRegistrationWithToken']],
     ['POST', '/confirm', ['Confirmation', 'confirmRegistrationWithPin']],
-    ['GET', '/search', ['SearchService', 'look']],
-    ['GET', '/test', ['SearchService', 'testSearch']]
+    ['GET', '/api/suggest', ['Search', 'look']],
+    ['GET', '/api/setupAccount', ['AccountSetupWizard', 'displayStepContent']],
+    ['GET', '/test', ['SearchService', 'testSearch']],
+    ['GET', '/{name}', ['ProfileView', 'displayProfile']]
 ];
