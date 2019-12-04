@@ -1,10 +1,10 @@
 import React from "react";
 import PostCard from "./PostCard";
+import Axios from "axios";
 
 class Feed extends React.Component {
     componentDidMount() {
-
-        axios.get('https://gist.githubusercontent.com/2DSharp/86fe64a377af70d1d9ee09b82dbeceaa/raw/2685ec1a373ef285bde9d1d2e7abe3171a24f546/test.json')
+        Axios.get('https://gist.githubusercontent.com/2DSharp/86fe64a377af70d1d9ee09b82dbeceaa/raw/2685ec1a373ef285bde9d1d2e7abe3171a24f546/test.json')
             .then(function (response) {
                 this.setState({
                     isLoaded: true,
