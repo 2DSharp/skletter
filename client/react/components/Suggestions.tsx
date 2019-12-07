@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
 import SearchSuggestion from "./SearchSuggestion";
 
-class Suggestions extends Component {
-    constructor(props) {
+export interface SuggestionProps {
+    results: any[],
+    searched: boolean
+}
+
+class Suggestions extends Component<SuggestionProps, {}> {
+    constructor(props: SuggestionProps) {
         super(props);
     }
 

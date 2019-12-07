@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack');
 module.exports = {
 
     entry: {
-        feed: './src/feed.js',
+        feed: './src/feed.tsx',
         // pageThree: './src/pageThree/index.js'
     },
     module: {
@@ -23,11 +23,30 @@ module.exports = {
 
                     }
                 }
+            },
+            {
+                test: /\.ts(x?)$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: "ts-loader"
+                    }
+                ]
+            },
+            // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+            {
+                enforce: "pre",
+                test: /\.js$/,
+                loader: "source-map-loader"
             }
         ],
     },
+    /*externals: {
+        "react": "react",
+        "react-dom": "ReactDOM"
+    },*/
     resolve: {
-        extensions: ['*', '.js', '.jsx']
+        extensions: ['*', '.js', '.jsx', '.ts', '.tsx']
     },
     output: {
         path: __dirname + '../../../public/static/js/react-components/',
@@ -36,8 +55,14 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            chunks: 'all',
-        },
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/](react|react-dom|axios)[\\/]/,
+                    name: 'base',
+                    chunks: 'all',
+                }
+            }
+        }
     },
     plugins: [
         new Dotenv({
@@ -46,6 +71,7 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin()
     ],
+
     devServer: {
         contentBase: '../../../public/static/js/react-components/',
         hot: true

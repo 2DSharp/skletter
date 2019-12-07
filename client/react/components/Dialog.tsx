@@ -1,8 +1,15 @@
 import React, {Component} from "react";
 import Button from "./Button";
 
-class Dialog extends Component {
-  constructor(props) {
+export interface DialogProps {
+  heading: string;
+  content: Object;
+  closable: boolean
+}
+
+class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
+
+  constructor(props: DialogProps) {
     super(props);
     this.closeDialog = this.closeDialog.bind(this);
     this.state = {dialogDisplayed: true};
@@ -19,6 +26,7 @@ class Dialog extends Component {
                   <div className="header">
                     {closable && <Button action={this.closeDialog} type="close"/>}
                     <span><h1>{this.props.heading}</h1></span>
+                    <hr/>
                   </div>
                   <div className="dialog-content">
                     {this.props.content}
@@ -31,6 +39,7 @@ class Dialog extends Component {
   }
 
   closeDialog() {
+    console.log("Closing");
     this.setState({dialogDisplayed: false});
   }
 }

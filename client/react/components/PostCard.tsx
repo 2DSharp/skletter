@@ -1,6 +1,10 @@
 import React from "react";
 
-const PostCard = (props) => {
+export interface PostCard {
+    data: any
+}
+
+const PostCard: React.FunctionComponent<PostCard> = (props: PostCard) => {
     return (
         <div>
             <div className="post-card">

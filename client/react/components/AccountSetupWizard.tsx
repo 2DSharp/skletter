@@ -2,8 +2,12 @@ import React, {Component} from "react";
 import Axios from "axios";
 import Button from "./Button";
 
-class AccountSetupWizard extends Component {
-    constructor(props) {
+export interface AccountSetupWizardProps {
+    step: number
+}
+
+class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
+    constructor(props: AccountSetupWizardProps) {
         super(props);
         this.uploadPicture = this.uploadPicture.bind(this);
     }
@@ -24,10 +28,10 @@ class AccountSetupWizard extends Component {
         alert("Hello");
     }
 
-    uploadPicturePrompt(stepData) {
+    uploadPicturePrompt() {
         return (
             <div style={{textAlign: "center"}}>
-                <h3 className="dialog-subhead">{stepData.title}</h3>
+                <h3 className="dialog-subhead">Add a profile picture</h3>
                 <div
                     style={{
                         backgroundImage: "url(http://localhost/static/img/test.jpg)",
@@ -51,18 +55,19 @@ class AccountSetupWizard extends Component {
                         </Button>
                         <input type="file"/>
                     </div>
-
                 </div>
                 <div className="spacer large"/>
-                <div>{stepData.description}</div>
+                <div>
+                    A profile picture is associated with your identity making you unique.
+                </div>
             </div>
         );
     }
 
-    renderStep(step, stepData) {
+    renderStep(step: number) {
         switch (step) {
             case 1:
-                return this.uploadPicturePrompt(stepData);
+                return this.uploadPicturePrompt();
             case 2:
                 return null;
         }
@@ -71,7 +76,20 @@ class AccountSetupWizard extends Component {
     render() {
         const {step, stepData} = this.state;
         //return null;
-        return this.renderStep(step, stepData);
+        return (
+            <div>
+                {this.renderStep(step)}
+                <div>
+                    <Button
+                        bindClass="std primary-btn small"
+                        type="action"
+                        action={this.uploadPicture}
+                    >
+                        Next <span className="fas fa-angle-double-right icon not-far"/>
+                    </Button>
+                </div>
+            </div>
+        );
     }
 }
 

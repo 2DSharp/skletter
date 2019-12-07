@@ -1,10 +1,17 @@
-import React, {Component} from "react";
+import React, {ChangeEvent, Component} from "react";
 import Axios from "axios";
 import Suggestions from "./Suggestions";
 
-class Search extends Component {
 
-    state = {
+export interface State {
+    searched: boolean,
+    key: string,
+    results: any[]
+}
+
+class Search extends Component<{}, State> {
+
+    state: Readonly<State> = {
         searched: false,
         key: '',
         results: []
@@ -29,7 +36,7 @@ class Search extends Component {
         );
     }
 
-    updateSearch(event) {
+    updateSearch(event: ChangeEvent<HTMLInputElement>) {
         Axios.get(process.env.API_URL + "/suggest?q=" + event.target.value)
             .then(response => {
                 this.setState({searched: true, results: response.data});
