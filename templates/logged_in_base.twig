@@ -43,7 +43,6 @@
     </div>
 
 </div>
-
 <div id="content">
     <div id="main-container" class="container">
         <div class='page-wrapper'>
@@ -52,6 +51,7 @@
                     {{ include('pieces/action_menu.twig') }}
                 </div>
                 <div class='column main-center'>
+                    <div id="example"></div>
                     {% block content %}{% endblock %}
                 </div>
 
@@ -72,7 +72,7 @@
 
 </div>
 {% block costly_imports %}
-
+    <script src="{{ server.js_assets }}/react-components/base-bundle.js"></script>
 {% endblock %}
 
 </body>

@@ -16,8 +16,6 @@
 
 {% endblock %}
 {% block costly_imports %}
-    <script src="{{ server.js_assets }}/axios.min.js"></script>
-    <script src="{{ server.js_assets }}/react-components/vendors~feed-bundle.js"></script>
-    <script src="{{ server.js_assets }}/react-components/feed-bundle.js"></script>
     {{ parent() }}
+    <script src="{{ server.js_assets }}/react-components/feed-bundle.js"></script>
 {% endblock %}
