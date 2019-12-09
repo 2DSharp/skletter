@@ -19,5 +19,6 @@ return [
     ['GET', '/api/suggest', ['Search', 'look']],
     ['GET', '/api/setupAccount', ['AccountSetupWizard', 'displayStepContent']],
     ['GET', '/test', ['SearchService', 'testSearch']],
-    ['GET', '/{name}', ['ProfileView', 'displayProfile']]
+    ['GET', '/{name}', ['ProfileView', 'displayProfile']],
+    ['POST', '/api/uploadPicture', ['UploadPicture', 'upload']]
 ];
