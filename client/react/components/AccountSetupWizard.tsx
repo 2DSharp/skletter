@@ -1,15 +1,15 @@
-import React, {Component} from "react";
+import React, {Component,} from "react";
 import Axios from "axios";
 import Button from "./Button";
+import ImageUploader from "./ImageUploader";
 
 export interface AccountSetupWizardProps {
-    step: number
+    step: number;
 }
 
 class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
     constructor(props: AccountSetupWizardProps) {
         super(props);
-        this.uploadPicture = this.uploadPicture.bind(this);
     }
 
     state = {
@@ -17,15 +17,12 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
         stepData: {}
     };
 
+
     componentDidMount() {
         //this.setState({ step: this.props.step });
         Axios.get(process.env.API_URL + "/setupAccount?step=1").then(response =>
             this.setState({stepData: response.data})
         );
-    }
-
-    uploadPicture() {
-        alert("Hello");
     }
 
     uploadPicturePrompt() {
@@ -43,18 +40,8 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 />
                 <div>
                     <div className="spacer medium"/>
-                    <div className="upload-btn-wrapper">
-                        <Button
-                            bindClass="std primary-btn medium"
-                            type="action"
-                            action={this.uploadPicture}
-                        >
-                            <input type="file"/>
-                            <span className="fas fa-upload icon not-far"/>
-                            Upload Image
-                        </Button>
-                        <input type="file"/>
-                    </div>
+                    <ImageUploader placeholder="Uploading Profile Picture..."
+                                   endpoint={process.env.API_URL + "/uploadPicture"}/>
                 </div>
                 <div className="spacer large"/>
                 <div>
@@ -79,12 +66,8 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
         return (
             <div>
                 {this.renderStep(step)}
-                <div>
-                    <Button
-                        bindClass="std primary-btn small"
-                        type="action"
-                        action={this.uploadPicture}
-                    >
+                <div className="navigation">
+                    <Button bindClass="std primary-btn small" type="action" action={null}>
                         Next <span className="fas fa-angle-double-right icon not-far"/>
                     </Button>
                 </div>

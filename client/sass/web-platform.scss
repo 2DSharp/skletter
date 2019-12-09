@@ -87,6 +87,7 @@ body {
   color: $accent-color;
   margin-top: 5px;
 }
+
 #suggestions {
   background-color: #fff;
   padding: 5px;
@@ -109,6 +110,7 @@ body {
   font-size: 24px;
   color: #000;
 }
+
 .suggest-list {
   list-style-type: none;
   cursor: pointer;
@@ -144,6 +146,7 @@ body {
   float: left;
   clear: both;
 }
+
 @mixin transition($transition) {
   -webkit-transition: $transition;
   -moz-transition: $transition;
@@ -172,8 +175,12 @@ body {
   margin-right: 15px;
   list-style-type: none;
 
+  &.spaced {
+    margin: 0 5px 0 5px;
+  }
+
   &.not-far {
-    margin-right: 10px;
+    margin-right: 0;
   }
 }
 
@@ -237,10 +244,6 @@ body {
   margin-left: 40px;
 }
 
-.main-center {
-  //  overflow-y: auto;
-}
-
 .column {
   display: flex;
   flex-direction: column;
@@ -254,7 +257,6 @@ body {
 .nav-icon {
   width: 45px;
   margin: 0 3px 0 3px;
-  // background-color: rgba(0, 0, 0, 0.1);
 
   display: inline-block;
 }
@@ -269,15 +271,19 @@ body {
 }
 
 .centered {
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .dialog-content {
   margin: 15px 0 15px 0;
+
+  .navigation {
+    float: right;
+    margin-top: 15px;
+  }
 }
 
 .dialog-container {
@@ -285,9 +291,7 @@ body {
   width: 600px;
   max-width: 100%;
   min-height: 200px;
-  height: 200px;
   position: fixed;
-  max-height: 100%;
   background-color: #fff;
   border-radius: 12px;
   border-color: black;
@@ -296,6 +300,12 @@ body {
   .header {
     width: 100%;
     margin-bottom: 30px;
+
+    hr {
+      border: 0;
+      height: 1px;
+      background: #333 linear-gradient(to right, #ccc, #333, #ccc);
+    }
 
     h1 {
       font-weight: 400;
@@ -384,5 +394,37 @@ button:focus {
     opacity: 0;
     cursor: pointer;
   }
+}
 
+.upload-meter {
+  height: 10px; /* Can be anything */
+  position: relative;
+  background: #f0f0f0;
+  @include prefix((
+          border-radius: 60px
+  ), webkit moz);
+  width: 180px;
+  margin: 10px auto;
+}
+
+.upload-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 60px;
+  background-color: #0085FD;
+  position: relative;
+  overflow: hidden;
+  width: 0;
+  @include prefix((transition: width 0.5s
+  ), webkit moz);
+}
+
+.upload-btn {
+  margin: 5px auto;
+}
+
+.upload-status {
+  padding: 5px;
+  font-size: 14px;
+  color: #333333;
 }
