@@ -22,7 +22,7 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
           {this.state.dialogDisplayed && (
               <div>
                 <div onClick={this.closeDialog} className="overlay"/>
-                <div className="dialog-container centered" style={{width: "800px", height: "450px"}}>
+                <div className="dialog-container centered" style={{width: "800px"}}>
                   <div className="header">
                     {closable && <Button action={this.closeDialog} type="close"/>}
                     <span><h1>{this.props.heading}</h1></span>
