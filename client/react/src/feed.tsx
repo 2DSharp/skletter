@@ -14,9 +14,10 @@ const params = queryString.parse(window.location.search);
 if (params.accountSetupWizard === "1")
   ReactDOM.render(
       <Dialog
-          heading="Let's get you up to speed"
+          heading="Set up account"
           content={<AccountSetupWizard step={1}/>}
           closable
+          overlayed={true}
       />,
       document.getElementById("dialog-root")
   );
