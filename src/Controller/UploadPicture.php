@@ -13,7 +13,6 @@ namespace Skletter\Controller;
 
 use Bulletproof\Image;
 use Skletter\Component\Core\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class UploadPicture implements Controller
@@ -29,9 +28,8 @@ class UploadPicture implements Controller
             ->setLocation(__DIR__ . "/../../public/static/upload");
 
         if ($image["avatar"] && $image->upload()) {
-            // update to db
+            return ['url' => $_ENV['USER_IMAGES'] . "/" . $image->getName() . ".jpeg"];
         }
-        echo $image->getError();
-        return new JsonResponse([], 401);
+        return ['url' => 'not found'];
     }
 }
