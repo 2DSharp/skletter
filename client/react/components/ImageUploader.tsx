@@ -5,6 +5,8 @@ import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
+import * as noUiSlider from 'nouislider';
+import "nouislider/distribute/nouislider.min.css"
 
 export interface ImageUploaderProps {
   placeholder: string;
@@ -109,8 +111,10 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
       uploadedURL: url
     });
     const image: any = document.getElementById("new-profile-pic");
-    // console.log(" Here: " + image.naturalWidth + " " + image.naturalHeight);
+    // Let the image load first and then change to avoid cached/inconsistent behavior:
+    // https://css-tricks.com/measuring-image-widths-javascript-carefully/
     image.addEventListener("load", function () {
+      // Fit image to container based on the smaller side
       let side = (image.naturalWidth < image.naturalHeight) ? "width" : "height";
       image.style[side] = "320px";
     });
@@ -135,6 +139,20 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
       ready(event: CustomEvent<any>): void {
         this.cropper.setCropBoxData({top: 40, width: 320});
         removeLoader();
+        let slider = document.getElementById('img-zoom-slider');
+
+        let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
+          start: 0,
+          connect: [true, false],
+          range: {
+            'min': 0.45,
+            'max': 1.5
+          },
+        });
+        rangeSlider.on('update', function (values: any, handle: any) {
+          console.log(rangeSlider.get());
+          this.cropper.zoomTo((rangeSlider.get() as unknown as number));
+        }.bind(this));
       }
     });
   }
@@ -165,6 +183,11 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
               />
           )}
         </div>
+      </div>
+      <div style={{marginTop: "35px", textAlign: "center"}}>
+        <span className="fas fa-image zoom-tip out"/>
+        <div id="img-zoom-slider"/>
+        <span className="fas fa-image zoom-tip in"/>
       </div>
     </div>);
   }
