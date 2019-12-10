@@ -17,9 +17,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
         stepData: {}
     };
 
-
     componentDidMount() {
-        //this.setState({ step: this.props.step });
         Axios.get(process.env.API_URL + "/setupAccount?step=1").then(response =>
             this.setState({stepData: response.data})
         );
@@ -67,7 +65,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
         return (
             <div>
                 {this.renderStep(step)}
-                <div className="navigation">
+                <div style={{paddingRight: "20px"}} className="navigation">
                     <Button bindClass="std primary-btn small" type="action" action={null}>
                         Next <span className="fas fa-angle-double-right icon not-far"/>
                     </Button>
