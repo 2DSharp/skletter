@@ -1,4 +1,5 @@
 import React, {ChangeEvent, Component, createRef} from "react";
+import ReactDOM from "react-dom";
 import Button from "./Button";
 import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
@@ -54,13 +55,13 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
               style={{display: "none"}}
               onChange={this.onChangeFile.bind(this)}
           />
-          {this.state.displayCropper && (
-              <Dialog
+          {this.state.displayCropper && (ReactDOM.createPortal(<Dialog
                   heading="Adjust the image"
                   content={this.renderCropper()}
                   closable
                   overlayed={false}
-              />
+              />, document.getElementById("dialog-root"))
+
           )}
         </div>
     );
@@ -107,7 +108,12 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
       displayCropper: true,
       uploadedURL: url
     });
-    const image = document.getElementById("new-profile-pic");
+    const image: any = document.getElementById("new-profile-pic");
+    // console.log(" Here: " + image.naturalWidth + " " + image.naturalHeight);
+    image.addEventListener("load", function () {
+      let side = (image.naturalWidth < image.naturalHeight) ? "width" : "height";
+      image.style[side] = "320px";
+    });
 
     let removeLoader = () => {
       this.setState({loadingCropper: false});
@@ -139,28 +145,28 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
   }
 
   renderCropper() {
-    return (
-        <div className="img-editor-container">
-          <div className="img-editor">
-            <img
-                className="canvas"
-                alt="Profile Image"
-                src={this.state.uploadedURL}
-                id="new-profile-pic"
-            />
-            {this.state.loadingCropper && (
-                <img
-                    alt="loading"
-                    style={{
-                      position: "absolute", top: "50%", left: "50%",
-                      transform: "translate(-50%, 0)"
-                    }}
-                    src={process.env.img_assets + "/loader-64.gif"}
-                />
-            )}
-          </div>
+    return (<div className="editor-prompt">
+      <div className="img-editor-container">
+        <div className="img-editor">
+          <img
+              className="canvas"
+              alt="Profile Image"
+              src={this.state.uploadedURL}
+              id="new-profile-pic"
+          />
+          {this.state.loadingCropper && (
+              <img
+                  alt="loading"
+                  style={{
+                    position: "absolute", top: "50%", left: "50%",
+                    transform: "translate(-50%, 0)"
+                  }}
+                  src={process.env.img_assets + "/loader-64.gif"}
+              />
+          )}
         </div>
-    );
+      </div>
+    </div>);
   }
 }
 

@@ -429,9 +429,14 @@ button:focus {
   color: #333333;
 }
 
+.editor-prompt {
+}
+
 .img-editor-container {
   overflow: hidden;
   height: 400px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .cropper-modal {
@@ -451,7 +456,7 @@ button:focus {
 
   .canvas {
     max-width: 100%;
-    min-width: 320px;
+    //    min-width: 320px;
     max-height: 600px;
     opacity: 0.3;
   }
