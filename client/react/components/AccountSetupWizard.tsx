@@ -28,6 +28,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
     uploadPicturePrompt() {
         return (
             <div style={{textAlign: "center"}}>
+                <h1>Let's get you up to speed</h1>
                 <h3 className="dialog-subhead">Add a profile picture</h3>
                 <div
                     style={{
@@ -41,7 +42,8 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 <div>
                     <div className="spacer medium"/>
                     <ImageUploader placeholder="Uploading Profile Picture..."
-                                   endpoint={process.env.API_URL + "/uploadPicture"}/>
+                                   endpoint={process.env.API_URL + "/uploadPicture"}
+                    />
                 </div>
                 <div className="spacer large"/>
                 <div>
@@ -59,7 +61,6 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 return null;
         }
     }
-
     render() {
         const {step, stepData} = this.state;
         //return null;
