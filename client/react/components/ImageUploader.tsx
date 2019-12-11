@@ -122,7 +122,16 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
     let removeLoader = () => {
       this.setState({loadingCropper: false});
     };
+    let slider = document.getElementById('img-zoom-slider');
 
+    let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
+      start: 0,
+      connect: [true, false],
+      range: {
+        'min': 0.45,
+        'max': 1.5
+      },
+    });
     const cropper = new Cropper(image as HTMLImageElement, {
       aspectRatio: 1,
       background: false,
@@ -137,18 +146,9 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
         console.log(event.detail.x);
       },
       ready(event: CustomEvent<any>): void {
+
         this.cropper.setCropBoxData({top: 40, width: 320});
         removeLoader();
-        let slider = document.getElementById('img-zoom-slider');
-
-        let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
-          start: 0,
-          connect: [true, false],
-          range: {
-            'min': 0.45,
-            'max': 1.5
-          },
-        });
         rangeSlider.on('update', function (values: any, handle: any) {
           console.log(rangeSlider.get());
           this.cropper.zoomTo((rangeSlider.get() as unknown as number));
