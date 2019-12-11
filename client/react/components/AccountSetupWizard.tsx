@@ -1,4 +1,4 @@
-import React, {Component,} from "react";
+import React, {Component} from "react";
 import Axios from "axios";
 import Button from "./Button";
 import ImageUploader from "./ImageUploader";
@@ -39,8 +39,9 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 />
                 <div>
                     <div className="spacer medium"/>
-                    <ImageUploader placeholder="Uploading Profile Picture..."
-                                   endpoint={process.env.API_URL + "/uploadPicture"}
+                    <ImageUploader
+                        placeholder="Uploading Profile Picture..."
+                        endpoint={process.env.API_URL + "/uploadPicture"}
                     />
                 </div>
                 <div className="spacer large"/>
@@ -59,11 +60,12 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 return null;
         }
     }
+
     render() {
         const {step, stepData} = this.state;
         //return null;
         return (
-            <div style={{width: "600px"}}>
+            <div style={{width: "650px"}}>
                 {this.renderStep(step)}
                 <div style={{paddingRight: "20px"}} className="navigation">
                     <Button bindClass="std primary-btn small" type="action" action={null}>

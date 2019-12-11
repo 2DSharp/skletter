@@ -39,12 +39,12 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   private uploader = createRef<HTMLInputElement>();
   private imgRef = createRef<HTMLImageElement>();
   private zoomSlider = createRef<HTMLDivElement>();
+  private cropper: Cropper;
 
   constructor(props: ImageUploaderProps) {
     super(props);
     this.selectPicture = this.selectPicture.bind(this);
   }
-
 
   render() {
     return (
@@ -102,11 +102,19 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   }
 
   private preparePreview(file: File) {
-    this.setState({progress: 100, file: file});
-    this.prepareCanvas(URL.createObjectURL(file));
+    this.setState({
+      file: file,
+      transactionCompleted: false,
+      uploading: false,
+      progress: 0,
+      loadingCropper: true,
+      displayCropper: true,
+      uploadedURL: URL.createObjectURL(file)
+    });
   }
 
   private upload() {
+    console.log(this.cropper.getCanvasData());
     this.setState({uploading: true});
     let form = new FormData();
     form.append("avatar", this.state.file);
@@ -125,7 +133,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     })
         .then(
             function (response: AxiosResponse) {
-              this.setState({transactionCompleted: true});
+              this.setState({transactionCompleted: true, displayCropper: false});
             }.bind(this)
         )
         .catch(function (response) {
@@ -133,22 +141,14 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
         });
   }
 
-  private prepareCanvas(url: string) {
-    this.setState({
-      loadingCropper: true,
-      displayCropper: true,
-      uploadedURL: url
-    });
-  }
-
-  private cropper: Cropper;
   private adjustImage() {
     const image: any = this.imgRef.current;
     // Let the image load first and then change to avoid cached/inconsistent behavior:
     // https://css-tricks.com/measuring-image-widths-javascript-carefully/
     image.addEventListener("load", function () {
       // Fit image to container based on the smaller side
-      const side = image.naturalWidth < image.naturalHeight ? "width" : "height";
+      const side =
+          image.naturalWidth < image.naturalHeight ? "width" : "height";
       image.style[side] = "320px";
     });
 
@@ -244,14 +244,12 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
                 negativeText="Cancel"
             />
           </React.Fragment>
-
       );
   }
 
   closeWindow() {
-    this.setState({transactionCompleted: true});
+    this.setState({transactionCompleted: true, displayCropper: false});
   }
-
 
   renderCropper() {
     let containerStyle = {opacity: 1};
