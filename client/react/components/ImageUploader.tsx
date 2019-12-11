@@ -7,6 +7,8 @@ import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import * as noUiSlider from "nouislider";
 import "nouislider/distribute/nouislider.min.css";
+import DecisionButtonGroup from "./DecisionButtonGroup";
+import ProgressMeter from "./ProgressMeter";
 
 export interface ImageUploaderProps {
   placeholder: string;
@@ -34,12 +36,15 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     transactionCompleted: false
   };
 
+  private uploader = createRef<HTMLInputElement>();
+  private imgRef = createRef<HTMLImageElement>();
+  private zoomSlider = createRef<HTMLDivElement>();
+
   constructor(props: ImageUploaderProps) {
     super(props);
     this.selectPicture = this.selectPicture.bind(this);
   }
 
-  private uploader = createRef<HTMLInputElement>();
 
   render() {
     return (
@@ -61,7 +66,8 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
               style={{display: "none"}}
               onChange={this.onChangeFile.bind(this)}
           />
-          {!this.state.transactionCompleted && this.state.displayCropper &&
+          {!this.state.transactionCompleted &&
+          this.state.displayCropper &&
           ReactDOM.createPortal(
               <Dialog
                   heading="Adjust the image"
@@ -137,19 +143,19 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
 
   private cropper: Cropper;
   private adjustImage() {
-    const image: any = document.getElementById("new-profile-pic");
+    const image: any = this.imgRef.current;
     // Let the image load first and then change to avoid cached/inconsistent behavior:
     // https://css-tricks.com/measuring-image-widths-javascript-carefully/
     image.addEventListener("load", function () {
       // Fit image to container based on the smaller side
-      let side = image.naturalWidth < image.naturalHeight ? "width" : "height";
+      const side = image.naturalWidth < image.naturalHeight ? "width" : "height";
       image.style[side] = "320px";
     });
 
-    let removeLoader = () => {
+    const removeLoader = () => {
       this.setState({loadingCropper: false});
     };
-    let slider = document.getElementById("img-zoom-slider");
+    const slider = this.zoomSlider.current;
 
     let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
       start: 0,
@@ -205,12 +211,10 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
                 }}
                 className="upload-status"
             >
-          <span style={{margin: "5px", fontWeight: "bold"}}>
-            {this.props.placeholder}
-          </span>
-              <div className="upload-meter">
-                <span style={{width: this.state.progress + "%"}}/>
-              </div>
+              <ProgressMeter
+                  progress={this.state.progress}
+                  placeholder={this.props.placeholder}
+              />
             </div>
         )
     );
@@ -230,45 +234,51 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
           <React.Fragment>
             <div style={{marginTop: "15px", textAlign: "center"}}>
               <span className="fas fa-image zoom-tip out"/>
-              <div id="img-zoom-slider"/>
+              <div id="img-zoom-slider" ref={this.zoomSlider}/>
               <span className="fas fa-image zoom-tip in"/>
             </div>
-            <div style={{textAlign: "center"}}>
-              <Button
-                  bindClass="confirmation negative spaced"
-                  type="action"
-                  action={() => console.log("hello")}
-              >
-                <span>Cancel</span>
-              </Button>
-              <Button
-                  bindClass="confirmation positive spaced"
-                  type="action"
-                  action={this.upload.bind(this)}
-              >
-                <span>Apply changes</span>
-              </Button>
-            </div>
+            <DecisionButtonGroup
+                positiveAction={this.upload.bind(this)}
+                negativeAction={this.closeWindow.bind(this)}
+                positiveText="Apply Changes"
+                negativeText="Cancel"
+            />
           </React.Fragment>
+
       );
   }
+
+  closeWindow() {
+    this.setState({transactionCompleted: true});
+  }
+
 
   renderCropper() {
     let containerStyle = {opacity: 1};
     if (this.state.uploading) containerStyle = {opacity: 0.4};
 
+    let placeholderStyle = {};
+    if (!this.state.loadingCropper && !this.state.uploading) {
+      placeholderStyle = {display: "none"};
+    }
+
+    const ImagePlaceholder = React.forwardRef((props: any, ref: any) => (
+        <img
+            className="canvas"
+            alt="Profile Image"
+            ref={ref}
+            style={placeholderStyle}
+            src={this.state.uploadedURL}
+            id="new-profile-pic"
+        />
+    ));
     return (
         <React.Fragment>
           {this.displayProgress()}
           <div className="editor-prompt">
             <div style={containerStyle} className="img-editor-container">
               <div className="img-editor">
-                <img
-                    className="canvas"
-                    alt="Profile Image"
-                    src={this.state.uploadedURL}
-                    id="new-profile-pic"
-                />
+                <ImagePlaceholder ref={this.imgRef}/>
               </div>
             </div>
             {this.showControls()}
