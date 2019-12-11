@@ -24,11 +24,10 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
               <div> {
                 this.props.overlayed && <div onClick={this.closeDialog} className="overlay"/>
               }
-                <div className="dialog-container centered" style={{width: "800px"}}>
+                <div className="dialog-container centered">
                   <div className="header">
                     {closable && <Button action={this.closeDialog} type="close"/>}
                     <span><b style={{textAlign: "left", margin: "20px"}}>{this.props.heading}</b></span>
-                    <hr/>
                   </div>
                   <div className="dialog-content">
                     {this.props.content}

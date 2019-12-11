@@ -63,7 +63,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
         const {step, stepData} = this.state;
         //return null;
         return (
-            <div>
+            <div style={{width: "600px"}}>
                 {this.renderStep(step)}
                 <div style={{paddingRight: "20px"}} className="navigation">
                     <Button bindClass="std primary-btn small" type="action" action={null}>
