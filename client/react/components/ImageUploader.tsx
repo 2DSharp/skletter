@@ -14,12 +14,13 @@ export interface ImageUploaderProps {
 }
 
 export interface ImageUploaderState {
-  progress: number,
-  displayCropper: boolean,
-  uploadedURL: string,
-  loadingCropper: boolean,
-  file: File,
-  uploading: boolean
+  progress: number;
+  displayCropper: boolean;
+  uploadedURL: string;
+  loadingCropper: boolean;
+  file: File;
+  uploading: boolean;
+  transactionCompleted: boolean;
 }
 
 class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
@@ -29,7 +30,8 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     uploadedURL: "",
     loadingCropper: false,
     uploading: false,
-    file: null
+    file: null,
+    transactionCompleted: false
   };
 
   constructor(props: ImageUploaderProps) {
@@ -42,15 +44,6 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   render() {
     return (
         <div style={{textAlign: "center", padding: "5px"}}>
-          {this.state.progress > 0 && this.state.progress < 100 && (
-              <div className="upload-status">
-                <span style={{margin: "5px"}}> {this.props.placeholder} </span>
-                <div className="upload-meter">
-                  <span style={{width: this.state.progress + "%"}}/>
-                </div>
-              </div>
-          )}
-
           <Button
               bindClass="std primary-btn medium upload-btn"
               type="action"
@@ -68,7 +61,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
               style={{display: "none"}}
               onChange={this.onChangeFile.bind(this)}
           />
-          {this.state.displayCropper && !this.state.uploading &&
+          {!this.state.transactionCompleted && this.state.displayCropper &&
           ReactDOM.createPortal(
               <Dialog
                   heading="Adjust the image"
@@ -82,9 +75,15 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     );
   }
 
-  componentDidUpdate(prevProps: ImageUploaderProps, prevState: ImageUploaderState) {
+  componentDidUpdate(
+      prevProps: ImageUploaderProps,
+      prevState: ImageUploaderState
+  ) {
     if (!prevState.displayCropper && this.state.displayCropper) {
       this.adjustImage();
+    }
+    if (!prevState.uploading && this.state.uploading) {
+      this.cropper.destroy();
     }
   }
 
@@ -113,15 +112,14 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
         let percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
         );
+        this.setState({uploading: true});
         this.setState({progress: percentCompleted});
       }.bind(this),
       headers: {"Content-Type": "multipart/form-data"}
     })
         .then(
             function (response: AxiosResponse) {
-              this.prepareCanvas(response.data.url);
-              this.adjustImage();
-              // console.log(response.data.url);
+              this.setState({transactionCompleted: true});
             }.bind(this)
         )
         .catch(function (response) {
@@ -137,8 +135,8 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     });
   }
 
+  private cropper: Cropper;
   private adjustImage() {
-
     const image: any = document.getElementById("new-profile-pic");
     // Let the image load first and then change to avoid cached/inconsistent behavior:
     // https://css-tricks.com/measuring-image-widths-javascript-carefully/
@@ -161,7 +159,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
         max: 1.5
       }
     });
-    const cropper = new Cropper(image as HTMLImageElement, {
+    this.cropper = new Cropper(image as HTMLImageElement, {
       aspectRatio: 1,
       background: false,
       cropBoxMovable: false,
@@ -192,53 +190,90 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     if (node) node.click();
   }
 
-  renderCropper() {
+  displayProgress() {
     return (
-        <div className="editor-prompt">
-          <div className="img-editor-container">
-            <div className="img-editor">
-              <img
-                  className="canvas"
-                  alt="Profile Image"
-                  src={this.state.uploadedURL}
-                  id="new-profile-pic"
-              />
-              {this.state.loadingCropper && (
-                  <img
-                      alt="loading"
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, 0)"
-                      }}
-                      src={process.env.img_assets + "/loader-64.gif"}
-                  />
-              )}
+        this.state.progress > 0 &&
+        this.state.progress < 100 && (
+            <div
+                style={{
+                  opacity: 1,
+                  position: "absolute",
+                  zIndex: 20,
+                  top: "190px",
+                  left: "50%",
+                  transform: "translate(-50%, 0)"
+                }}
+                className="upload-status"
+            >
+          <span style={{margin: "5px", fontWeight: "bold"}}>
+            {this.props.placeholder}
+          </span>
+              <div className="upload-meter">
+                <span style={{width: this.state.progress + "%"}}/>
+              </div>
             </div>
+        )
+    );
+  }
+
+  showControls() {
+    if (this.state.uploading)
+      return (
+          <div style={{marginTop: "20px", textAlign: "center"}}>
+          <span style={{margin: "5px", fontWeight: "bold"}}>
+            Applying changes...
+          </span>
           </div>
-          <div style={{marginTop: "15px", textAlign: "center"}}>
-            <span className="fas fa-image zoom-tip out"/>
-            <div id="img-zoom-slider"/>
-            <span className="fas fa-image zoom-tip in"/>
+      );
+    else
+      return (
+          <React.Fragment>
+            <div style={{marginTop: "15px", textAlign: "center"}}>
+              <span className="fas fa-image zoom-tip out"/>
+              <div id="img-zoom-slider"/>
+              <span className="fas fa-image zoom-tip in"/>
+            </div>
+            <div style={{textAlign: "center"}}>
+              <Button
+                  bindClass="confirmation negative spaced"
+                  type="action"
+                  action={() => console.log("hello")}
+              >
+                <span>Cancel</span>
+              </Button>
+              <Button
+                  bindClass="confirmation positive spaced"
+                  type="action"
+                  action={this.upload.bind(this)}
+              >
+                <span>Apply changes</span>
+              </Button>
+            </div>
+          </React.Fragment>
+      );
+  }
+
+  renderCropper() {
+    let containerStyle = {opacity: 1};
+    if (this.state.uploading) containerStyle = {opacity: 0.4};
+
+    return (
+        <React.Fragment>
+          {this.displayProgress()}
+          <div className="editor-prompt">
+            <div style={containerStyle} className="img-editor-container">
+              <div className="img-editor">
+                <img
+                    className="canvas"
+                    alt="Profile Image"
+                    src={this.state.uploadedURL}
+                    id="new-profile-pic"
+                />
+              </div>
+            </div>
+            {this.showControls()}
           </div>
-          <div style={{textAlign: "center"}}>
-            <Button
-                bindClass="confirmation negative spaced"
-                type="action"
-                action={() => console.log("hello")}
-            >
-              <span>Cancel</span>
-            </Button>
-            <Button
-                bindClass="confirmation positive spaced"
-                type="action"
-                action={this.upload.bind(this)}
-            >
-              <span>Apply changes</span>
-            </Button>
-          </div>
-        </div>
+        </React.Fragment>
     );
   }
 }
