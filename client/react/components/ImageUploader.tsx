@@ -5,20 +5,31 @@ import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
-import * as noUiSlider from 'nouislider';
-import "nouislider/distribute/nouislider.min.css"
+import * as noUiSlider from "nouislider";
+import "nouislider/distribute/nouislider.min.css";
 
 export interface ImageUploaderProps {
   placeholder: string;
   endpoint: string;
 }
 
-class ImageUploader extends Component<ImageUploaderProps, {}> {
-  state = {
+export interface ImageUploaderState {
+  progress: number,
+  displayCropper: boolean,
+  uploadedURL: string,
+  loadingCropper: boolean,
+  file: File,
+  uploading: boolean
+}
+
+class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
+  state: ImageUploaderState = {
     progress: 0,
     displayCropper: false,
     uploadedURL: "",
-    loadingCropper: false
+    loadingCropper: false,
+    uploading: false,
+    file: null
   };
 
   constructor(props: ImageUploaderProps) {
@@ -57,16 +68,24 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
               style={{display: "none"}}
               onChange={this.onChangeFile.bind(this)}
           />
-          {this.state.displayCropper && (ReactDOM.createPortal(<Dialog
+          {this.state.displayCropper && !this.state.uploading &&
+          ReactDOM.createPortal(
+              <Dialog
                   heading="Adjust the image"
                   content={this.renderCropper()}
                   closable
                   overlayed={false}
-              />, document.getElementById("dialog-root"))
-
+              />,
+              document.getElementById("dialog-root")
           )}
         </div>
     );
+  }
+
+  componentDidUpdate(prevProps: ImageUploaderProps, prevState: ImageUploaderState) {
+    if (!prevState.displayCropper && this.state.displayCropper) {
+      this.adjustImage();
+    }
   }
 
   onChangeFile(event: ChangeEvent) {
@@ -74,13 +93,18 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
     event.preventDefault();
     const target = event.target as HTMLInputElement;
     const file: File = (target.files as FileList)[0];
-    console.log(file);
-    this.upload(file);
+    this.preparePreview(file);
   }
 
-  private upload(file: File) {
+  private preparePreview(file: File) {
+    this.setState({progress: 100, file: file});
+    this.prepareCanvas(URL.createObjectURL(file));
+  }
+
+  private upload() {
+    this.setState({uploading: true});
     let form = new FormData();
-    form.append("avatar", file);
+    form.append("avatar", this.state.file);
     Axios({
       method: "post",
       url: this.props.endpoint,
@@ -95,7 +119,8 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
     })
         .then(
             function (response: AxiosResponse) {
-              this.adjustImage(response.data.url);
+              this.prepareCanvas(response.data.url);
+              this.adjustImage();
               // console.log(response.data.url);
             }.bind(this)
         )
@@ -104,33 +129,37 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
         });
   }
 
-  private adjustImage(url: string) {
+  private prepareCanvas(url: string) {
     this.setState({
       loadingCropper: true,
       displayCropper: true,
       uploadedURL: url
     });
+  }
+
+  private adjustImage() {
+
     const image: any = document.getElementById("new-profile-pic");
     // Let the image load first and then change to avoid cached/inconsistent behavior:
     // https://css-tricks.com/measuring-image-widths-javascript-carefully/
     image.addEventListener("load", function () {
       // Fit image to container based on the smaller side
-      let side = (image.naturalWidth < image.naturalHeight) ? "width" : "height";
+      let side = image.naturalWidth < image.naturalHeight ? "width" : "height";
       image.style[side] = "320px";
     });
 
     let removeLoader = () => {
       this.setState({loadingCropper: false});
     };
-    let slider = document.getElementById('img-zoom-slider');
+    let slider = document.getElementById("img-zoom-slider");
 
     let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
       start: 0,
       connect: [true, false],
       range: {
-        'min': 0.45,
-        'max': 1.5
-      },
+        min: 0.45,
+        max: 1.5
+      }
     });
     const cropper = new Cropper(image as HTMLImageElement, {
       aspectRatio: 1,
@@ -143,16 +172,17 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
       center: false,
       dragMode: "move",
       crop(event) {
-        console.log(event.detail.x);
+        //console.log(event.detail.x);
       },
       ready(event: CustomEvent<any>): void {
-
         this.cropper.setCropBoxData({top: 40, width: 320});
         removeLoader();
-        rangeSlider.on('update', function (values: any, handle: any) {
-          console.log(rangeSlider.get());
-          this.cropper.zoomTo((rangeSlider.get() as unknown as number));
-        }.bind(this));
+        rangeSlider.on(
+            "update",
+            function (values: any, handle: any) {
+              this.cropper.zoomTo((rangeSlider.get() as unknown) as number);
+            }.bind(this)
+        );
       }
     });
   }
@@ -163,33 +193,53 @@ class ImageUploader extends Component<ImageUploaderProps, {}> {
   }
 
   renderCropper() {
-    return (<div className="editor-prompt">
-      <div className="img-editor-container">
-        <div className="img-editor">
-          <img
-              className="canvas"
-              alt="Profile Image"
-              src={this.state.uploadedURL}
-              id="new-profile-pic"
-          />
-          {this.state.loadingCropper && (
+    return (
+        <div className="editor-prompt">
+          <div className="img-editor-container">
+            <div className="img-editor">
               <img
-                  alt="loading"
-                  style={{
-                    position: "absolute", top: "50%", left: "50%",
-                    transform: "translate(-50%, 0)"
-                  }}
-                  src={process.env.img_assets + "/loader-64.gif"}
+                  className="canvas"
+                  alt="Profile Image"
+                  src={this.state.uploadedURL}
+                  id="new-profile-pic"
               />
-          )}
+              {this.state.loadingCropper && (
+                  <img
+                      alt="loading"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, 0)"
+                      }}
+                      src={process.env.img_assets + "/loader-64.gif"}
+                  />
+              )}
+            </div>
+          </div>
+          <div style={{marginTop: "15px", textAlign: "center"}}>
+            <span className="fas fa-image zoom-tip out"/>
+            <div id="img-zoom-slider"/>
+            <span className="fas fa-image zoom-tip in"/>
+          </div>
+          <div style={{textAlign: "center"}}>
+            <Button
+                bindClass="confirmation negative spaced"
+                type="action"
+                action={() => console.log("hello")}
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button
+                bindClass="confirmation positive spaced"
+                type="action"
+                action={this.upload.bind(this)}
+            >
+              <span>Apply changes</span>
+            </Button>
+          </div>
         </div>
-      </div>
-      <div style={{marginTop: "35px", textAlign: "center"}}>
-        <span className="fas fa-image zoom-tip out"/>
-        <div id="img-zoom-slider"/>
-        <span className="fas fa-image zoom-tip in"/>
-      </div>
-    </div>);
+    );
   }
 }
 
