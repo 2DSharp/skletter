@@ -403,8 +403,9 @@ button:focus {
   @include prefix((
           border-radius: 60px
   ), webkit moz);
-  width: 180px;
+  width: 400px;
   margin: 10px auto;
+  border: 1px solid lightgray;
 }
 
 .upload-meter > span {
@@ -438,6 +439,7 @@ button:focus {
 .img-editor-container {
   overflow: hidden;
   max-height: 390px;
+  z-index: 10;
   text-align: center;
   margin: 0 auto;
   border: 1px solid lightgray;
