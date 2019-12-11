@@ -288,7 +288,7 @@ body {
 
 .dialog-container {
   z-index: 10;
-  width: 600px;
+  min-width: 400px;
   max-width: 100%;
   min-height: 200px;
   position: fixed;
@@ -300,12 +300,8 @@ body {
   .header {
     width: 100%;
     margin-bottom: 30px;
-
-    hr {
-      border: 0;
-      height: 1px;
-      background: #333 linear-gradient(to right, #ccc, #333, #ccc);
-    }
+    border-bottom: 1px solid gray;
+    padding-bottom: 7px;
 
     h1 {
       font-weight: 400;
@@ -431,6 +427,7 @@ button:focus {
 
 .editor-prompt {
   height: 450px;
+  width: 650px;
 }
 
 .img-editor-container {
@@ -451,6 +448,7 @@ button:focus {
 
 .cropper-view-box {
   border-radius: 50%;
+  outline-width: 2px !important;
 }
 
 .img-editor {
@@ -517,3 +515,4 @@ button:focus {
     font-size: 20px;
   }
 }
+
