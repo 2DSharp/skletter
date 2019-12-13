@@ -439,6 +439,7 @@ button:focus {
 .img-editor-container {
   overflow: hidden;
   max-height: 390px;
+  min-height: 320px;
   z-index: 10;
   text-align: center;
   margin: 0 auto;
@@ -454,10 +455,11 @@ button:focus {
 .cropper-view-box {
   border-radius: 50%;
   outline-width: 2px !important;
+  margin: 0 auto;
 }
 
 .img-editor {
-  max-width: 500px;
+  max-width: 100%;
   min-width: 320px;
   display: inline-block;
   margin: 0 auto;
@@ -465,7 +467,7 @@ button:focus {
   .canvas {
     max-width: 100%;
     //    min-width: 320px;
-    max-height: 600px;
+    max-height: 800px;
     opacity: 0.3;
   }
 }

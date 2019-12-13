@@ -149,7 +149,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       // Fit image to container based on the smaller side
       const side =
           image.naturalWidth < image.naturalHeight ? "width" : "height";
-      image.style[side] = "320px";
+      image.style[side] = "400px";
     });
 
     const removeLoader = () => {
@@ -161,8 +161,8 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       start: 0,
       connect: [true, false],
       range: {
-        min: 0.45,
-        max: 1.5
+        min: 0,
+        max: 1
       }
     });
     this.cropper = new Cropper(image as HTMLImageElement, {
@@ -174,12 +174,10 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       highlight: false,
       guides: false,
       center: false,
+      toggleDragModeOnDblclick: false,
       dragMode: "move",
-      crop(event) {
-        //console.log(event.detail.x);
-      },
       ready(event: CustomEvent<any>): void {
-        this.cropper.setCropBoxData({top: 40, width: 320});
+        this.cropper.setCropBoxData({top: 0, left: this.cropper.getCanvasData().width * 0.5 - 385 / 2, width: 385});
         removeLoader();
         rangeSlider.on(
             "update",
