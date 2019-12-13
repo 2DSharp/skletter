@@ -156,15 +156,9 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       this.setState({loadingCropper: false});
     };
     const slider = this.zoomSlider.current;
+    let minZoom: number = 0;
+    let maxZoom: number = 1;
 
-    let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
-      start: 0,
-      connect: [true, false],
-      range: {
-        min: 0,
-        max: 1
-      }
-    });
     this.cropper = new Cropper(image as HTMLImageElement, {
       aspectRatio: 1,
       background: false,
@@ -178,11 +172,40 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       dragMode: "move",
       ready(event: CustomEvent<any>): void {
         this.cropper.setCropBoxData({top: 0, left: this.cropper.getCanvasData().width * 0.5 - 385 / 2, width: 385});
+        const imageData = this.cropper.getImageData();
+        //if (imageData.width > imageData.height)
+        minZoom = (imageData.width / imageData.naturalWidth) - 0.05;
+        //else
+        const ratio = Math.floor(imageData.naturalWidth / imageData.width);
+        if (2 >= ratio)
+          maxZoom = 2;
+        else if (5 < ratio)
+          maxZoom = 0.5;
+
+        console.log("Width: " + (imageData.naturalWidth / imageData.width));
+        console.log("Max zoom: " + maxZoom);
+
+        let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
+          start: 0,
+          connect: [true, false],
+          range: {
+            min: minZoom,
+            max: maxZoom,
+          },
+          behaviour: 'tap-drag',
+          step: 0.0001
+        });
+        console.log(minZoom);
         removeLoader();
         rangeSlider.on(
             "update",
             function (values: any, handle: any) {
-              this.cropper.zoomTo((rangeSlider.get() as unknown) as number);
+              console.log(rangeSlider.get());
+              const containerData = this.cropper.getContainerData();
+              this.cropper.zoomTo(((rangeSlider.get() as unknown) as number), {
+                x: containerData.width / 2,
+                y: containerData.height / 2
+              });
             }.bind(this)
         );
       }
