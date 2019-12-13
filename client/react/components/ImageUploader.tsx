@@ -114,7 +114,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   }
 
   private upload() {
-    console.log(this.cropper.getCanvasData());
+    console.log(this.cropper.getData(true));
     this.setState({uploading: true});
     let form = new FormData();
     form.append("avatar", this.state.file);
@@ -147,9 +147,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     // https://css-tricks.com/measuring-image-widths-javascript-carefully/
     image.addEventListener("load", function () {
       // Fit image to container based on the smaller side
-      const side =
-          image.naturalWidth < image.naturalHeight ? "width" : "height";
-      image.style[side] = "400px";
+
     });
 
     const removeLoader = () => {
@@ -158,6 +156,10 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     const slider = this.zoomSlider.current;
     let minZoom: number = 0;
     let maxZoom: number = 1;
+
+    const isLandscape = (width: number, height: number) => {
+      return width > height;
+    };
 
     this.cropper = new Cropper(image as HTMLImageElement, {
       aspectRatio: 1,
@@ -171,11 +173,21 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       toggleDragModeOnDblclick: false,
       dragMode: "move",
       ready(event: CustomEvent<any>): void {
-        this.cropper.setCropBoxData({top: 0, left: this.cropper.getCanvasData().width * 0.5 - 385 / 2, width: 385});
+
         const imageData = this.cropper.getImageData();
-        //if (imageData.width > imageData.height)
+        const canvasData = this.cropper.getCanvasData();
+        console.log(imageData);
+        console.log(canvasData);
+        if (imageData.rotate == -90) {
+          this.cropper.setCanvasData({width: imageData.width, left: imageData.top + 10});
+          this.cropper.setCropBoxData({top: 2, height: 386});
+        } else {
+          this.cropper.setCanvasData({left: 648 - imageData.width});
+          this.cropper.setCropBoxData({top: 0, left: imageData.width * 0.5 - 390 / 2, width: 385});
+        }
+
         minZoom = (imageData.width / imageData.naturalWidth) - 0.05;
-        //else
+
         const ratio = Math.floor(imageData.naturalWidth / imageData.width);
         if (2 >= ratio)
           maxZoom = 2;
@@ -193,7 +205,6 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
             max: maxZoom,
           },
           behaviour: 'tap-drag',
-          step: 0.0001
         });
         console.log(minZoom);
         removeLoader();
