@@ -466,7 +466,7 @@ button:focus {
 
   .canvas {
     max-width: 100%;
-    //    min-width: 320px;
+    min-width: 320px;
     max-height: 800px;
     opacity: 0.3;
   }
@@ -476,10 +476,11 @@ button:focus {
 .noUi-target {
   margin: 0 auto;
   width: 300px;
-  height: 3px !important;
+  height: 4px !important;
   border: none !important;
   background-color: rgba(207, 22, 113, 0.5) !important;
   box-shadow: none !important;
+  cursor: pointer;
   // background-color: #333333 !important;
 }
 
