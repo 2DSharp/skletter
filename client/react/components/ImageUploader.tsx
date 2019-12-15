@@ -3,12 +3,12 @@ import ReactDOM from "react-dom";
 import Button from "./Button";
 import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
-import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import * as noUiSlider from "nouislider";
 import "nouislider/distribute/nouislider.min.css";
 import DecisionButtonGroup from "./DecisionButtonGroup";
 import ProgressMeter from "./ProgressMeter";
+import ReactAvatarEditor, {Position} from "react-avatar-editor";
 
 export interface ImageUploaderProps {
   placeholder: string;
@@ -18,28 +18,89 @@ export interface ImageUploaderProps {
 export interface ImageUploaderState {
   progress: number;
   displayCropper: boolean;
-  uploadedURL: string;
-  loadingCropper: boolean;
-  file: File;
   uploading: boolean;
   transactionCompleted: boolean;
+  image: File;
+  allowZoomOut: boolean;
+  position: Position;
+  scale: number;
+  rotate: number;
+  borderRadius: number;
+  preview: any;
+  width: number;
+  height: number;
+  naturalWidth?: number;
+  naturalHeight?: number;
 }
 
+export const getOrientation = (file: File, callback: Function) => {
+  const reader = new FileReader();
+
+  reader.onload = (event: ProgressEvent) => {
+    if (!event.target) {
+      return;
+    }
+
+    const file = event.target as FileReader;
+    const view = new DataView(file.result as ArrayBuffer);
+
+    if (view.getUint16(0, false) != 0xffd8) {
+      return callback(-2);
+    }
+
+    const length = view.byteLength;
+    let offset = 2;
+
+    while (offset < length) {
+      if (view.getUint16(offset + 2, false) <= 8) return callback(-1);
+      let marker = view.getUint16(offset, false);
+      offset += 2;
+
+      if (marker == 0xffe1) {
+        if (view.getUint32((offset += 2), false) != 0x45786966) {
+          return callback(-1);
+        }
+
+        let little = view.getUint16((offset += 6), false) == 0x4949;
+        offset += view.getUint32(offset + 4, little);
+        let tags = view.getUint16(offset, little);
+        offset += 2;
+        for (let i = 0; i < tags; i++) {
+          if (view.getUint16(offset + i * 12, little) == 0x0112) {
+            return callback(view.getUint16(offset + i * 12 + 8, little));
+          }
+        }
+      } else if ((marker & 0xff00) != 0xff00) {
+        break;
+      } else {
+        offset += view.getUint16(offset, false);
+      }
+    }
+    return callback(-1);
+  };
+
+  reader.readAsArrayBuffer(file);
+};
 class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   state: ImageUploaderState = {
     progress: 0,
     displayCropper: false,
-    uploadedURL: "",
-    loadingCropper: false,
     uploading: false,
-    file: null,
-    transactionCompleted: false
+    transactionCompleted: false,
+    image: null,
+    allowZoomOut: false,
+    position: {x: 0.5, y: 0.5},
+    scale: 1,
+    rotate: 0,
+    borderRadius: 1,
+    preview: null,
+    width: 310,
+    height: 310
   };
 
   private uploader = createRef<HTMLInputElement>();
-  private imgRef = createRef<HTMLImageElement>();
   private zoomSlider = createRef<HTMLDivElement>();
-  private cropper: Cropper;
+  private editor: ReactAvatarEditor;
 
   constructor(props: ImageUploaderProps) {
     super(props);
@@ -88,36 +149,42 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     if (!prevState.displayCropper && this.state.displayCropper) {
       this.adjustImage();
     }
-    if (!prevState.uploading && this.state.uploading) {
-      this.cropper.destroy();
-    }
   }
 
   onChangeFile(event: ChangeEvent) {
     event.stopPropagation();
     event.preventDefault();
     const target = event.target as HTMLInputElement;
-    const file: File = (target.files as FileList)[0];
-    this.preparePreview(file);
+    this.preparePreview();
+    this.handleNewImage(event);
   }
 
-  private preparePreview(file: File) {
+  private preparePreview() {
     this.setState({
-      file: file,
       transactionCompleted: false,
       uploading: false,
       progress: 0,
-      loadingCropper: true,
-      displayCropper: true,
-      uploadedURL: URL.createObjectURL(file)
+      displayCropper: true
     });
   }
 
   private upload() {
-    console.log(this.cropper.getData(true));
     this.setState({uploading: true});
+    const image = this.editor.getImage();
+    const rect = this.editor.getCroppingRect();
+    let croppedData: object;
+
+    croppedData = {
+      x: Math.round(this.state.naturalWidth * rect.x),
+      y: Math.round(this.state.naturalHeight * rect.y),
+      width: Math.round(image.width * rect.width * this.state.scale),
+      height: Math.round(image.height * rect.height * this.state.scale)
+    };
+
+    console.log(croppedData);
+
     let form = new FormData();
-    form.append("avatar", this.state.file);
+    form.append("avatar", this.state.image);
     Axios({
       method: "post",
       url: this.props.endpoint,
@@ -139,88 +206,6 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
         .catch(function (response) {
           console.log(response);
         });
-  }
-
-  private adjustImage() {
-    const image: any = this.imgRef.current;
-    // Let the image load first and then change to avoid cached/inconsistent behavior:
-    // https://css-tricks.com/measuring-image-widths-javascript-carefully/
-    image.addEventListener("load", function () {
-      // Fit image to container based on the smaller side
-
-    });
-
-    const removeLoader = () => {
-      this.setState({loadingCropper: false});
-    };
-    const slider = this.zoomSlider.current;
-    let minZoom: number = 0;
-    let maxZoom: number = 1;
-
-    const isLandscape = (width: number, height: number) => {
-      return width > height;
-    };
-
-    this.cropper = new Cropper(image as HTMLImageElement, {
-      aspectRatio: 1,
-      background: false,
-      cropBoxMovable: false,
-      viewMode: 1,
-      cropBoxResizable: false,
-      highlight: false,
-      guides: false,
-      center: false,
-      toggleDragModeOnDblclick: false,
-      dragMode: "move",
-      ready(event: CustomEvent<any>): void {
-
-        const imageData = this.cropper.getImageData();
-        const canvasData = this.cropper.getCanvasData();
-        console.log(imageData);
-        console.log(canvasData);
-        if (imageData.rotate == -90) {
-          this.cropper.setCanvasData({width: imageData.width, left: imageData.top + 10});
-          this.cropper.setCropBoxData({top: 2, height: 386});
-        } else {
-          this.cropper.setCanvasData({left: 648 - imageData.width});
-          this.cropper.setCropBoxData({top: 0, left: imageData.width * 0.5 - 390 / 2, width: 385});
-        }
-
-        minZoom = (imageData.width / imageData.naturalWidth) - 0.05;
-
-        const ratio = Math.floor(imageData.naturalWidth / imageData.width);
-        if (2 >= ratio)
-          maxZoom = 2;
-        else if (5 < ratio)
-          maxZoom = 0.5;
-
-        console.log("Width: " + (imageData.naturalWidth / imageData.width));
-        console.log("Max zoom: " + maxZoom);
-
-        let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
-          start: 0,
-          connect: [true, false],
-          range: {
-            min: minZoom,
-            max: maxZoom,
-          },
-          behaviour: 'tap-drag',
-        });
-        console.log(minZoom);
-        removeLoader();
-        rangeSlider.on(
-            "update",
-            function (values: any, handle: any) {
-              console.log(rangeSlider.get());
-              const containerData = this.cropper.getContainerData();
-              this.cropper.zoomTo(((rangeSlider.get() as unknown) as number), {
-                x: containerData.width / 2,
-                y: containerData.height / 2
-              });
-            }.bind(this)
-        );
-      }
-    });
   }
 
   private selectPicture() {
@@ -283,39 +268,121 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     this.setState({transactionCompleted: true, displayCropper: false});
   }
 
+  private adjustImage() {
+    const slider = this.zoomSlider.current;
+
+    let rangeSlider: noUiSlider.noUiSlider = noUiSlider.create(slider, {
+      start: 0,
+      connect: [true, false],
+      range: {
+        min: 1,
+        max: 2
+      },
+      step: 0.01
+    });
+
+    rangeSlider.on(
+        "update",
+        function (values: any, handle: any) {
+          this.handleScale(parseFloat(values[0]));
+        }.bind(this)
+    );
+  }
+
+  setEditorRef = (editor: ReactAvatarEditor) => (this.editor = editor);
+
   renderCropper() {
     let containerStyle = {opacity: 1};
-    if (this.state.uploading) containerStyle = {opacity: 0.4};
+    if (this.state.uploading) containerStyle = {opacity: 0};
 
-    let placeholderStyle = {};
-    if (!this.state.loadingCropper && !this.state.uploading) {
-      placeholderStyle = {display: "none"};
-    }
-
-    const ImagePlaceholder = React.forwardRef((props: any, ref: any) => (
-        <img
-            className="canvas"
-            alt="Profile Image"
-            ref={ref}
-            style={placeholderStyle}
-            src={this.state.uploadedURL}
-            id="new-profile-pic"
-        />
-    ));
     return (
         <React.Fragment>
           {this.displayProgress()}
           <div className="editor-prompt">
             <div style={containerStyle} className="img-editor-container">
               <div className="img-editor">
-                <ImagePlaceholder ref={this.imgRef}/>
+                <div style={{margin: "0 auto", textAlign: "center"}}>
+                  <ReactAvatarEditor
+                      ref={this.setEditorRef}
+                      scale={this.state.scale}
+                      width={this.state.width}
+                      height={this.state.height}
+                      style={{cursor: "move"}}
+                      color={[245, 245, 245, 0.6]} // RGBA
+                      position={this.state.position}
+                      onPositionChange={this.handlePositionChange}
+                      rotate={this.state.rotate}
+                      borderRadius={
+                        this.state.width / (100 / this.state.borderRadius)
+                      }
+                      image={this.state.image}
+                      className="editor-canvas"
+                  />
+                </div>
               </div>
             </div>
+
             {this.showControls()}
           </div>
         </React.Fragment>
     );
   }
+
+  handleNewImage = (e: ChangeEvent) => {
+    const file: any = (e.target as HTMLInputElement).files[0];
+
+    getOrientation(
+        file,
+        function (orientation: number) {
+          switch (orientation) {
+            case 3:
+              this.setState({rotate: 180});
+              break;
+            case 6:
+              this.setState({
+                rotate: 90,
+                width: this.state.height,
+                height: this.state.width
+              });
+              break;
+            case 8:
+              this.setState({
+                rotate: -90
+              });
+              break;
+            default:
+              this.setState({rotate: 0});
+              break;
+          }
+        }.bind(this)
+    );
+    this.setState({image: file});
+    let fr = new FileReader();
+
+    fr.onload = function () {
+      let img = new Image();
+      img.onload = function () {
+        this.setState({
+          naturalWidth: img.width,
+          naturalHeight: img.naturalHeight
+        });
+      }.bind(this);
+      if (typeof fr.result === "string") {
+        img.src = fr.result;
+      } // is the data URL because called with readAsDataURL
+    }.bind(this);
+
+    fr.readAsDataURL(file);
+  };
+
+  handleScale = (value: number) => {
+    const scale = value;
+    this.setState({scale});
+  };
+
+  handlePositionChange = (position: Position) => {
+    this.setState({position});
+  };
 }
 
 export default ImageUploader;

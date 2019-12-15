@@ -27,10 +27,10 @@
     "axios": "^0.19.0",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2",
-    "cropperjs": "1.5.6",
     "nouislider": "^14.1.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
+    "react-avatar-editor": "^11.0.7",
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
@@ -39,6 +39,7 @@
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
     "@types/react": "^16.9.15",
+    "@types/react-avatar-editor": "^10.3.5",
     "@types/react-cropper": "^0.10.7",
     "@types/react-dom": "^16.9.4",
     "babel-loader": "^8.0.6",
