@@ -92,7 +92,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     position: {x: 0.5, y: 0.5},
     scale: 1,
     rotate: 0,
-    borderRadius: 1,
+    borderRadius: 50,
     preview: null,
     width: 310,
     height: 310
@@ -249,7 +249,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     else
       return (
           <React.Fragment>
-            <div style={{marginTop: "15px", textAlign: "center"}}>
+            <div style={{marginTop: "10px", textAlign: "center"}}>
               <span className="fas fa-image zoom-tip out"/>
               <div id="img-zoom-slider" ref={this.zoomSlider}/>
               <span className="fas fa-image zoom-tip in"/>

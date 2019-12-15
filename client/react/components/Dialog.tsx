@@ -27,7 +27,7 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
                 <div className="dialog-container centered">
                   <div className="header">
                     {closable && <Button action={this.closeDialog} type="close"/>}
-                    <span><b style={{textAlign: "left", margin: "20px"}}>{this.props.heading}</b></span>
+                    <span><b style={{textAlign: "left", margin: "10px"}}>{this.props.heading}</b></span>
                   </div>
                   <div className="dialog-content">
                     {this.props.content}
