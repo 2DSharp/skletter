@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import Button from "./Button";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export interface DialogProps {
   heading: string;
@@ -24,16 +25,26 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
               <div> {
                 this.props.overlayed && <div onClick={this.closeDialog} className="overlay"/>
               }
-                <div className="dialog-container centered">
-                  <div className="header">
-                    {closable && <Button action={this.closeDialog} type="close"/>}
-                    <span><b style={{textAlign: "left", margin: "10px"}}>{this.props.heading}</b></span>
+                <ReactCSSTransitionGroup
+                    transitionName="example"
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnterTimeout={500}
+                    transitionLeaveTimeout={500}>
+                  <div className="simple-modal">
+                    <div className="dialog-container simple-modal__content">
+                      <div className="header">
+                        {closable && <Button action={this.closeDialog} type="close"/>}
+                        <span><b style={{textAlign: "left", margin: "10px"}}>{this.props.heading}</b></span>
+                      </div>
+                      <div className="dialog-content modal-main">
+                        {this.props.content}
+                      </div>
+                    </div>
                   </div>
-                  <div className="dialog-content">
-                    {this.props.content}
-                  </div>
-                </div>
+                </ReactCSSTransitionGroup>
               </div>
+
           )}
         </div>
     );

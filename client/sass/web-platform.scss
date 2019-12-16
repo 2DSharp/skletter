@@ -556,3 +556,47 @@ button {
 .spaced {
   margin: 7px;
 }
+
+.example-appear {
+  opacity: 0.1;
+}
+
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity .3s ease-in;
+}
+
+.simple-modal {
+  --gutter: 14px;
+  --modal-color: #800000;
+  --soft-color: #fafafa;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  position: fixed;
+  background-color: rgba(0, 0, 0, .7);
+  padding-top: 2%;
+
+  &__content {
+    width: 95vw;
+    max-width: 600px;
+    height: 80vh;
+    max-height: 500px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    margin: 30px auto 0;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.modal-main {
+  flex: 1;
+  text-align: left;
+  overflow: auto;
+  padding: var(--gutter);
+}
