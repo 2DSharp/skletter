@@ -21,6 +21,7 @@ export interface ImageUploaderState {
   uploading: boolean;
   transactionCompleted: boolean;
   image: File;
+  showLoader: boolean;
   allowZoomOut: boolean;
   position: Position;
   scale: number;
@@ -88,6 +89,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     uploading: false,
     transactionCompleted: false,
     image: null,
+    showLoader: false,
     allowZoomOut: false,
     position: {x: 0.5, y: 0.5},
     scale: 1,
@@ -164,6 +166,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       transactionCompleted: false,
       uploading: false,
       progress: 0,
+      showLoader: true,
       displayCropper: true
     });
   }
@@ -291,17 +294,24 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
 
   setEditorRef = (editor: ReactAvatarEditor) => (this.editor = editor);
 
+  displayLoader() {
+    return this.state.showLoader &&
+        <img className="centered" style={{zIndex: 1000}} src={process.env.img_assets + "/loader-64.gif"} alt="Loading"/>
+  }
+
   renderCropper() {
     let containerStyle = {opacity: 1};
     if (this.state.uploading) containerStyle = {opacity: 0};
 
     return (
-        <React.Fragment>
+        <>
           {this.displayProgress()}
           <div className="editor-prompt">
             <div style={containerStyle} className="img-editor-container">
               <div className="img-editor">
+
                 <div style={{margin: "0 auto", textAlign: "center"}}>
+                  {this.displayLoader()}
                   <ReactAvatarEditor
                       ref={this.setEditorRef}
                       scale={this.state.scale}
@@ -324,7 +334,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
 
             {this.showControls()}
           </div>
-        </React.Fragment>
+        </>
     );
   }
 
@@ -364,7 +374,8 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       img.onload = function () {
         this.setState({
           naturalWidth: img.width,
-          naturalHeight: img.naturalHeight
+          naturalHeight: img.naturalHeight,
+          showLoader: false
         });
       }.bind(this);
       if (typeof fr.result === "string") {
