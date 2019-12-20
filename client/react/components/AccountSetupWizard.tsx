@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import Axios from "axios";
 import Button from "./Button";
 import ImageUploader from "./ImageUploader";
 
@@ -14,13 +13,10 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
 
     state = {
         step: 1,
-        stepData: {}
     };
 
     componentDidMount() {
-        Axios.get(process.env.API_URL + "/setupAccount?step=1").then(response =>
-            this.setState({stepData: response.data})
-        );
+
     }
 
     uploadPicturePrompt() {
@@ -30,7 +26,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 <h3 className="dialog-subhead">Add a profile picture</h3>
                 <div
                     style={{
-                        backgroundImage: "url(http://localhost/static/img/test.jpg)",
+                        backgroundImage: "url(http://localhost/static/img/out-normal.jpg)",
                         display: "inline-block",
                         width: "128px",
                         height: "128px"
@@ -62,7 +58,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
     }
 
     render() {
-        const {step, stepData} = this.state;
+        const {step} = this.state;
         //return null;
         return (
             <div>
