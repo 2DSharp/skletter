@@ -430,7 +430,7 @@ button:focus {
 .editor-prompt {
   max-height: 470px;
   min-height: 420px;
-  width: 650px;
+  width: 100%;
 }
 
 .img-editor-container {
@@ -557,13 +557,14 @@ button {
   margin: 7px;
 }
 
-.example-appear {
-  opacity: 0.1;
+.dialog-transition-appear {
+  transform: scale(0.6);
 }
 
-.example-appear.example-appear-active {
+.dialog-transition-appear.dialog-transition-appear-active {
   opacity: 1;
-  transition: opacity .3s ease-in;
+  transform: scale(1);
+  transition: transform .2s ease-in;
 }
 
 .simple-modal {
@@ -580,14 +581,11 @@ button {
   padding-top: 2%;
 
   &__content {
-    width: 95vw;
-    max-width: 600px;
-    height: 80vh;
+    max-width: 665px;
     max-height: 500px;
     position: relative;
     overflow: hidden;
-    border-radius: 4px;
-    margin: 30px auto 0;
+    margin: 5vh auto 0;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -598,5 +596,5 @@ button {
   flex: 1;
   text-align: left;
   overflow: auto;
-  padding: var(--gutter);
+  //padding: var(--gutter);
 }

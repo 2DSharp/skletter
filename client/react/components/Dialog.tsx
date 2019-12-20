@@ -25,13 +25,14 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
               <div> {
                 this.props.overlayed && <div onClick={this.closeDialog} className="overlay"/>
               }
-                <ReactCSSTransitionGroup
-                    transitionName="example"
-                    transitionAppear={true}
-                    transitionAppearTimeout={500}
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={500}>
-                  <div className="simple-modal">
+
+                <div className="simple-modal">
+                  <ReactCSSTransitionGroup
+                      transitionName="dialog-transition"
+                      transitionAppear={true}
+                      transitionAppearTimeout={500}
+                      transitionEnterTimeout={500}
+                      transitionLeaveTimeout={500}>
                     <div className="dialog-container simple-modal__content">
                       <div className="header">
                         {closable && <Button action={this.closeDialog} type="close"/>}
@@ -41,8 +42,8 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
                         {this.props.content}
                       </div>
                     </div>
+                  </ReactCSSTransitionGroup>
                   </div>
-                </ReactCSSTransitionGroup>
               </div>
 
           )}
