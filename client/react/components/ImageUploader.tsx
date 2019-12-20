@@ -175,9 +175,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     this.setState({uploading: true});
     const image = this.editor.getImage();
     const rect = this.editor.getCroppingRect();
-    let croppedData: object;
-
-    croppedData = {
+    let croppedData = {
       x: Math.round(this.state.naturalWidth * rect.x),
       y: Math.round(this.state.naturalHeight * rect.y),
       width: Math.round(image.width * rect.width * this.state.scale),
@@ -188,6 +186,11 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
 
     let form = new FormData();
     form.append("avatar", this.state.image);
+    form.append("x", "" + croppedData.x);
+    form.append("y", "" + croppedData.y);
+    let side = (croppedData.width > croppedData.height) ? croppedData.width : croppedData.height;
+    form.append("side", "" + side);
+
     Axios({
       method: "post",
       url: this.props.endpoint,
@@ -203,6 +206,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     })
         .then(
             function (response: AxiosResponse) {
+              console.log(response);
               this.setState({transactionCompleted: true, displayCropper: false});
             }.bind(this)
         )
@@ -295,8 +299,16 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   setEditorRef = (editor: ReactAvatarEditor) => (this.editor = editor);
 
   displayLoader() {
-    return this.state.showLoader &&
-        <img className="centered" style={{zIndex: 1000}} src={process.env.img_assets + "/loader-64.gif"} alt="Loading"/>
+    return (
+        this.state.showLoader && (
+            <img
+                className="centered"
+                style={{zIndex: 1000}}
+                src={process.env.img_assets + "/loader-64.gif"}
+                alt="Loading"
+            />
+        )
+    );
   }
 
   renderCropper() {
@@ -309,25 +321,28 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
           <div className="editor-prompt">
             <div style={containerStyle} className="img-editor-container">
               <div className="img-editor">
-
                 <div style={{margin: "0 auto", textAlign: "center"}}>
                   {this.displayLoader()}
-                  <ReactAvatarEditor
-                      ref={this.setEditorRef}
-                      scale={this.state.scale}
-                      width={this.state.width}
-                      height={this.state.height}
-                      style={{cursor: "move"}}
-                      color={[245, 245, 245, 0.6]} // RGBA
-                      position={this.state.position}
-                      onPositionChange={this.handlePositionChange}
-                      rotate={this.state.rotate}
-                      borderRadius={
-                        this.state.width / (100 / this.state.borderRadius)
-                      }
-                      image={this.state.image}
-                      className="editor-canvas"
-                  />
+                  {
+                    !this.state.uploading &&
+
+                    <ReactAvatarEditor
+                        ref={this.setEditorRef}
+                        scale={this.state.scale}
+                        width={this.state.width}
+                        height={this.state.height}
+                        style={{cursor: "move"}}
+                        color={[245, 245, 245, 0.6]} // RGBA
+                        position={this.state.position}
+                        onPositionChange={this.handlePositionChange}
+                        rotate={this.state.rotate}
+                        borderRadius={
+                          this.state.width / (100 / this.state.borderRadius)
+                        }
+                        image={this.state.image}
+                        className="editor-canvas"
+                    />
+                  }
                 </div>
               </div>
             </div>
