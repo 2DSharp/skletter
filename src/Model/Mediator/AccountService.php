@@ -31,12 +31,12 @@ class AccountService
      * Remote user management service
      * @var RomeoClient $userService
      */
-    private $userService;
+    private RomeoClient $userService;
     /**
      * Local session management service
      * @var SessionManager $session
      */
-    private $session;
+    private SessionManager $session;
 
     /**
      * AccountService constructor.
@@ -140,11 +140,20 @@ class AccountService
             $err->message = "Something went wrong. Try again.";
             return new Result(false, ["global" => $err]);
         }
-
     }
 
     public function getSessionUser()
     {
         return $this->session->getLoginDetails();
+    }
+
+    public function updateProfilePicture(int $id, string $imageId)
+    {
+        $this->userService->updateProfileImage($id, $imageId);
+    }
+
+    public function getProfilePicture(string $username): string
+    {
+        return $this->userService->getProfileImage($username);
     }
 }

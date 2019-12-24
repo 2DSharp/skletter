@@ -14,6 +14,7 @@ namespace Skletter\Controller;
 use Bulletproof\Image;
 use Skletter\Component\Core\Controller;
 use Skletter\Model\LocalService\SessionManager;
+use Skletter\Model\Mediator\AccountService;
 use Skletter\Model\Mediator\ImageService;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,12 +30,19 @@ class UploadPicture implements Controller
      * @var ImageService
      */
     private ImageService $imageService;
+    /**
+     * @var AccountService
+     */
+    private AccountService $account;
 
     use ControllerTrait;
 
-    public function __construct(SessionManager $sessionManager, ImageService $imageService)
+    public function __construct(ImageService $imageService,
+                                AccountService $account,
+                                SessionManager $sessionManager)
     {
         $this->imageService = $imageService;
+        $this->account = $account;
         $this->session = $sessionManager;
     }
 
@@ -42,12 +50,12 @@ class UploadPicture implements Controller
     {
         $image = new Image($_FILES);
 
-        $name = $this->imageService->getImageId();
-        $image->setName($name)
+        $imageId = $this->imageService->getImageId();
+        $image->setName($imageId)
             ->setSize(self::ONE_KB, self::FIFTEEN_MB)
             ->setDimension(12000, 12000)
             ->setMime(["jpeg"])
-            ->setLocation(__DIR__ . "/../../public/static/upload");
+            ->setLocation(__DIR__ . "/../../temp_store");
 
 
         if ($image["avatar"] && $image->upload()) {
@@ -56,9 +64,11 @@ class UploadPicture implements Controller
                 'y' => $request->request->get('y'),
                 'side' => $request->request->get('side')
             ];
-            $this->imageService->updateProfilePicture($name,
+            $this->imageService->updateProfilePicture($imageId,
                                                       $image->getFullPath(),
                                                       $values);
+            $this->account->updateProfilePicture($this->session->getLoginDetails()->id, $imageId);
+            //echo $this->imageService->getProfilePicVariant($imageId, ImageService::BIG);
             return [
                 'url' => $_ENV['USER_IMAGES'] . "/" . $image->getName() . ".jpg",
             ];

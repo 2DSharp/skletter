@@ -15,9 +15,19 @@ use Skletter\Model\RemoteService\PhotoBooth\CropBox;
 use Skletter\Model\RemoteService\PhotoBooth\ImageMeta;
 use Skletter\Model\RemoteService\PhotoBooth\ImageType;
 use Skletter\Model\RemoteService\PhotoBooth\PhotoBoothClient;
+use Skletter\Model\RemoteService\PhotoBooth\ProfileVariant;
 
 class ImageService
 {
+    const SMALL = 0;
+    const NORMAL = 1;
+    const BIG = 2;
+
+    public const Variant = [
+        self::SMALL => ProfileVariant::SMALL,
+        self::NORMAL => ProfileVariant::MEDIUM,
+        self::BIG => ProfileVariant::BIG
+    ];
     /**
      * @var PhotoBoothClient
      */
@@ -45,5 +55,10 @@ class ImageService
         $meta->type = ImageType::DISPLAY_PICTURE;
 
         $this->photoBooth->uploadImage($imageId, $imagePath, $meta);
+    }
+
+    public function getProfilePicVariant(string $id, int $variant): string
+    {
+        return $this->photoBooth->getProfilePicture($id, self::Variant[$variant]);
     }
 }
