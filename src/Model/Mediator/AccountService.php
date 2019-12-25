@@ -11,6 +11,7 @@
 namespace Skletter\Model\Mediator;
 
 use Skletter\Factory\CookieFactory;
+use Skletter\Model\Entity\CurrentUser;
 use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\RemoteService\DTO\Error;
 use Skletter\Model\RemoteService\DTO\LoginMetadata;
@@ -98,8 +99,8 @@ class AccountService
             if ($cookieDTO->notification != null) {
                 return new Result(false, $cookieDTO->notification->errors);
             }
-
-            $this->session->storeLoginDetails($cookieDTO->user);
+            $user = CurrentUser::buildFromDTO($cookieDTO->user);
+            $this->session->storeLoginDetails($user);
 
             $cookie = CookieFactory::createSignedCookie($cookieDTO, "persistence", $params['user-agent']);
 
@@ -120,7 +121,8 @@ class AccountService
             switch ($type) {
                 case self::CONFIRMATION_PIN:
                     $dto = $this->userService->verifyPin($id, $token);
-                    $this->session->storeLoginDetails($dto);
+                    $user = CurrentUser::buildFromDTO($dto);
+                    $this->session->storeLoginDetails($user);
                     break;
                 case self::CONFIRMATION_TOKEN:
                     $dto = $this->userService->verifyToken($id, $token);

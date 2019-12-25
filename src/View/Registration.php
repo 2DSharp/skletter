@@ -44,7 +44,7 @@ class Registration extends AbstractView
                 $request,
                 ['status' => 'success', 'result' => $this->templating->render(
                     'pieces/contact_verification_prompt.twig',
-                    ['email' => $this->session->getLoginDetails()->email]
+                    ['email' => $this->session->getLoginDetails()->getEmail()]
                 )],
                 $_ENV['base_url'] . '/register'
             );
@@ -73,8 +73,8 @@ class Registration extends AbstractView
         $html = $this->createHTMLFromTemplate(
             $this->templating, 'pages/registration.twig',
             ['title' => 'Skletter - Registration',
-                'status' => $this->session->getLoginDetails()->status,
-                'email' => $this->session->getLoginDetails()->email]
+                'status' => $this->session->getLoginDetails()->getStatus(),
+                'email' => $this->session->getLoginDetails()->getEmail()]
         );
         return $this->respond($request, $html);
     }
