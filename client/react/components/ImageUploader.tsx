@@ -13,6 +13,7 @@ import ReactAvatarEditor, {Position} from "react-avatar-editor";
 export interface ImageUploaderProps {
   placeholder: string;
   endpoint: string;
+  onUpdate: any;
 }
 
 export interface ImageUploaderState {
@@ -156,7 +157,6 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   onChangeFile(event: ChangeEvent) {
     event.stopPropagation();
     event.preventDefault();
-    const target = event.target as HTMLInputElement;
     this.preparePreview();
     this.handleNewImage(event);
   }
@@ -182,13 +182,14 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       height: Math.round(image.height * rect.height * this.state.scale)
     };
 
-    console.log(croppedData);
-
     let form = new FormData();
     form.append("avatar", this.state.image);
     form.append("x", "" + croppedData.x);
     form.append("y", "" + croppedData.y);
-    let side = (croppedData.width > croppedData.height) ? croppedData.width : croppedData.height;
+    let side =
+        croppedData.width > croppedData.height
+            ? croppedData.width
+            : croppedData.height;
     form.append("side", "" + side);
 
     Axios({
@@ -206,7 +207,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
     })
         .then(
             function (response: AxiosResponse) {
-              console.log(response);
+              this.props.onUpdate();
               this.setState({transactionCompleted: true, displayCropper: false});
             }.bind(this)
         )
@@ -323,26 +324,24 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
               <div className="img-editor">
                 <div style={{margin: "0 auto", textAlign: "center"}}>
                   {this.displayLoader()}
-                  {
-                    !this.state.uploading &&
-
-                    <ReactAvatarEditor
-                        ref={this.setEditorRef}
-                        scale={this.state.scale}
-                        width={this.state.width}
-                        height={this.state.height}
-                        style={{cursor: "move"}}
-                        color={[245, 245, 245, 0.6]} // RGBA
-                        position={this.state.position}
-                        onPositionChange={this.handlePositionChange}
-                        rotate={this.state.rotate}
-                        borderRadius={
-                          this.state.width / (100 / this.state.borderRadius)
-                        }
-                        image={this.state.image}
-                        className="editor-canvas"
-                    />
-                  }
+                  {!this.state.uploading && (
+                      <ReactAvatarEditor
+                          ref={this.setEditorRef}
+                          scale={this.state.scale}
+                          width={this.state.width}
+                          height={this.state.height}
+                          style={{cursor: "move"}}
+                          color={[245, 245, 245, 0.6]} // RGBA
+                          position={this.state.position}
+                          onPositionChange={this.handlePositionChange}
+                          rotate={this.state.rotate}
+                          borderRadius={
+                            this.state.width / (100 / this.state.borderRadius)
+                          }
+                          image={this.state.image}
+                          className="editor-canvas"
+                      />
+                  )}
                 </div>
               </div>
             </div>

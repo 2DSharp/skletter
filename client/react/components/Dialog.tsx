@@ -25,7 +25,6 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
               <div> {
                 this.props.overlayed && <div onClick={this.closeDialog} className="overlay"/>
               }
-
                 <div className="simple-modal">
                   <ReactCSSTransitionGroup
                       transitionName="dialog-transition"
@@ -45,7 +44,6 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
                   </ReactCSSTransitionGroup>
                   </div>
               </div>
-
           )}
         </div>
     );

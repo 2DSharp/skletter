@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Button from "./Button";
 import ImageUploader from "./ImageUploader";
+import Axios, {AxiosResponse} from "axios";
 
 export interface AccountSetupWizardProps {
     step: number;
@@ -9,14 +10,17 @@ export interface AccountSetupWizardProps {
 class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
     constructor(props: AccountSetupWizardProps) {
         super(props);
+        this.updatePicture = this.updatePicture.bind(this);
+        this.fetchAndAddPicture = this.fetchAndAddPicture.bind(this);
     }
 
     state = {
         step: 1,
+        pic: "http://localhost/static/upload/default.png"
     };
 
     componentDidMount() {
-
+        this.updatePicture();
     }
 
     uploadPicturePrompt() {
@@ -26,7 +30,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 <h3 className="dialog-subhead">Add a profile picture</h3>
                 <div
                     style={{
-                        backgroundImage: "url(http://localhost/static/img/out-normal.jpg)",
+                        backgroundImage: "url(" + this.state.pic + ")",
                         display: "inline-block",
                         width: "128px",
                         height: "128px"
@@ -36,6 +40,7 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 <div>
                     <div className="spacer medium"/>
                     <ImageUploader
+                        onUpdate={this.updatePicture}
                         placeholder="Uploading Profile Picture..."
                         endpoint={process.env.API_URL + "/uploadPicture"}
                     />
@@ -46,6 +51,31 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
                 </div>
             </div>
         );
+    }
+
+    updatePicture() {
+        Axios.get(process.env.API_URL + "/getCurrentUserDetails")
+            .then(
+                function (response: AxiosResponse) {
+                    const username = response.data.username;
+                    this.fetchAndAddPicture(username);
+                }.bind(this)
+            )
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    fetchAndAddPicture(username: string) {
+        Axios.get(process.env.API_URL + "/getProfilePicture?username=" + username)
+            .then(
+                function (response: AxiosResponse) {
+                    this.setState({pic: response.data.url});
+                }.bind(this)
+            )
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     renderStep(step: number) {
@@ -59,7 +89,6 @@ class AccountSetupWizard extends Component<AccountSetupWizardProps, {}> {
 
     render() {
         const {step} = this.state;
-        //return null;
         return (
             <div>
                 {this.renderStep(step)}

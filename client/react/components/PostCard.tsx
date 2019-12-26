@@ -9,7 +9,7 @@ const PostCard: React.FunctionComponent<PostCard> = (props: PostCard) => {
         <div>
             <div className="post-card">
                 <div className="profile-image"
-                     style={{backgroundImage: `url(${props.data.profile_picture})`}}/>
+                     style={{backgroundImage: `url('http://localhost/static/upload/default.png')`}}/>
                 <div className="post-text">
                     <div className="subject">{props.data.subject}</div>
                     <div className="byline">
