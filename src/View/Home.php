@@ -11,8 +11,8 @@
 namespace Skletter\View;
 
 
+use Skletter\Model\Entity\CurrentUser;
 use Skletter\Model\LocalService\SessionManager;
-use Skletter\Model\RemoteService\DTO\Status;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,8 +22,8 @@ class Home extends AbstractView
     private SessionManager $session;
 
     private array $pageMap = [
-        Status::TEMP => 'registration.twig',
-        Status::ACTIVE => 'feed.twig'
+        CurrentUser::TEMP => 'registration.twig',
+        CurrentUser::ACTIVE => 'feed.twig'
     ];
 
     public function __construct(\Twig\Environment $twig, SessionManager $session)
@@ -50,13 +50,13 @@ class Home extends AbstractView
     private function getParams($status): array
     {
         switch ($status) {
-            case Status::TEMP:
+            case CurrentUser::TEMP:
                 return [
                     'title' => 'Confirm your email - Skletter',
                     'status' => 'Temp',
-                    'email' => $this->session->getLoginDetails()->email
+                    'email' => $this->session->getLoginDetails()->getEmail()
                 ];
-            case Status::ACTIVE:
+            case CurrentUser::ACTIVE:
                 return [
                     'title' => 'Home - Skletter',
                     'status' => 'Active',
@@ -67,12 +67,12 @@ class Home extends AbstractView
     }
 
     /**
-     * @param Status $status
-     * @param  Request $request
+     * @param int $status
+     * @param Request $request
      * @return Response
      * @throws \Twig\Error\Error
      */
-    private function showLoggedInHome($status, Request $request)
+    private function showLoggedInHome(int $status, Request $request)
     {
         $html = $this->createHTMLFromTemplate(
             $this->templating,
@@ -90,7 +90,7 @@ class Home extends AbstractView
     public function main(Request $request): Response
     {
         if ($this->session->isLoggedIn())
-            return $this->showLoggedInHome($this->session->getLoginDetails()->status, $request);
+            return $this->showLoggedInHome($this->session->getLoginDetails()->getStatus(), $request);
         //Need to manage unauthorized post requests sent to this
 
         return $this->showLoggedOutHome($request);

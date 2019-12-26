@@ -17,7 +17,8 @@ return [
     ['GET', '/confirm', ['Confirmation', 'confirmRegistrationWithToken']],
     ['POST', '/confirm', ['Confirmation', 'confirmRegistrationWithPin']],
     ['GET', '/api/suggest', ['Search', 'look']],
-    ['GET', '/api/setupAccount', ['AccountSetupWizard', 'displayStepContent']],
     ['GET', '/test', ['SearchService', 'testSearch']],
-    ['GET', '/{name}', ['ProfileView', 'displayProfile']]
+    ['POST', '/api/uploadPicture', ['UploadPicture', 'upload']],
+    ['GET', '/api/getCurrentUserDetails', ['Profile', 'getCurrentUserDetails']],
+    ['GET', '/api/getProfilePicture', ['Profile', 'displayProfilePicture']]
 ];

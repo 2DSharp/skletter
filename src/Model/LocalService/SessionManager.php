@@ -10,7 +10,7 @@
 
 namespace Skletter\Model\LocalService;
 
-use Skletter\Model\RemoteService\DTO\UserDTO;
+use Skletter\Model\Entity\CurrentUser;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class SessionManager
 {
-    private $persistence;
+    private SessionInterface $persistence;
 
     public function __construct(SessionInterface $session)
     {
@@ -33,26 +33,24 @@ class SessionManager
     {
         return $this->persistence->getId();
     }
-    public function storeLoginDetails(UserDTO $dto): void
+
+    public function storeLoginDetails(CurrentUser $user): void
     {
-        $this->persistence->set("name", $dto->name);
-        $this->persistence->set("email", $dto->email);
-        $this->persistence->set("username", $dto->username);
-        $this->persistence->set("id", $dto->id);
-        $this->persistence->set("status", $dto->status);
+        $this->persistence->set("name", $user->getName());
+        $this->persistence->set("email", $user->getEmail());
+        $this->persistence->set("username", $user->getUsername());
+        $this->persistence->set("id", $user->getId());
+        $this->persistence->set("status", $user->getStatus());
     }
 
-    public function getLoginDetails(): UserDTO
+    public function getLoginDetails(): CurrentUser
     {
-        $dto = new UserDTO();
-
-        $dto->name = $this->persistence->get("name");
-        $dto->email = $this->persistence->get("email");
-        $dto->username = $this->persistence->get("username");
-        $dto->id = $this->persistence->get("id");
-        $dto->status = $this->persistence->get("status");
-
-        return $dto;
+        return new CurrentUser($this->persistence->get("id"),
+                               $this->persistence->get("name"),
+                               $this->persistence->get("username"),
+                               $this->persistence->get("email"),
+                               $this->persistence->get("status")
+        );
     }
 
     public function isLoggedIn(): bool

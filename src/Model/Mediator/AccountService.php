@@ -11,6 +11,7 @@
 namespace Skletter\Model\Mediator;
 
 use Skletter\Factory\CookieFactory;
+use Skletter\Model\Entity\CurrentUser;
 use Skletter\Model\LocalService\SessionManager;
 use Skletter\Model\RemoteService\DTO\Error;
 use Skletter\Model\RemoteService\DTO\LoginMetadata;
@@ -31,12 +32,12 @@ class AccountService
      * Remote user management service
      * @var RomeoClient $userService
      */
-    private $userService;
+    private RomeoClient $userService;
     /**
      * Local session management service
      * @var SessionManager $session
      */
-    private $session;
+    private SessionManager $session;
 
     /**
      * AccountService constructor.
@@ -98,8 +99,8 @@ class AccountService
             if ($cookieDTO->notification != null) {
                 return new Result(false, $cookieDTO->notification->errors);
             }
-
-            $this->session->storeLoginDetails($cookieDTO->user);
+            $user = CurrentUser::buildFromDTO($cookieDTO->user);
+            $this->session->storeLoginDetails($user);
 
             $cookie = CookieFactory::createSignedCookie($cookieDTO, "persistence", $params['user-agent']);
 
@@ -120,7 +121,8 @@ class AccountService
             switch ($type) {
                 case self::CONFIRMATION_PIN:
                     $dto = $this->userService->verifyPin($id, $token);
-                    $this->session->storeLoginDetails($dto);
+                    $user = CurrentUser::buildFromDTO($dto);
+                    $this->session->storeLoginDetails($user);
                     break;
                 case self::CONFIRMATION_TOKEN:
                     $dto = $this->userService->verifyToken($id, $token);
@@ -140,11 +142,20 @@ class AccountService
             $err->message = "Something went wrong. Try again.";
             return new Result(false, ["global" => $err]);
         }
-
     }
 
     public function getSessionUser()
     {
         return $this->session->getLoginDetails();
+    }
+
+    public function updateProfilePicture(int $id, string $imageId)
+    {
+        $this->userService->updateProfileImage($id, $imageId);
+    }
+
+    public function getProfilePicture(string $username): string
+    {
+        return $this->userService->getProfileImage($username);
     }
 }

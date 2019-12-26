@@ -18,6 +18,7 @@ use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Factory\MapperFactory;
 use Skletter\Factory\QueryObjectFactory;
+use Skletter\Model\RemoteService\PhotoBooth\PhotoBoothClient;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\RemoteService\Search\SearchClient;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,6 +66,11 @@ $injector->delegate(RomeoClient::class, function () use (&$collector) {
 $injector->delegate(SearchClient::class, function () use (&$collector) {
     $protocol = buildBinaryProtocol("localhost", 9091, $collector);
     return new SearchClient($protocol);
+});
+
+$injector->delegate(PhotoBoothClient::class, function () use (&$collector) {
+    $protocol = buildBinaryProtocol("localhost", 9092, $collector);
+    return new PhotoBoothClient($protocol);
 });
 
 $injector->share(RomeoClient::class);
