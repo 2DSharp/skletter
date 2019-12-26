@@ -67,12 +67,11 @@ class UploadPicture implements Controller
             $this->imageService->updateProfilePicture($imageId,
                                                       $image->getFullPath(),
                                                       $values);
-            $this->account->updateProfilePicture($this->session->getLoginDetails()->id, $imageId);
-            //echo $this->imageService->getProfilePicVariant($imageId, ImageService::BIG);
+            $this->account->updateProfilePicture($this->session->getLoginDetails()->getId(), $imageId);
             return [
-                'url' => $_ENV['USER_IMAGES'] . "/" . $image->getName() . ".jpg",
+                'success' => true,
             ];
         }
-        return ['url' => 'not found'];
+        return ['success' => false];
     }
 }
