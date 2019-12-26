@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Button from "./Button";
+import Button from "./Controls/Button";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export interface DialogProps {

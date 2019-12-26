@@ -1,12 +1,12 @@
 import React, {ChangeEvent, Component, createRef} from "react";
 import ReactDOM from "react-dom";
-import Button from "./Button";
+import Button from "./Controls/Button";
 import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
 import "cropperjs/dist/cropper.css";
 import * as noUiSlider from "nouislider";
 import "nouislider/distribute/nouislider.min.css";
-import DecisionButtonGroup from "./DecisionButtonGroup";
+import DecisionButtonGroup from "./Controls/DecisionButtonGroup";
 import ProgressMeter from "./ProgressMeter";
 import ReactAvatarEditor, {Position} from "react-avatar-editor";
 
@@ -256,7 +256,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
       );
     else
       return (
-          <React.Fragment>
+          <>
             <div style={{marginTop: "10px", textAlign: "center"}}>
               <span className="fas fa-image zoom-tip out"/>
               <div id="img-zoom-slider" ref={this.zoomSlider}/>
@@ -268,7 +268,7 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
                 positiveText="Apply Changes"
                 negativeText="Cancel"
             />
-          </React.Fragment>
+          </>
       );
   }
 

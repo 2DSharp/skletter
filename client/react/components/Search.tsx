@@ -1,6 +1,6 @@
 import React, {ChangeEvent, Component} from "react";
 import Axios from "axios";
-import Suggestions from "./Suggestions";
+import Suggestions from "./Search/Suggestions";
 
 
 export interface State {

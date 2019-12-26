@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Button from "./Button";
+import Button from "./Controls/Button";
 import UpdateDPStep from "./AccountSetupWizard/UpdateDPStep";
 
 export interface AccountSetupWizardProps {
