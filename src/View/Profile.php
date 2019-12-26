@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Profile extends AbstractView
 {
     private ImageService $imageService;
-    private AccountService $accountSevice;
+    private AccountService $accountService;
     /**
      * @var SessionManager
      */
@@ -39,13 +39,13 @@ class Profile extends AbstractView
     {
         $this->imageService = $imageService;
         $this->session = $sessionManager;
-        $this->accountSevice = $accountService;
+        $this->accountService = $accountService;
     }
 
 
     public function displayProfilePicture(Request $request): Response
     {
-        $imageId = $this->accountSevice->getProfilePicture($request->query->get("username"));
+        $imageId = $this->accountService->getProfilePicture($request->query->get("username"));
         return new JsonResponse(['url' => str_replace('/var/www/Skletter/public/static/upload/',
                                                       $_ENV['USER_IMAGES'] . "/",
                                                       $this->imageService->getProfilePicVariant($imageId,
@@ -56,9 +56,9 @@ class Profile extends AbstractView
     {
         $details = $this->session->getLoginDetails();
         return new JsonResponse([
-                                    'name' => $details->name,
-                                    'email' => $details->email,
-                                    'username' => $details->username
+                                    'name' => $details->getName(),
+                                    'email' => $details->getEmail(),
+                                    'username' => $details->getUsername()
                                 ]);
     }
 }
