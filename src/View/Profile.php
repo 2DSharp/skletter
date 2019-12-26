@@ -20,6 +20,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Profile extends AbstractView
 {
+    private array $variantMap = [
+        'big' => ImageService::BIG,
+        'small' => ImageService::SMALL,
+        'normal' => ImageService::NORMAL
+    ];
     private ImageService $imageService;
     private AccountService $accountService;
     /**
@@ -46,10 +51,11 @@ class Profile extends AbstractView
     public function displayProfilePicture(Request $request): Response
     {
         $imageId = $this->accountService->getProfilePicture($request->query->get("username"));
+        $type = $this->variantMap[$request->query->get("variant", "normal")];
         return new JsonResponse(['url' => str_replace('/var/www/Skletter/public/static/upload/',
                                                       $_ENV['USER_IMAGES'] . "/",
                                                       $this->imageService->getProfilePicVariant($imageId,
-                                                                                                ImageService::BIG))]);
+                                                                                                $type))]);
     }
 
     public function getCurrentUserDetails(Request $request): Response
