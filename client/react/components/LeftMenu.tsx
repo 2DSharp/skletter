@@ -43,27 +43,29 @@ const LeftMenu = () => {
     actions[i].action();
   };
   return (
-      <div className="left-menu">
-        <ul className="action-menu">
-          {actions.map((item, i) => (
-              <ActionItem
-                  action={showAction}
-                  id={i}
-                  key={i}
-                  linkClass={item.linkClass}
-                  iconClass={item.iconClass}
-                  name={item.name}
-              />
-          ))}
-        </ul>
+      <>
+        <div className="left-menu">
+          <div className="action-menu">
+            {actions.map((item, i) => (
+                <ActionItem
+                    action={showAction}
+                    id={i}
+                    key={i}
+                    linkClass={item.linkClass}
+                    iconClass={item.iconClass}
+                    name={item.name}
+                />
+            ))}
+          </div>
+        </div>
         {showDialog && (
             <Dialog heading="Adjust the image" closable overlayed={false}>
               <div>
-                <h1>Hello world</h1>
+                <textarea/>
               </div>
             </Dialog>
         )}
-      </div>
+      </>
   );
 };
 

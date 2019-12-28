@@ -8,6 +8,7 @@ export interface DialogProps {
   heading: string;
   closable: boolean;
   overlayed: boolean;
+  onClose?: any
 }
 
 class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
@@ -57,6 +58,7 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
 
   closeDialog() {
     this.setState({dialogDisplayed: false});
+    this.props.onClose();
   }
 }
 

@@ -45,12 +45,10 @@ body {
   background-color: transparent;
   width: 280px;
   height: 23px;
-
-  //box-shadow: 0 0 7px $accent-color;
 }
 
 .central-block {
-  min-width: 700px;
+  max-width: 700px;
 }
 
 #header {
@@ -137,18 +135,22 @@ body {
   list-style-type: none;
   margin-top: 0;
   padding-top: 0;
-}
 
-.action-menu .action {
-  padding: 12px 20px 12px 20px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 20px;
-  margin: 8px 0 8px 0;
-  font-weight: 300;
-  width: inherit;
-  float: left;
-  clear: both;
+  .action {
+    padding: 12px 20px 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 20px;
+    margin: 8px 0 8px 0;
+    font-weight: 300;
+    width: inherit;
+    float: left;
+    clear: both;
+
+    .action-text {
+      margin-left: 15px;
+    }
+  }
 }
 
 @mixin transition($transition) {
@@ -176,8 +178,8 @@ body {
 }
 
 .icon {
-  margin-right: 15px;
   list-style-type: none;
+  font-size: 24px;
 
   &.spaced {
     margin: 0 5px 0 5px;
@@ -202,10 +204,6 @@ body {
   }
 }
 
-.nav-icon {
-  //margin: 0 20px 0 20px;
-}
-
 #suggestions {
   margin: 1px 10px 5px 10px;
   padding: 5px;
@@ -214,14 +212,12 @@ body {
   border-radius: 10px;
   font-size: 15px;
   color: #333333;
-  // font-family: Arial, sans-serif;
 }
 
 .page-wrapper {
   display: flex;
   margin: 5px;
   align-items: flex-start;
-  //background-color: red;
 }
 
 .header-wrapper {
@@ -230,7 +226,7 @@ body {
 }
 
 .head-text {
-  width: 304px;
+  width: 100px;
   font-family: Roboto, sans-serif;
   font-size: 24px;
   color: $accent-color;
@@ -240,22 +236,16 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 100%;
+  width: 840px;
+  margin: 0 auto;
 }
-
-.main-left {
-  flex-grow: 1;
-  margin-left: 40px;
-}
-
 .column {
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 .nav-menu {
-  width: 300px;
+  //width: 300px;
 }
 
 .nav-icon {
@@ -272,6 +262,12 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5); /* color */
+}
+
+.left-menu {
+  padding: 10px;
+  height: 100px;
+  position: fixed;
 }
 
 .centered {
@@ -596,5 +592,48 @@ button {
   flex: 1;
   text-align: left;
   overflow: auto;
-  //padding: var(--gutter);
+}
+
+.main-left {
+  flex: 0 0 80px;
+}
+
+.main-center {
+  flex: 0 0 720px;
+}
+
+.right-block {
+  display: none;
+}
+
+.action-text {
+  display: none;
+}
+
+$breakpoint-tablet: 1190px;
+@media (min-width: $breakpoint-tablet) {
+  .main-left {
+    flex: 0 0 180px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .action-text {
+    display: inline-block;
+  }
+  .row {
+    width: 1200px !important;
+  }
+}
+
+@media (min-width: 1075px) {
+  .right-block {
+    flex: 0 0 240px;
+    height: 100px;
+    background-color: #cf1671;
+    display: block;
+  }
+  .row {
+    width: 1075px;
+  }
+
 }

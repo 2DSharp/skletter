@@ -1,16 +1,5 @@
-/*
-.page-content {
-  margin: 0px auto;
-  min-width: 600px;
-  display: inline-block;
-  max-width: 800px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  min-height: 800px;
-  background-color: rgba(255, 255, 0, 0.1);
-}
-*/
+
 %building-block {
-  //
   padding: 10px;
 }
 
@@ -23,26 +12,11 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 }
 
-.left-menu {
-  @extend %building-block;
-  //background-color: orange;
-  height: 100px;
-  position: fixed;
-}
 
 .page-content {
   @extend %building-block;
-
-  // background-color: blue;
   height: 100px;
   width: 700px;
-}
-
-.right-block {
-  @extend %building-block;
-  //background-color: green;
-  height: 100px;
-  width: 300px;
 }
 
 .subject {

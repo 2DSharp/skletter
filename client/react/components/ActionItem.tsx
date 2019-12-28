@@ -10,10 +10,11 @@ export interface ActionItemProps {
 
 const ActionItem = (props: ActionItemProps) => {
     return (
-        <li onClick={() => props.action(props.id)} className={"action " + props.linkClass}>
+        <div onClick={() => props.action(props.id)}
+             className={"action" + (props.linkClass == null ? "" : " " + props.linkClass)}>
             <span className={props.iconClass}/>
-            {props.name}
-        </li>
+            <span className="action-text">{props.name}</span>
+        </div>
     );
 };
 
