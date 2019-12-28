@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import Button from "./Controls/Button";
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import ReactDOM from "react-dom";
+import TransitionGroup from "react-transition-group/TransitionGroup";
+import CSSTransition from "react-transition-group/CSSTransition";
 
 export interface DialogProps {
   heading: string;
@@ -26,29 +27,26 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
                     <div onClick={this.closeDialog} className="overlay"/>
                 )}
                 <div className="simple-modal">
-                  <ReactCSSTransitionGroup
-                      transitionName="dialog-transition"
-                      transitionAppear={true}
-                      transitionAppearTimeout={500}
-                      transitionEnterTimeout={500}
-                      transitionLeaveTimeout={500}
-                  >
-                    <div className="dialog-container simple-modal__content">
-                      <div className="header">
-                        {closable && (
-                            <Button action={this.closeDialog} type="close"/>
-                        )}
-                        <span>
+                  <TransitionGroup>
+                    <CSSTransition classNames="dialog-transition" appear={true}
+                                   timeout={{appear: 500, exit: 500, enter: 500}}>
+                      <div className="dialog-container simple-modal__content">
+                        <div className="header">
+                          {closable && (
+                              <Button action={this.closeDialog} type="close"/>
+                          )}
+                          <span>
                       <b style={{textAlign: "left", margin: "10px"}}>
                         {this.props.heading}
                       </b>
                     </span>
+                        </div>
+                        <div className="dialog-content modal-main">
+                          {this.props.children}
+                        </div>
                       </div>
-                      <div className="dialog-content modal-main">
-                        {this.props.children}
-                      </div>
-                    </div>
-                  </ReactCSSTransitionGroup>
+                    </CSSTransition>
+                  </TransitionGroup>
                 </div>
               </div>
           )}
