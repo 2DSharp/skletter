@@ -47,7 +47,7 @@
     <div id="main-container" class="container">
         <div class='page-wrapper'>
             <div class='row'>
-                <div class='column main-left'>
+                <div id="left-action-menu-root" class='column main-left'>
                     {{ include('pieces/action_menu.twig') }}
                 </div>
                 <div class='column main-center'>
@@ -72,6 +72,7 @@
 
 </div>
 {% block costly_imports %}
+    <script src="{{ server.js_assets }}/react-components/shared-bundle.js"></script>
     <script src="{{ server.js_assets }}/react-components/base-bundle.js"></script>
 {% endblock %}
 
