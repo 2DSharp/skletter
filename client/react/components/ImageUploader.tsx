@@ -1,5 +1,4 @@
 import React, {ChangeEvent, Component, createRef} from "react";
-import ReactDOM from "react-dom";
 import Button from "./Controls/Button";
 import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
@@ -132,15 +131,14 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
           />
           {!this.state.transactionCompleted &&
           this.state.displayCropper &&
-          ReactDOM.createPortal(
-              <Dialog
-                  heading="Adjust the image"
-                  content={this.renderCropper()}
-                  closable
-                  overlayed={false}
-              />,
-              document.getElementById("dialog-root")
-          )}
+          <Dialog
+              heading="Adjust the image"
+              closable
+              overlayed={false}
+          >
+            {this.renderCropper()}
+          </Dialog>
+          }
         </div>
     );
   }
