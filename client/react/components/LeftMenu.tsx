@@ -42,15 +42,14 @@ const LeftMenu = () => {
   const showAction = (i: number) => {
     actions[i].action();
   };
-  let i = 0;
   return (
       <div className="left-menu">
         <ul className="action-menu">
-          {actions.map(item => (
+          {actions.map((item, i) => (
               <ActionItem
                   action={showAction}
                   id={i}
-                  key={i++}
+                  key={i}
                   linkClass={item.linkClass}
                   iconClass={item.iconClass}
                   name={item.name}

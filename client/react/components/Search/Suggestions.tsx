@@ -12,15 +12,14 @@ class Suggestions extends Component<SuggestionProps, {}> {
     }
 
     render() {
-        let resId = 0;
 
         if (!this.props.searched || this.props.results.length < 1)
             return null;
         return (
             <div id="suggestions">
                 <ul id="suggestions-ul">
-                    {this.props.results.map(result => (
-                        <SearchSuggestion id={resId} key={resId++} data={result}/>
+                    {this.props.results.map((result, i) => (
+                        <SearchSuggestion id={i} key={i} data={result}/>
                     ))}
                 </ul>
             </div>
