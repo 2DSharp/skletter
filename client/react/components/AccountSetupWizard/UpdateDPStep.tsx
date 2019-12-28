@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import ImageUploader from "../ImageUploader";
-import Axios, {AxiosResponse} from "axios";
+import Axios from "axios";
 
 const UpdateDPStep = () => {
     const [picture, setPicture] = useState(
@@ -13,7 +13,7 @@ const UpdateDPStep = () => {
             username +
             "&variant=big"
         )
-            .then(function (response: AxiosResponse) {
+            .then(response => {
                 setPicture(response.data.url);
             })
             .catch(error => {
@@ -22,10 +22,10 @@ const UpdateDPStep = () => {
     };
     const updatePicture = () => {
         Axios.get(process.env.API_URL + "/getCurrentUserDetails")
-            .then(function (response: AxiosResponse) {
+            .then(response => {
                 fetchAndAddPicture(response.data.username);
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
             });
     };
