@@ -5,6 +5,7 @@ module.exports = {
 
     entry: {
         feed: './src/feed.tsx',
+        base: './src/logged_in_base.tsx'
         // pageThree: './src/pageThree/index.js'
     },
     module: {
@@ -63,7 +64,7 @@ module.exports = {
             cacheGroups: {
                 vendor: {
                     test: /[\\/]node_modules[\\/](react|react-dom|axios)[\\/]/,
-                    name: 'base',
+                    name: 'shared',
                     chunks: 'all',
                 }
             }
