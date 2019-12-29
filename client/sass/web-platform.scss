@@ -177,7 +177,7 @@ body {
   @include transition(all 0.3s ease-in-out);
 }
 
-.composer {
+.composer-btn {
   color: #f2f3f5;
   background-color: $accent-hard;
 }
@@ -274,6 +274,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 201;
   background-color: rgba(0, 0, 0, 0.5); /* color */
 }
 
@@ -702,5 +703,82 @@ $breakpoint-tablet: 1190px;
   &.small {
     width: 48px;
     height: 48px;
+  }
+
+  &.normal {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.compose-header {
+  border: 0;
+  border-bottom: 1px solid $border-gray;
+  width: 100%;
+  padding: 5px 0 5px 0;
+}
+
+.composer {
+  margin: 5px auto 0 auto;
+
+  .post-text {
+    width: 560px;
+    padding-bottom: 0;
+  }
+
+  .body {
+    border: 0;
+    resize: none;
+  }
+
+  .actions {
+    display: flex;
+    line-height: 40px;
+
+    .manipulators {
+      width: 500px;
+    }
+
+    .manipulator {
+      margin-right: 10px;
+      margin-left: 10px;
+      color: #333333;
+      cursor: pointer;
+      font-size: 20px;
+
+      &.blue {
+        line-height: 40px;
+        color: $blue-dark;
+
+        &:hover {
+          color: $blue-light;
+        }
+      }
+
+      &:hover {
+        color: $accent-hard;
+      }
+    }
+  }
+}
+
+.padded-container {
+  margin: 5px 10px 0 10px;
+}
+
+.push-btn {
+  border-radius: 9999px;
+  border: 0;
+  font-weight: bold;
+  font-size: 18px;
+  padding-left: 1em;
+  padding-right: 1em;
+  min-height: 40px;
+  background-color: $accent-hard;
+  color: #ffffff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $accent-element;
   }
 }

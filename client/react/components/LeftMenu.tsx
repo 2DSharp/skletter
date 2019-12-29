@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import ActionItem from "./ActionItem";
-import Dialog from "./Dialog";
+import Composer from "./Modals/Composer";
 
 const LeftMenu = () => {
   const [showDialog, setDialogShow] = useState(false);
@@ -33,7 +33,7 @@ const LeftMenu = () => {
     {
       name: "Compose",
       iconClass: "fas fa-feather icon",
-      linkClass: "composer",
+      linkClass: "composer-btn",
       action: () => {
         setDialogShow(true);
       }
@@ -59,11 +59,7 @@ const LeftMenu = () => {
           </div>
         </div>
         {showDialog && (
-            <Dialog heading="Adjust the image" closable overlayed={false}>
-              <div>
-                <textarea/>
-              </div>
-            </Dialog>
+            <Composer onClose={() => setDialogShow(false)}/>
         )}
       </>
   );

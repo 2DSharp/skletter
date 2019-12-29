@@ -31,6 +31,7 @@
     "nouislider": "^14.1.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
+    "react-autosize-textarea": "^7.0.0",
     "react-avatar-editor": "^11.0.7",
     "react-dom": "^16.12.0",
     "react-transition-group": "^4.3.0"
