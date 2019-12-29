@@ -68,7 +68,7 @@ body {
 }
 
 #content {
-  margin-top: 80px;
+  margin-top: 55px;
 }
 
 .search-box {
@@ -137,14 +137,17 @@ body {
   padding-top: 0;
 
   .action {
-    padding: 12px 20px 12px 20px;
-    border-radius: 25px;
+    padding: 3px;
+    border-radius: 50%;
     cursor: pointer;
     font-size: 20px;
-    margin: 8px 0 8px 0;
+    margin: 5px 0 5px 0;
+    height: 50px;
+    min-width: 50px;
     font-weight: 300;
     width: inherit;
     float: left;
+    text-align: center;
     clear: both;
 
     .action-text {
@@ -180,6 +183,7 @@ body {
 .icon {
   list-style-type: none;
   font-size: 24px;
+  line-height: 50px;
 
   &.spaced {
     margin: 0 5px 0 5px;
@@ -265,7 +269,7 @@ body {
 }
 
 .left-menu {
-  padding: 10px;
+  padding: 10px 0 10px 0;
   height: 100px;
   position: fixed;
 }
@@ -595,7 +599,14 @@ button {
 }
 
 .main-left {
-  flex: 0 0 80px;
+  flex: 0 0 65px;
+
+}
+
+.left-menu {
+  overflow-y: auto;
+  height: calc(100vh - 100px);
+  width: 72px;
 }
 
 .main-center {
@@ -610,18 +621,37 @@ button {
   display: none;
 }
 
+@media (min-height: 552px) {
+  .left-menu {
+    width: 60px;
+  }
+  .main-left {
+    flex: 0 0 53px;
+  }
+}
 $breakpoint-tablet: 1190px;
 @media (min-width: $breakpoint-tablet) {
   .main-left {
     flex: 0 0 180px;
-    margin-right: 10px;
     margin-left: 10px;
   }
-  .action-text {
-    display: inline-block;
+  .left-menu {
+    width: 160px;
   }
   .row {
     width: 1200px !important;
+  }
+  .action-menu {
+    .action-text {
+      display: inline-block;
+      font-size: 20px;
+    }
+
+    .action {
+      border-radius: 25px;
+      padding: 0 12px 0 12px;
+      margin: 8px 0 8px 0;
+    }
   }
 }
 
@@ -633,7 +663,7 @@ $breakpoint-tablet: 1190px;
     display: block;
   }
   .row {
-    width: 1075px;
+    width: 1030px;
   }
 
 }
