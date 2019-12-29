@@ -7,6 +7,7 @@ $blue-light: #0085FD;
 $blue-dark: #0b4bff;
 $accent-element: rgb(207, 22, 113);
 $border-gray: darkgray;
+$border-lighter-gray: rgba(0, 0, 0, 0.2);
 /* This CSS will print because %message-shared is extended. */
 $gray-bg: #f0f1f3;
 
@@ -713,9 +714,9 @@ $breakpoint-tablet: 1190px;
 
 .compose-header {
   border: 0;
-  border-bottom: 1px solid $border-gray;
+  border-bottom: 1px solid $border-lighter-gray;
   width: 100%;
-  padding: 5px 0 5px 0;
+  padding: 5px 0 12px 0;
 }
 
 .composer {
