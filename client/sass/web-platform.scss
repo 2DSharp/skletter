@@ -58,6 +58,7 @@ body {
   top: 0;
   margin: 0 auto;
   position: fixed;
+  z-index: 200;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -69,6 +70,13 @@ body {
 
 #content {
   margin-top: 55px;
+  height: 100vh;
+  @include prefix(
+                  (
+                          display: flex
+                  ),
+                  webkit moz
+  );
 }
 
 .search-box {
@@ -220,7 +228,8 @@ body {
 
 .page-wrapper {
   display: flex;
-  margin: 5px;
+  height: 100%;
+  margin: 0px auto;
   align-items: flex-start;
 }
 
@@ -269,8 +278,6 @@ body {
 }
 
 .left-menu {
-  padding: 10px 0 10px 0;
-  height: 100px;
   position: fixed;
 }
 
@@ -599,14 +606,20 @@ button {
 }
 
 .main-left {
-  flex: 0 0 65px;
-
+  flex: 0 0 70px;
 }
 
 .left-menu {
+  z-index: 10;
+  height: 100%;
+  width: 80px;
+  background-color: #fff;
+}
+
+.action-menu {
   overflow-y: auto;
-  height: calc(100vh - 100px);
-  width: 72px;
+  margin: 0 4px;
+  height: calc(100% - 55px);
 }
 
 .main-center {
@@ -621,12 +634,12 @@ button {
   display: none;
 }
 
-@media (min-height: 552px) {
+@media (min-height: 530px) {
   .left-menu {
-    width: 60px;
+    width: 64px;
   }
   .main-left {
-    flex: 0 0 53px;
+    flex: 0 0 56px;
   }
 }
 $breakpoint-tablet: 1190px;
@@ -636,21 +649,22 @@ $breakpoint-tablet: 1190px;
     margin-left: 10px;
   }
   .left-menu {
-    width: 160px;
+    width: 165px;
   }
   .row {
     width: 1200px !important;
   }
   .action-menu {
-    .action-text {
-      display: inline-block;
-      font-size: 20px;
-    }
-
     .action {
       border-radius: 25px;
       padding: 0 12px 0 12px;
       margin: 8px 0 8px 0;
+
+      .action-text {
+        display: inline-block;
+        font-size: 18px;
+        line-height: 100% !important;
+      }
     }
   }
 }
