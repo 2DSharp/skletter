@@ -1,29 +1,16 @@
 import React, {useEffect, useState} from "react";
 import ImageUploader from "../ImageUploader";
 import Axios from "axios";
+import ProfilePicture from "../ProfilePicture";
 
 const UpdateDPStep = () => {
-    const [picture, setPicture] = useState(
-        "http://localhost/static/upload/default.png"
-    );
-    const fetchAndAddPicture = (username: string) => {
-        Axios.get(
-            process.env.API_URL +
-            "/getProfilePicture?username=" +
-            username +
-            "&variant=big"
-        )
-            .then(response => {
-                setPicture(response.data.url);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    };
+
+    const [username, setUsername] = useState(null);
+    const [count, setCount] = useState(0);
     const updatePicture = () => {
         Axios.get(process.env.API_URL + "/getCurrentUserDetails")
             .then(response => {
-                fetchAndAddPicture(response.data.username);
+                setUsername(response.data.username);
             })
             .catch(error => {
                 console.log(error);
@@ -35,19 +22,11 @@ const UpdateDPStep = () => {
         <div style={{textAlign: "center"}}>
             <h1>Let's get you up to speed</h1>
             <h3 className="dialog-subhead">Add a profile picture</h3>
-            <div
-                style={{
-                    backgroundImage: "url(" + picture + ")",
-                    display: "inline-block",
-                    width: "128px",
-                    height: "128px"
-                }}
-                className="profile-image"
-            />
+            <ProfilePicture key={count} variant="big" username={username}/>
             <div>
                 <div className="spacer medium"/>
                 <ImageUploader
-                    onUpdate={updatePicture}
+                    onUpdate={() => setCount(count + 1)}
                     placeholder="Uploading Profile Picture..."
                     endpoint={process.env.API_URL + "/uploadPicture"}
                 />

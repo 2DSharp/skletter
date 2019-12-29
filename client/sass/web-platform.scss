@@ -159,7 +159,7 @@ body {
     clear: both;
 
     .action-text {
-      margin-left: 15px;
+      margin-left: 12px;
     }
   }
 }
@@ -302,14 +302,14 @@ body {
   min-height: 200px;
   position: fixed;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   border-color: black;
   padding: 15px 0 15px 0;
 
   .header {
     width: 100%;
     border-bottom: 1px solid $border-gray;
-    padding-bottom: 7px;
+    padding-bottom: 10px;
 
     h1 {
       font-weight: 400;
@@ -610,7 +610,6 @@ button {
 }
 
 .left-menu {
-  z-index: 10;
   height: 100%;
   width: 80px;
   background-color: #fff;
@@ -663,7 +662,9 @@ $breakpoint-tablet: 1190px;
       .action-text {
         display: inline-block;
         font-size: 18px;
+        font-family: 'Arial', sans-serif;
         line-height: 100% !important;
+        font-weight: bold;
       }
     }
   }
@@ -679,5 +680,27 @@ $breakpoint-tablet: 1190px;
   .row {
     width: 1030px;
   }
+}
 
+.profile-image {
+  margin: 10px 5px 0 5px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color: #fff;
+
+  &.big {
+    width: 128px;
+    height: 128px;
+    display: inline-block;
+  }
+
+  &.small {
+    width: 48px;
+    height: 48px;
+  }
 }

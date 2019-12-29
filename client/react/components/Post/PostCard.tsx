@@ -1,4 +1,5 @@
 import React from "react";
+import ProfilePicture from "../ProfilePicture";
 
 export interface PostCard {
     data: any
@@ -8,8 +9,7 @@ const PostCard: React.FunctionComponent<PostCard> = (props: PostCard) => {
     return (
         <div>
             <div className="post-card">
-                <div className="profile-image"
-                     style={{backgroundImage: `url('http://localhost/static/upload/default.png')`}}/>
+                <ProfilePicture username={props.data.username} variant="small"/>
                 <div className="post-text">
                     <div className="subject">{props.data.subject}</div>
                     <div className="byline">
