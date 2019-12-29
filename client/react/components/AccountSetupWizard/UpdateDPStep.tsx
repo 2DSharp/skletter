@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import ImageUploader from "../ImageUploader";
 import Axios from "axios";
-import ProfilePicture from "../ProfilePicture";
+import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 
 const UpdateDPStep = () => {
 
@@ -22,7 +22,7 @@ const UpdateDPStep = () => {
         <div style={{textAlign: "center"}}>
             <h1>Let's get you up to speed</h1>
             <h3 className="dialog-subhead">Add a profile picture</h3>
-            <ProfilePicture key={count} variant="big" username={username}/>
+            <ProfilePicture key={count} variant={ProfilePictureVariant.BIG} username={username}/>
             <div>
                 <div className="spacer medium"/>
                 <ImageUploader

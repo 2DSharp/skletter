@@ -1,5 +1,5 @@
 import React from "react";
-import ProfilePicture from "../ProfilePicture";
+import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 
 export interface PostCard {
     data: any
@@ -9,7 +9,7 @@ const PostCard: React.FunctionComponent<PostCard> = (props: PostCard) => {
     return (
         <div>
             <div className="post-card">
-                <ProfilePicture username={props.data.username} variant="small"/>
+                <ProfilePicture username={props.data.username} variant={ProfilePictureVariant.SMALL}/>
                 <div className="post-text">
                     <div className="subject">{props.data.subject}</div>
                     <div className="byline">
