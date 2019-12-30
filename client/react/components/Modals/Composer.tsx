@@ -42,20 +42,32 @@ const Composer = (props: ComposerProps) => {
                   type="text"
                   placeholder="What's up?"
               />
-              <TextareaAutosize draggable={"false"}
-                                className="post-content body"
-                                placeholder="Share your story"
-                                maxRows={14}
-                                rows={6}
+              <TextareaAutosize
+                  draggable={"false"}
+                  className="post-content body"
+                  placeholder="Share your story"
+                  maxRows={14}
+                  rows={6}
               />
               <div className="actions">
                 <div className="manipulators">
                   <i className="fas fa-bold manipulator"/>
                   <i className="fas fa-italic manipulator"/>
-                  <i className="fas fa-image manipulator"/>
-
+                  <i className="far fa-image manipulator"/>
                 </div>
-                <PushButton><>Post</>
+                <PushButton>
+                <span style={{fontSize: 14}}>
+                  <span style={{fontWeight: "normal"}}>Writing to: </span>
+                  Public
+                  <i
+                      style={{fontSize: 10}}
+                      className="fas fa-chevron-down spaced-right-icon far"
+                  />
+                </span>
+                </PushButton>
+
+                <PushButton className="main">
+                  <>Post</>
                 </PushButton>
               </div>
             </div>

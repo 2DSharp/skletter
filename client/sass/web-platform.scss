@@ -10,6 +10,8 @@ $border-gray: darkgray;
 $border-lighter-gray: rgba(0, 0, 0, 0.2);
 /* This CSS will print because %message-shared is extended. */
 $gray-bg: #f0f1f3;
+$secondary-btn-background-color: #e4e6eb;
+$secondary-btn-pressed-background-color: rgba(0, 0, 0, 0.2);
 
 @mixin prefix($declarations, $prefixes: ()) {
   @each $property, $value in $declarations {
@@ -187,6 +189,14 @@ body {
   color: $accent-hard;
   //background-color: rgba(207, 22, 113, 0.075);
   @include transition(all 0.3s ease-in-out);
+}
+
+.spaced-right-icon {
+  margin-left: 5px;
+
+  &.far {
+    margin-left: 7px;
+  }
 }
 
 .icon {
@@ -664,9 +674,7 @@ $breakpoint-tablet: 1190px;
       .action-text {
         display: inline-block;
         font-size: 18px;
-        font-family: 'Arial', sans-serif;
         line-height: 100% !important;
-        font-weight: bold;
       }
     }
   }
@@ -716,7 +724,7 @@ $breakpoint-tablet: 1190px;
   border: 0;
   border-bottom: 1px solid $border-lighter-gray;
   width: 100%;
-  padding: 5px 0 12px 0;
+  padding: 5px 0 8px 0;
 }
 
 .composer {
@@ -737,12 +745,11 @@ $breakpoint-tablet: 1190px;
     line-height: 40px;
 
     .manipulators {
-      width: 500px;
+      width: 300px;
     }
 
     .manipulator {
-      margin-right: 10px;
-      margin-left: 10px;
+      margin-right: 15px;
       color: #333333;
       cursor: pointer;
       font-size: 20px;
@@ -775,11 +782,22 @@ $breakpoint-tablet: 1190px;
   padding-left: 1em;
   padding-right: 1em;
   min-height: 40px;
-  background-color: $accent-hard;
-  color: #ffffff;
   cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+  background-color: $secondary-btn-background-color;
+  color: #333333;
 
   &:hover {
-    background-color: $accent-element;
+    background-color: $secondary-btn-pressed-background-color;
+  }
+
+  &.main {
+    background-color: $blue-light;
+    color: #ffffff;
+
+    &:hover {
+      background-color: $blue-dark;
+    }
   }
 }
