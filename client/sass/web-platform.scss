@@ -3,7 +3,7 @@ $primary-color: #000;
 $accent-color: rgba(207, 22, 113, 0.7);
 $accent-hard: rgba(207, 6, 91, 0.84);
 $focus-color: #3a4acf;
-$blue-light: #0085FD;
+$blue-light: #0085fd;
 $blue-dark: #0b4bff;
 $accent-element: rgb(207, 22, 113);
 $border-gray: darkgray;
@@ -337,7 +337,7 @@ body {
   @include prefix(
                   (
                           box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3),
-                          background-clip: padding-box,
+                          background-clip: padding-box
                   ),
                   webkit moz
   );
@@ -401,7 +401,7 @@ button:focus {
     margin: 0;
   }
 
-  input[type=file] {
+  input[type="file"] {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -416,9 +416,12 @@ button:focus {
   height: 10px; /* Can be anything */
   position: relative;
   background: #f0f0f0;
-  @include prefix((
-          border-radius: 60px
-  ), webkit moz);
+  @include prefix(
+                  (
+                          border-radius: 60px
+                  ),
+                  webkit moz
+  );
   width: 400px;
   margin: 10px auto;
   border: 1px solid lightgray;
@@ -428,12 +431,16 @@ button:focus {
   display: block;
   height: 100%;
   border-radius: 60px;
-  background-color: #0085FD;
+  background-color: #0085fd;
   position: relative;
   overflow: hidden;
   width: 0;
-  @include prefix((transition: width 0.5s
-  ), webkit moz);
+  @include prefix(
+                  (
+                          transition: width 0.5s
+                  ),
+                  webkit moz
+  );
 }
 
 .upload-btn {
@@ -489,7 +496,6 @@ button:focus {
   }
 }
 
-
 .noUi-target {
   margin: 0 auto;
   width: 300px;
@@ -512,7 +518,8 @@ button:focus {
   cursor: move !important;
 }
 
-.noUi-handle::before, .noUi-handle::after {
+.noUi-handle::before,
+.noUi-handle::after {
   height: 0 !important;
   content: none !important;
 }
@@ -551,7 +558,7 @@ button {
     font-weight: bold;
 
     &.positive {
-      background-color: #0085FD;
+      background-color: #0085fd;
       color: #fff;
       border: none;
 
@@ -583,7 +590,7 @@ button {
 .dialog-transition-appear.dialog-transition-appear-active {
   opacity: 1;
   transform: scale(1);
-  transition: transform .2s ease-in;
+  transition: transform 0.2s ease-in;
 }
 
 .simple-modal {
@@ -596,7 +603,7 @@ button {
   height: 100vh;
   z-index: 2000;
   position: fixed;
-  background-color: rgba(0, 0, 0, .7);
+  background-color: rgba(0, 0, 0, 0.7);
   padding-top: 2%;
 
   &__content {
@@ -735,10 +742,12 @@ $breakpoint-tablet: 1190px;
     padding-bottom: 0;
   }
 
-  .body {
-    border: 0;
-    resize: none;
+  .public-DraftEditor-content {
+    min-height: 200px;
+    max-height: 350px;
+    overflow-y: auto;
   }
+
 
   .actions {
     display: flex;
@@ -749,7 +758,7 @@ $breakpoint-tablet: 1190px;
     }
 
     .manipulator {
-      margin-right: 15px;
+      margin-right: 20px;
       color: #333333;
       cursor: pointer;
       font-size: 20px;

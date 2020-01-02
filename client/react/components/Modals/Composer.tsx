@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import Dialog from "../Dialog";
 import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 import Axios from "axios";
-import {TextareaAutosize} from "react-autosize-textarea/lib/TextareaAutosize";
 import PushButton from "../Controls/PushButton";
+import {Editor, EditorState} from 'draft-js';
+import 'draft-js/dist/Draft.css';
 
 export interface ComposerProps {
   onClose: any;
@@ -11,6 +12,15 @@ export interface ComposerProps {
 
 const Composer = (props: ComposerProps) => {
   const [username, setUsername] = useState(null);
+  const [title, setTitle] = useState("");
+  const [contentChanged, setContentChanged] = useState(false);
+
+  const placeholder = "Share your story";
+
+  const [content, setContent] = useState("");
+  const [editorState, setEditorState] = React.useState(
+      EditorState.createEmpty(),
+  );
   const getUsername = () => {
     Axios.get(process.env.API_URL + "/getCurrentUserDetails")
         .then(response => {
@@ -22,6 +32,10 @@ const Composer = (props: ComposerProps) => {
   };
   useEffect(() => getUsername());
 
+  const handleSubmission = (event: FormEvent) => {
+    event.preventDefault();
+    console.log(title, content);
+  };
   return (
       <Dialog
           heading="Compose"
@@ -36,40 +50,40 @@ const Composer = (props: ComposerProps) => {
                 username={username}
             />
             <div className="post-text">
-              <input
-                  autoFocus={true}
-                  className="subject compose-header"
-                  type="text"
-                  placeholder="What's up?"
-              />
-              <TextareaAutosize
-                  draggable={"false"}
-                  className="post-content body"
-                  placeholder="Share your story"
-                  maxRows={14}
-                  rows={6}
-              />
-              <div className="actions">
-                <div className="manipulators">
-                  <i className="fas fa-bold manipulator"/>
-                  <i className="fas fa-italic manipulator"/>
-                  <i className="far fa-image manipulator"/>
+              <form onSubmit={handleSubmission}>
+                <input
+                    autoFocus={true}
+                    className="subject compose-header"
+                    type="text"
+                    name="title"
+                    value={title}
+                    placeholder="What's up?"
+                    onChange={e => setTitle(e.target.value)}
+                />
+                <div className="post-content body rich-editor">
+                  <Editor editorState={editorState} placeholder="Share your story" onChange={setEditorState}/>
                 </div>
-                <PushButton>
-                <span style={{fontSize: 14}}>
-                  <span style={{fontWeight: "normal"}}>Writing to: </span>
-                  Public
-                  <i
-                      style={{fontSize: 10}}
-                      className="fas fa-chevron-down spaced-right-icon far"
-                  />
-                </span>
-                </PushButton>
-
-                <PushButton className="main">
-                  <>Post</>
-                </PushButton>
-              </div>
+                <div className="actions">
+                  <div className="manipulators">
+                    <i className="fas fa-bold manipulator"/>
+                    <i className="fas fa-italic manipulator"/>
+                    <i className="far fa-image manipulator"/>
+                  </div>
+                  <PushButton>
+                  <span style={{fontSize: 14}}>
+                    <span style={{fontWeight: "normal"}}>Writing to: </span>
+                    Public
+                    <i
+                        style={{fontSize: 10}}
+                        className="fas fa-chevron-down spaced-right-icon far"
+                    />
+                  </span>
+                  </PushButton>
+                  <PushButton className="main">
+                    <>Post</>
+                  </PushButton>
+                </div>
+              </form>
             </div>
           </div>
         </div>
