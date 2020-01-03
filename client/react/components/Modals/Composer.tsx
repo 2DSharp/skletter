@@ -1,10 +1,11 @@
-import React, {FormEvent, useEffect, useState} from "react";
+import React, {createRef, FormEvent, useEffect, useState} from "react";
 import Dialog from "../Dialog";
 import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 import Axios from "axios";
 import PushButton from "../Controls/PushButton";
-import {Editor, EditorState} from 'draft-js';
+import {convertToRaw, Editor, EditorState} from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import RichTextManipulator, {ActionType} from "../Controls/RichTextManipulator";
 
 export interface ComposerProps {
   onClose: any;
@@ -13,11 +14,6 @@ export interface ComposerProps {
 const Composer = (props: ComposerProps) => {
   const [username, setUsername] = useState(null);
   const [title, setTitle] = useState("");
-  const [contentChanged, setContentChanged] = useState(false);
-
-  const placeholder = "Share your story";
-
-  const [content, setContent] = useState("");
   const [editorState, setEditorState] = React.useState(
       EditorState.createEmpty(),
   );
@@ -34,8 +30,12 @@ const Composer = (props: ComposerProps) => {
 
   const handleSubmission = (event: FormEvent) => {
     event.preventDefault();
-    console.log(title, content);
+    console.log(convertToRaw(editorState.getCurrentContent()));
   };
+
+  const editor = createRef<Editor>();
+  const focusEditor = () => editor.current.focus();
+
   return (
       <Dialog
           heading="Compose"
@@ -60,14 +60,16 @@ const Composer = (props: ComposerProps) => {
                     placeholder="What's up?"
                     onChange={e => setTitle(e.target.value)}
                 />
-                <div className="post-content body rich-editor">
-                  <Editor editorState={editorState} placeholder="Share your story" onChange={setEditorState}/>
+                <div onClick={focusEditor} className="post-content body rich-editor">
+                  <Editor ref={editor} editorState={editorState} placeholder="Share your story"
+                          onChange={setEditorState}/>
                 </div>
                 <div className="actions">
                   <div className="manipulators">
-                    <i className="fas fa-bold manipulator"/>
-                    <i className="fas fa-italic manipulator"/>
-                    <i className="far fa-image manipulator"/>
+                    <RichTextManipulator type={ActionType.BOLD} onToggle={() => console.log("Bold")}/>
+                    <RichTextManipulator type={ActionType.ITALICS} onToggle={() => console.log("Italics")}/>
+                    <RichTextManipulator type={ActionType.PHOTO} onToggle={() => console.log("Photo")}/>
+
                   </div>
                   <PushButton>
                   <span style={{fontSize: 14}}>

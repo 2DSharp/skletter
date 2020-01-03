@@ -107,7 +107,11 @@ body {
 }
 
 .stack-bg {
-  color: #f2f3f5;
+  color: $secondary-btn-background-color;
+}
+
+.stack-bg-hover {
+  color: $secondary-btn-pressed-background-color;
 }
 
 .fa-stack {
@@ -727,6 +731,10 @@ $breakpoint-tablet: 1190px;
   }
 }
 
+.rich-editor {
+  cursor: text;
+}
+
 .compose-header {
   border: 0;
   border-bottom: 1px solid $border-lighter-gray;
@@ -763,6 +771,10 @@ $breakpoint-tablet: 1190px;
       cursor: pointer;
       font-size: 20px;
 
+      &.pressed {
+        color: $accent-element;
+      }
+
       &.blue {
         line-height: 40px;
         color: $blue-dark;
@@ -770,10 +782,6 @@ $breakpoint-tablet: 1190px;
         &:hover {
           color: $blue-light;
         }
-      }
-
-      &:hover {
-        color: $accent-hard;
       }
     }
   }
