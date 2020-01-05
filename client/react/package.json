@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/2DSharp/skletter#readme",
   "dependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/draft-js": "^0.10.37",
     "@types/nouislider": "^9.0.5",
     "@types/react-transition-group": "^4.2.3",
