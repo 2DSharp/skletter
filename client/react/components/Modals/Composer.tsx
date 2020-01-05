@@ -3,7 +3,7 @@ import Dialog from "../Dialog";
 import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 import Axios from "axios";
 import PushButton from "../Controls/PushButton";
-import {convertToRaw, Editor, EditorState, RichUtils} from "draft-js";
+import {CharacterMetadata, convertToRaw, DraftEditorCommand, Editor, EditorState, RichUtils} from "draft-js";
 import "draft-js/dist/Draft.css";
 import RichTextManipulator, {ActionType} from "../Controls/RichTextManipulator";
 
@@ -11,7 +11,15 @@ export interface ComposerProps {
   onClose: any;
 }
 
-function getSelectedCharacters(editorState: EditorState) {
+/**
+ * Get character list under selection (not just cursor)
+ * The function is pulled out of the component since it was performing better for some reason
+ * The lambdas defined inside are *probably* re-created with every re-render or something
+ * @param editorState
+ */
+function getSelectedCharacters(
+    editorState: EditorState
+): Immutable.Iterable<number, CharacterMetadata> {
   const selectionState = editorState.getSelection();
   const anchorKey = selectionState.getAnchorKey();
   const currentContent = editorState.getCurrentContent();
@@ -21,7 +29,15 @@ function getSelectedCharacters(editorState: EditorState) {
   return currentContentBlock.getCharacterList().slice(start, end);
 }
 
-function getStyle(editorState: EditorState, styleAttribute: string) {
+/**
+ * Get the current styles under a selection or under the cursor
+ * **The function is pulled out of the component since it was performing better for some reason
+ * The lambdas defined inside are *probably* re-created with every re-render or something**
+ * @param editorState
+ * @param styleAttribute
+ * @return boolean
+ */
+function getStyle(editorState: EditorState, styleAttribute: string): boolean {
   let isSelectionStyled = true;
   getSelectedCharacters(editorState).forEach(element => {
     isSelectionStyled =
@@ -62,6 +78,25 @@ const Composer = (props: ComposerProps) => {
     event.preventDefault();
     setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
     setItalicBtnPressed(!italicBtnPressed);
+  };
+
+  const handleKeyCommand = (command: DraftEditorCommand) => {
+    switch (String(command).toLowerCase()) {
+      case "bold":
+        setBoldBtnPressed(!boldBtnPressed);
+        break;
+      case "italic":
+        setItalicBtnPressed(!italicBtnPressed);
+        break;
+      default:
+        break;
+    }
+    const newState = RichUtils.handleKeyCommand(editorState, command);
+    if (newState) {
+      setEditorState(newState);
+      return "handled";
+    }
+    return "not-handled";
   };
 
   const updateState = (editorState: EditorState) => {
@@ -107,6 +142,7 @@ const Composer = (props: ComposerProps) => {
                   <Editor
                       ref={editor}
                       editorState={editorState}
+                      handleKeyCommand={handleKeyCommand}
                       placeholder="Share your story"
                       onChange={updateState}
                   />
