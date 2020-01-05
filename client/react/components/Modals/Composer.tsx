@@ -6,6 +6,7 @@ import PushButton from "../Controls/PushButton";
 import {CharacterMetadata, convertToRaw, DraftEditorCommand, Editor, EditorState, RichUtils} from "draft-js";
 import "draft-js/dist/Draft.css";
 import RichTextManipulator, {ActionType} from "../Controls/RichTextManipulator";
+import classNames from "classnames";
 
 export interface ComposerProps {
   onClose: any;
@@ -107,9 +108,14 @@ const Composer = (props: ComposerProps) => {
   };
   const [boldBtnPressed, setBoldBtnPressed] = useState(false);
   const [italicBtnPressed, setItalicBtnPressed] = useState(false);
+  const [actionsDisabled, setActionsDisabled] = useState(true);
 
   const editor = useRef<Editor>();
   const focusEditor = () => editor.current.focus();
+
+  const actionsClass = classNames("actions", {
+    disabled: actionsDisabled && !editorState.getCurrentContent().hasText()
+  });
 
   return (
       <Dialog
@@ -145,9 +151,11 @@ const Composer = (props: ComposerProps) => {
                       handleKeyCommand={handleKeyCommand}
                       placeholder="Share your story"
                       onChange={updateState}
+                      onFocus={() => setActionsDisabled(false)}
+                      onBlur={() => setActionsDisabled(true)}
                   />
                 </div>
-                <div className="actions">
+                <div className={actionsClass}>
                   <div className="manipulators">
                     <RichTextManipulator
                         type={ActionType.BOLD}
