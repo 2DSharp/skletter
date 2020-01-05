@@ -585,6 +585,14 @@ button {
 
 .spaced {
   margin: 7px;
+
+  &.horizontal {
+    margin: 0 7px 0 7px;
+  }
+
+  &.vertical {
+    margin: 7px 0 7px 0;
+  }
 }
 
 .dialog-transition-appear {
@@ -791,17 +799,20 @@ $breakpoint-tablet: 1190px;
   margin: 5px 10px 0 10px;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .push-btn {
   border-radius: 9999px;
   border: 0;
-  font-weight: bold;
-  font-size: 18px;
   padding-left: 1em;
   padding-right: 1em;
   min-height: 40px;
   cursor: pointer;
   margin-left: 5px;
   margin-right: 5px;
+  min-width: 75px;
   background-color: $secondary-btn-background-color;
   color: #333333;
 
@@ -816,5 +827,18 @@ $breakpoint-tablet: 1190px;
     &:hover {
       background-color: $blue-dark;
     }
+  }
+
+  span, i {
+    line-height: 40px;
+  }
+
+  .medium-text {
+    font-size: 16px;
+  }
+
+  .big-text {
+    font-weight: bold;
+    font-size: 18px;
   }
 }
