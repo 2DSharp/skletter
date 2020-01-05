@@ -13,7 +13,7 @@ export interface DecisionButtonGroupProps {
 const DecisionButtonGroup = (props: DecisionButtonGroupProps) => {
     return (
         <React.Fragment>
-            <div style={{textAlign: "center"}}>
+            <div className="spaced" style={{textAlign: "center"}}>
                 <PushButton action={props.negativeAction}>
                     <span className="bold spaced">{props.negativeText}</span>
                 </PushButton>
