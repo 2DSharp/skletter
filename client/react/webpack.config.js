@@ -63,7 +63,7 @@ module.exports = {
         splitChunks: {
             cacheGroups: {
                 vendor: {
-                    test: /[\\/]node_modules[\\/](react|react-dom|axios)[\\/]/,
+                    test: /[\\/]node_modules[\\/](react|react-dom|axios|draft-js)[\\/]/,
                     name: 'shared',
                     chunks: 'all',
                 }
