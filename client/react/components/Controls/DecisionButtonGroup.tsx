@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from "./Button";
+import PushButton from "./PushButton";
 
 export interface DecisionButtonGroupProps {
     positiveAction(): void;
@@ -14,19 +14,12 @@ const DecisionButtonGroup = (props: DecisionButtonGroupProps) => {
     return (
         <React.Fragment>
             <div style={{textAlign: "center"}}>
-                <Button
-                    bindClass="confirmation negative spaced"
-                    type="action"
-                    action={props.negativeAction}>
-                    <span>{props.negativeText}</span>
-                </Button>
-                <Button
-                    bindClass="confirmation positive spaced"
-                    type="action"
-                    action={props.positiveAction}
-                >
-                    <span>{props.positiveText}</span>
-                </Button>
+                <PushButton action={props.negativeAction}>
+                    <span className="bold spaced">{props.negativeText}</span>
+                </PushButton>
+                <PushButton className="main" action={props.positiveAction}>
+                    <span className="bold spaced">{props.positiveText}</span>
+                </PushButton>
             </div>
         </React.Fragment>
     );

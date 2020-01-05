@@ -1,5 +1,4 @@
 import React, {ChangeEvent, Component, createRef} from "react";
-import Button from "./Controls/Button";
 import Axios, {AxiosResponse} from "axios";
 import Dialog from "./Dialog";
 import "cropperjs/dist/cropper.css";
@@ -8,6 +7,7 @@ import "nouislider/distribute/nouislider.min.css";
 import DecisionButtonGroup from "./Controls/DecisionButtonGroup";
 import ProgressMeter from "./ProgressMeter";
 import ReactAvatarEditor, {Position} from "react-avatar-editor";
+import PushButton from "./Controls/PushButton";
 
 export interface ImageUploaderProps {
   placeholder: string;
@@ -112,14 +112,13 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   render() {
     return (
         <div style={{textAlign: "center", padding: "5px"}}>
-          <Button
-              bindClass="std primary-btn medium upload-btn"
-              type="action"
+          <PushButton
+              className="main"
               action={this.selectPicture}
           >
-            <span className="fas fa-upload icon spaced"/>
-            Upload Image
-          </Button>
+            <span style={{lineHeight: "40px", fontSize: 15}} className="fas fa-plus horizontal"/>
+            <span className="bold spaced"> Upload Image</span>
+          </PushButton>
           <input
               id="uploader"
               type="file"
@@ -129,16 +128,11 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
               style={{display: "none"}}
               onChange={this.onChangeFile.bind(this)}
           />
-          {!this.state.transactionCompleted &&
-          this.state.displayCropper &&
-          <Dialog
-              heading="Adjust the image"
-              closable
-              overlayed={false}
-          >
-            {this.renderCropper()}
-          </Dialog>
-          }
+          {!this.state.transactionCompleted && this.state.displayCropper && (
+              <Dialog heading="Adjust the image" closable overlayed={false}>
+                {this.renderCropper()}
+              </Dialog>
+          )}
         </div>
     );
   }

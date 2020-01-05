@@ -8,7 +8,8 @@ export interface PushButtonProps {
 
 const PushButton = (props: PushButtonProps) => {
     return (
-        <button className={"push-btn " + props.className} onClick={props.action}>
+        <button className={"push-btn spaced " + ((props.className != undefined) ? props.className : "")}
+                onClick={props.action}>
             {props.children}
         </button>
     );
