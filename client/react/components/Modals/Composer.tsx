@@ -3,10 +3,18 @@ import Dialog from "../Dialog";
 import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
 import Axios from "axios";
 import PushButton from "../Controls/PushButton";
-import {CharacterMetadata, convertToRaw, DraftEditorCommand, Editor, EditorState, RichUtils} from "draft-js";
+import {CharacterMetadata, convertToRaw, DraftEditorCommand, EditorState, RichUtils} from "draft-js";
 import "draft-js/dist/Draft.css";
+import createHashtagPlugin from 'draft-js-hashtag-plugin';
+import 'draft-js-hashtag-plugin/lib/plugin.css';
+import 'draft-js-mention-plugin/lib/plugin.css';
+
 import RichTextManipulator, {ActionType} from "../Controls/RichTextManipulator";
 import classNames from "classnames";
+// To enable plugins
+import Editor from 'draft-js-plugins-editor';
+
+const hashtagPlugin = createHashtagPlugin();
 
 export interface ComposerProps {
   onClose: any;
@@ -153,6 +161,7 @@ const Composer = (props: ComposerProps) => {
                       onChange={updateState}
                       onFocus={() => setActionsDisabled(false)}
                       onBlur={() => setActionsDisabled(true)}
+                      plugins={[hashtagPlugin]}
                   />
                 </div>
                 <div className={actionsClass}>
