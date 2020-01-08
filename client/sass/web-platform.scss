@@ -204,8 +204,9 @@ body {
 }
 
 .icon {
-  list-style-type: none;
-  font-size: 24px;
+  display: table-cell;
+  width: 45px;
+  font-size: 20px;
   line-height: 50px;
 
   &.spaced {
@@ -686,13 +687,15 @@ $breakpoint-tablet: 1190px;
   }
   .action-menu {
     .action {
+      display: table;
+      table-layout: fixed;
       border-radius: 25px;
       padding: 0 12px 0 12px;
       margin: 8px 0 8px 0;
 
       .action-text {
-        display: inline-block;
-        font-size: 18px;
+        display: table-cell;
+        font-size: 16px;
         line-height: 100% !important;
       }
     }
