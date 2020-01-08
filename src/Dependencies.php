@@ -18,17 +18,15 @@ use Skletter\Contract\Factory\MapperFactoryInterface;
 use Skletter\Contract\Factory\QueryObjectFactoryInterface;
 use Skletter\Factory\MapperFactory;
 use Skletter\Factory\QueryObjectFactory;
-use Skletter\Model\RemoteService\PhotoBooth\PhotoBoothClient;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
-use Skletter\Model\RemoteService\Search\SearchClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Thrift\Transport\TFramedTransport;
 use Twig;
-use function Skletter\Factory\buildBinaryProtocol;
 use function Skletter\Factory\buildLazyLoader;
 use function Skletter\Factory\buildPredis;
 use function Skletter\Factory\buildRabbitMQ;
+use function Skletter\Factory\buildRPCConnections;
 use function Skletter\Factory\getLazyLoadingPDO;
 use function Skletter\Factory\getLazyLoadingTwigFactory;
 use function Skletter\Factory\getRequestFactory;
@@ -44,8 +42,6 @@ $templatesDir = __DIR__ . '/../templates';
 $templatesCacheDir = __DIR__ . '/../app/cache/templates';
 $injector->delegate(Twig\Environment::class, getLazyLoadingTwigFactory($lazyloader, $templatesDir, $templatesCacheDir));
 
-$injector->share(TransportCollector::class);
-$collector = $injector->make(TransportCollector::class);
 
 $injector->delegate(\PDO::class, getLazyLoadingPDO($lazyloader));
 $injector->delegate(Client::class, buildPredis());
@@ -57,22 +53,10 @@ $injector->define(
     FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
 );
+$injector->share(TransportCollector::class);
+$collector = $injector->make(TransportCollector::class);
 
-$injector->delegate(RomeoClient::class, function () use (&$collector) {
-    $protocol = buildBinaryProtocol("localhost", 9090, $collector);
-    return new RomeoClient($protocol);
-});
-
-$injector->delegate(SearchClient::class, function () use (&$collector) {
-    $protocol = buildBinaryProtocol("localhost", 9091, $collector);
-    return new SearchClient($protocol);
-});
-
-$injector->delegate(PhotoBoothClient::class, function () use (&$collector) {
-    $protocol = buildBinaryProtocol("localhost", 9092, $collector);
-    return new PhotoBoothClient($protocol);
-});
-
+buildRPCConnections($injector, $collector);
 $injector->share(RomeoClient::class);
 
 

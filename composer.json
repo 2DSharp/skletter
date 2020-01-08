@@ -17,7 +17,8 @@
       "Skletter\\": "src/"
     },
     "files": [
-      "src/Factory/DependencyFactory.php"
+      "src/Factory/DependencyFactory.php",
+      "src/Factory/RPCConnectionFactory.php"
     ]
   },
 
