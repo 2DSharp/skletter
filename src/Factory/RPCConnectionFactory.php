@@ -13,8 +13,11 @@ namespace Skletter\Factory;
 use Auryn\Injector;
 use Skletter\Component\TransportCollector;
 use Skletter\Model\RemoteService\PhotoBooth\PhotoBoothClient;
+use Skletter\Model\RemoteService\PostOffice\PostOfficeClient;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\RemoteService\Search\SearchClient;
+use Skletter\Model\RemoteService\SocialGraph\SocialGraphClient;
+use Skletter\Model\RemoteService\Timeline\TimelineClient;
 use Skletter\Model\RemoteService\Uniqid\UniqidInterfaceClient;
 
 function buildRPCConnections(Injector &$injector, TransportCollector &$collector)
@@ -32,6 +35,19 @@ function buildRPCConnections(Injector &$injector, TransportCollector &$collector
     $injector->delegate(PhotoBoothClient::class, function () use (&$collector) {
         $protocol = buildBinaryProtocol("localhost", 9092, $collector);
         return new PhotoBoothClient($protocol);
+    });
+
+    $injector->delegate(TimelineClient::class, function () use (&$collector) {
+        $protocol = buildBinaryProtocol("localhost", 9093, $collector);
+        return new TimelineClient($protocol);
+    });
+    $injector->delegate(SocialGraphClient::class, function () use (&$collector) {
+        $protocol = buildBinaryProtocol("localhost", 9094, $collector);
+        return new SocialGraphClient($protocol);
+    });
+    $injector->delegate(PostOfficeClient::class, function () use (&$collector) {
+        $protocol = buildBinaryProtocol("localhost", 9095, $collector);
+        return new PostOfficeClient($protocol);
     });
 
     $injector->delegate(UniqidInterfaceClient::class, function () use (&$collector) {
