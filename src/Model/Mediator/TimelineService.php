@@ -34,13 +34,12 @@ class TimelineService
     public function fetchTimeline(int $userId)
     {
         $postList = $this->client->fetchTimeline($userId);
-
-        $i = 0;
         $posts = [];
 
         foreach ($postList as $postDTO) {
             $post = new Post();
             $post->setContent($postDTO->post->content);
+            $post->title = $postDTO->post->title;
             //$post->setTimestamp($postDTO->post->time);
             $post->setComposerName($postDTO->user->name);
             $post->setUsername($postDTO->user->username);
