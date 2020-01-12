@@ -3,9 +3,10 @@ namespace php Skletter.Model.RemoteService.PostOffice
 
 struct PostDTO {
     1: required string id
-    2: required string content
-    3: optional i64 time
-    4: required i32 userId
+    2: required string title
+    3: required string content
+    4: optional i64 time
+    5: required i32 userId
 }
 service PostOffice
 {

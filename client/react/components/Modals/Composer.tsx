@@ -1,7 +1,7 @@
 import React, {FormEvent, useEffect, useRef, useState} from "react";
 import Dialog from "../Dialog";
 import ProfilePicture, {ProfilePictureVariant} from "../ProfilePicture";
-import Axios from "axios";
+import Axios, {AxiosResponse} from "axios";
 import PushButton from "../Controls/PushButton";
 import {CharacterMetadata, convertToRaw, DraftEditorCommand, EditorState, RichUtils} from "draft-js";
 import "draft-js/dist/Draft.css";
@@ -76,7 +76,19 @@ const Composer = (props: ComposerProps) => {
 
   const handleSubmission = (event: FormEvent) => {
     event.preventDefault();
-    console.log(convertToRaw(editorState.getCurrentContent()));
+    const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    Axios.post(process.env.API_URL + "/post", formData)
+        .then(
+            function (response: AxiosResponse) {
+              console.log(response)
+            }
+        )
+        .catch(function (response) {
+          console.log(response);
+        });
   };
   const toggleBold = (event: React.MouseEvent) => {
     event.preventDefault();

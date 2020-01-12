@@ -13,6 +13,7 @@ namespace Skletter\Model\Mediator;
 
 use Skletter\Model\RemoteService\PostOffice\PostDTO;
 use Skletter\Model\RemoteService\PostOffice\PostOfficeClient;
+use Skletter\Model\ValueObject\Post;
 
 class PostService
 {
@@ -31,14 +32,15 @@ class PostService
         $this->generator = $generator;
     }
 
-    public function addNewPost(string $content, int $user): string
+    public function addNewPost(Post $post, int $userId): string
     {
         $dto = new PostDTO();
         $dto->id = $this->generator->getId();
-        $dto->content = $content;
-        $dto->userId = $user;
-        $this->client->registerPublicPost($dto);
+        $dto->userId = $userId;
+        $dto->content = $post->content;
+        $dto->title = $post->title;
 
+        $this->client->registerPublicPost($dto);
         return $dto->id;
     }
 }

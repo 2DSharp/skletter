@@ -13,10 +13,11 @@ namespace Skletter\Model\ValueObject;
 
 class Post
 {
+    public string $id;
+    public string $title;
+    public string $content;
     public string $username;
     public string $composerName;
-    public string $id;
-    public string $content;
     public int $timestamp;
     public string $img;
 

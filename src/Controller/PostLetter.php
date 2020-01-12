@@ -15,6 +15,7 @@ use Skletter\Component\Core\Controller;
 use Skletter\Model\Mediator\AccountService;
 use Skletter\Model\Mediator\PostService;
 use Skletter\Model\Mediator\TimelineService;
+use Skletter\Model\ValueObject\Post;
 use Symfony\Component\HttpFoundation\Request;
 
 class PostLetter implements Controller
@@ -44,8 +45,12 @@ class PostLetter implements Controller
     public function post(Request $request)
     {
         $content = $request->request->get("content");
+        $title = $request->request->get("title");
+        $postVO = new Post();
+        $postVO->title = $title;
+        $postVO->content = $content;
         $user = $this->accountService->getSessionUser()->getId();
-        $postId = $this->postService->addNewPost($content, $this->accountService->getSessionUser()->getId());
+        $postId = $this->postService->addNewPost($postVO, $this->accountService->getSessionUser()->getId());
         $this->timelineService->addToPublicTimeline($user, $postId);
         return ['id' => $postId];
     }
