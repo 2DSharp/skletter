@@ -20,5 +20,9 @@ return [
     ['GET', '/test', ['SearchService', 'testSearch']],
     ['POST', '/api/uploadPicture', ['UploadPicture', 'upload']],
     ['GET', '/api/getCurrentUserDetails', ['Profile', 'getCurrentUserDetails']],
-    ['GET', '/api/getProfilePicture', ['Profile', 'displayProfilePicture']]
+    ['GET', '/api/getProfilePicture', ['Profile', 'displayProfilePicture']],
+    ['POST', '/api/post', ['PostLetter', 'post']],
+    ['GET', '/api/fetchTimeline', ['Timeline', 'fetchTimeline']],
+
+
 ];
