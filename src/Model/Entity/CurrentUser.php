@@ -11,8 +11,8 @@
 namespace Skletter\Model\Entity;
 
 
-use Skletter\Model\RemoteService\DTO\Status;
-use Skletter\Model\RemoteService\DTO\UserDTO;
+use Skletter\Model\RemoteService\Romeo\Status;
+use Skletter\Model\RemoteService\Romeo\UserDTO;
 
 class CurrentUser extends User
 {

@@ -12,7 +12,7 @@ namespace Skletter\Factory;
 
 
 use Skletter\Component\SecureTokenManager;
-use Skletter\Model\RemoteService\DTO\CookieDTO;
+use Skletter\Model\RemoteService\Romeo\CookieDTO;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class CookieFactory

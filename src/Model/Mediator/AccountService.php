@@ -10,13 +10,13 @@
 
 namespace Skletter\Model\Mediator;
 
+use Error;
 use Skletter\Factory\CookieFactory;
 use Skletter\Model\Entity\CurrentUser;
 use Skletter\Model\LocalService\SessionManager;
-use Skletter\Model\RemoteService\DTO\Error;
-use Skletter\Model\RemoteService\DTO\LoginMetadata;
-use Skletter\Model\RemoteService\DTO\UserDTO;
+use Skletter\Model\RemoteService\Romeo\LoginMetadata;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
+use Skletter\Model\RemoteService\Romeo\UserDTO;
 use Skletter\Model\ValueObject\Result;
 
 /**
