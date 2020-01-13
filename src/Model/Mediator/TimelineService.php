@@ -11,6 +11,9 @@
 namespace Skletter\Model\Mediator;
 
 
+use Carbon\CarbonInterface;
+use Jenssegers\Date\Date;
+use Skletter\Model\RemoteService\Timeline\PostAggregate;
 use Skletter\Model\RemoteService\Timeline\TimelineClient;
 use Skletter\Model\ValueObject\Post;
 
@@ -37,16 +40,23 @@ class TimelineService
         $posts = [];
 
         foreach ($postList as $postDTO) {
-            $post = new Post();
-            $post->setContent($postDTO->post->content);
-            $post->title = $postDTO->post->title;
-            //$post->setTimestamp($postDTO->post->time);
-            $post->setComposerName($postDTO->user->name);
-            $post->setUsername($postDTO->user->username);
-            $post->setId($postDTO->post->id);
-            $post->img = $postDTO->user->profilePicture . ".jpg";
-            array_push($posts, $post);
+            array_push($posts, $this->convertToPost($postDTO));
         }
         return $posts;
+    }
+
+    private function convertToPost(PostAggregate $postDTO): Post
+    {
+        $post = new Post();
+        $post->setContent($postDTO->post->content);
+        $post->title = $postDTO->post->title;
+        $date = new Date($postDTO->post->time);
+        $post->createdAt = $date->diffForHumans(Date::now(), CarbonInterface::DIFF_ABSOLUTE, true);
+        $post->setComposerName($postDTO->user->name);
+        $post->setUsername($postDTO->user->username);
+        $post->setId($postDTO->post->id);
+        $post->img = $postDTO->user->profilePicture . ".jpg";
+
+        return $post;
     }
 }

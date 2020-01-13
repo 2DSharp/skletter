@@ -5,7 +5,7 @@ struct PostDTO {
     1: required string id
     2: required string title
     3: required string content
-    4: optional i64 time
+    4: optional string time
     5: required i32 userId
 }
 service PostOffice

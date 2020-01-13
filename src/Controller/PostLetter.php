@@ -52,6 +52,6 @@ class PostLetter implements Controller
         $user = $this->accountService->getSessionUser()->getId();
         $postId = $this->postService->addNewPost($postVO, $this->accountService->getSessionUser()->getId());
         $this->timelineService->addToPublicTimeline($user, $postId);
-        return ['id' => $postId];
+        return ['success' => true];
     }
 }

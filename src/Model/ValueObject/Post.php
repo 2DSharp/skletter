@@ -18,7 +18,7 @@ class Post
     public string $content;
     public string $username;
     public string $composerName;
-    public int $timestamp;
+    public string $createdAt;
     public string $img;
 
     /**
@@ -102,18 +102,10 @@ class Post
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getTimestamp(): int
+    public function getCreatedAt(): string
     {
-        return $this->timestamp;
-    }
-
-    /**
-     * @param int $timestamp
-     */
-    public function setTimestamp(int $timestamp): void
-    {
-        $this->timestamp = $timestamp;
+        return $this->createdAt;
     }
 }
