@@ -10,6 +10,19 @@
   border-radius: 10px;
   display: flex;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+
+  .message-head {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .message-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 1.45em;
+    padding: 5px 20px 5px 20px;
+    color: #333333;
+  }
 }
 
 
@@ -67,7 +80,6 @@
 
 .profile-meta {
   display: inline-block;
-  margin: 5px 0 5px 0;
 }
 
 /* Skeleton */

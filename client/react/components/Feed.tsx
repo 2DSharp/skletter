@@ -1,6 +1,7 @@
 import React from "react";
 import PostCard from "./Post/PostCard";
 import Axios, {AxiosResponse} from "axios";
+import MessageCard from "./Post/MessageCard";
 
 export interface FeedState {
     isLoaded: boolean,
@@ -29,7 +30,15 @@ class Feed extends React.Component<{}, FeedState> {
 
     render() {
         const {isLoaded, posts} = this.state;
+
         if (isLoaded) {
+            if (posts.length == 0)
+                return (<MessageCard icon={process.env.img_assets + "/party_popper.png"} title="You made it!">
+                    <div>
+                        Now that you are done with the hard bit, follow some people or topics to fill this space up. Or,
+                        you can start writing now!
+                    </div>
+                </MessageCard>);
             return (
                 <div>
                     {posts.map(post => (

@@ -706,7 +706,7 @@ $breakpoint-tablet: 1190px;
   .right-block {
     flex: 0 0 240px;
     height: 100px;
-    background-color: #cf1671;
+    color: #333333;
     display: block;
   }
   .row {
@@ -849,4 +849,8 @@ $breakpoint-tablet: 1190px;
     font-weight: bold;
     font-size: 18px;
   }
+}
+
+.empty-block {
+  display: none;
 }
