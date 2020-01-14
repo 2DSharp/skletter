@@ -418,25 +418,32 @@ button:focus {
 }
 
 .upload-meter {
-  height: 10px; /* Can be anything */
   position: relative;
-  background: #f0f0f0;
-  @include prefix(
-                  (
-                          border-radius: 60px
-                  ),
-                  webkit moz
-  );
-  width: 400px;
-  margin: 10px auto;
-  border: 1px solid lightgray;
+
+  &.img-meter {
+    height: 10px; /* Can be anything */
+    width: 400px;
+    background: #f0f0f0;
+    @include prefix(
+                    (
+                            border-radius: 60px
+                    ),
+                    webkit moz
+    );
+    margin: 10px auto;
+    border: 1px solid lightgray;
+  }
+
+  &.dialog-meter {
+    height: 2px; /* Can be anything */
+    width: 100%;
+    background: transparent;
+  }
 }
 
 .upload-meter > span {
   display: block;
   height: 100%;
-  border-radius: 60px;
-  background-color: #0085fd;
   position: relative;
   overflow: hidden;
   width: 0;
@@ -446,6 +453,15 @@ button:focus {
                   ),
                   webkit moz
   );
+
+  &.img-meter {
+    border-radius: 60px;
+    background-color: #0085fd;
+  }
+
+  &.dialog-meter {
+    background-color: $blue-dark;
+  }
 }
 
 .upload-btn {
@@ -702,6 +718,11 @@ $breakpoint-tablet: 1190px;
   }
 }
 
+.footer {
+  font-size: 14px;
+  color: #333333;
+  margin: 10px;
+}
 @media (min-width: 1075px) {
   .right-block {
     flex: 0 0 240px;
