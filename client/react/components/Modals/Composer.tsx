@@ -5,19 +5,20 @@ import Axios, {AxiosResponse} from "axios";
 import PushButton from "../Controls/PushButton";
 import {CharacterMetadata, convertToRaw, DraftEditorCommand, EditorState, RichUtils} from "draft-js";
 import "draft-js/dist/Draft.css";
-import createHashtagPlugin from 'draft-js-hashtag-plugin';
-import 'draft-js-hashtag-plugin/lib/plugin.css';
-import 'draft-js-mention-plugin/lib/plugin.css';
+import createHashtagPlugin from "draft-js-hashtag-plugin";
+import "draft-js-hashtag-plugin/lib/plugin.css";
+import "draft-js-mention-plugin/lib/plugin.css";
 
 import RichTextManipulator, {ActionType} from "../Controls/RichTextManipulator";
 import classNames from "classnames";
 // To enable plugins
-import Editor from 'draft-js-plugins-editor';
+import Editor from "draft-js-plugins-editor";
 
 const hashtagPlugin = createHashtagPlugin();
 
 export interface ComposerProps {
   onClose: any;
+  handleSuccess: any;
 }
 
 /**
@@ -60,9 +61,11 @@ function getStyle(editorState: EditorState, styleAttribute: string): boolean {
 const Composer = (props: ComposerProps) => {
   const [username, setUsername] = useState(null);
   const [title, setTitle] = useState("");
-  const [editorState, setEditorState] = React.useState(
+
+  const [editorState, setEditorState] = useState(
       EditorState.createEmpty()
   );
+  const [progress, setProgress] = useState(0);
   const getUsername = () => {
     Axios.get(process.env.API_URL + "/getCurrentUserDetails")
         .then(response => {
@@ -72,20 +75,32 @@ const Composer = (props: ComposerProps) => {
           console.log(error);
         });
   };
-  useEffect(() => getUsername());
+  useEffect(() => {
+    getUsername()
+  }, []);
 
   const handleSubmission = (event: FormEvent) => {
     event.preventDefault();
-    const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    const content = JSON.stringify(
+        convertToRaw(editorState.getCurrentContent())
+    );
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    Axios.post(process.env.API_URL + "/post", formData)
-        .then(
-            function (response: AxiosResponse) {
-              console.log(response)
-            }
-        )
+    Axios({
+      method: "post",
+      url: process.env.API_URL + "/post",
+      data: formData,
+      onUploadProgress: function (progressEvent: any) {
+        let percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+        );
+        setProgress(percentCompleted);
+      }
+    })
+        .then(function (response: AxiosResponse) {
+          props.handleSuccess();
+        })
         .catch(function (response) {
           console.log(response);
         });
@@ -122,7 +137,6 @@ const Composer = (props: ComposerProps) => {
 
   const updateState = (editorState: EditorState) => {
     setEditorState(editorState);
-
     setBoldBtnPressed(getStyle(editorState, "BOLD"));
     setItalicBtnPressed(getStyle(editorState, "ITALIC"));
   };
@@ -142,6 +156,7 @@ const Composer = (props: ComposerProps) => {
           heading="Compose"
           onClose={props.onClose}
           closable
+          progress={progress}
           overlayed={false}
       >
         <div className="padded-container small">
