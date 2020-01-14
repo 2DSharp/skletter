@@ -6,30 +6,61 @@ import MessageCard from "./Post/MessageCard";
 export interface FeedState {
     isLoaded: boolean,
     posts: any[]
+    lastPostId: string
+    hasUpdates: boolean
+    loadedPosts: any[]
 }
 
 class Feed extends React.Component<{}, FeedState> {
     componentDidMount() {
-
         Axios.get(process.env.API_URL + "/fetchTimeline")
             .then(function (response: AxiosResponse) {
                 this.setState({
                     isLoaded: true,
+                    lastPostId: response.data[0].id,
                     posts: response.data
                 });
             }.bind(this))
             .catch(function (error) {
                 console.log(error);
             });
+        setInterval(this.checkForNewPosts.bind(this), 3000);
+    }
+
+    loadNewPosts() {
+        this.setState({posts: [...this.state.loadedPosts, ...this.state.posts], hasUpdates: false});
+    }
+
+    async checkForNewPosts() {
+        if (this.state.isLoaded) {
+            Axios.get(process.env.API_URL + "/fetchTimelineUpdate?lastPostId=" + this.state.lastPostId)
+                .then(function (response: AxiosResponse) {
+                    if (response.data.length > 0) {
+                        this.setState({
+                            isLoaded: true,
+                            hasUpdates: true,
+                            lastPostId: response.data[0].id,
+                            loadedPosts: [...response.data, ...this.state.loadedPosts]
+                        });
+                    }
+
+                }.bind(this))
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     state: Readonly<FeedState> = {
         isLoaded: false,
-        posts: []
+        loadedPosts: [],
+        posts: [],
+        lastPostId: null,
+        hasUpdates: false
     };
 
     render() {
-        const {isLoaded, posts} = this.state;
+        const {isLoaded, posts, hasUpdates} = this.state;
 
         if (isLoaded) {
             if (posts.length == 0)
@@ -41,6 +72,9 @@ class Feed extends React.Component<{}, FeedState> {
                 </MessageCard>);
             return (
                 <div>
+                    {hasUpdates &&
+                    <div className="loaded-post-placeholder" onClick={this.loadNewPosts.bind(this)}>Load new posts
+                      ({this.state.loadedPosts.length})</div>}
                     {posts.map(post => (
                         <PostCard key={post.id} data={post}/>
                     ))}
