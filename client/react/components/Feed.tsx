@@ -18,7 +18,7 @@ class Feed extends React.Component<{}, FeedState> {
             function (response: AxiosResponse) {
               this.setState({
                 isLoaded: true,
-                lastPostId: ((response.data.length) > 0 ? response.data[0].id : ""),
+                lastPostId: response.data.length > 0 ? response.data[0].id : "",
                 posts: response.data
               });
             }.bind(this)
@@ -70,21 +70,27 @@ class Feed extends React.Component<{}, FeedState> {
     hasUpdates: false
   };
 
+  displayAvailablePosts() {
+    return (
+        this.state.hasUpdates && (
+            <div
+                className="loaded-post-placeholder"
+                onClick={this.loadNewPosts.bind(this)}
+            >
+              Load new posts ({this.state.loadedPosts.length})
+            </div>
+        )
+    );
+  }
+
   render() {
-    const {isLoaded, posts, hasUpdates} = this.state;
+    const {isLoaded, posts} = this.state;
 
     if (isLoaded) {
       if (posts.length == 0)
         return (
             <div>
-              {hasUpdates && (
-                  <div
-                      className="loaded-post-placeholder"
-                      onClick={this.loadNewPosts.bind(this)}
-                  >
-                    Load new posts ({this.state.loadedPosts.length})
-                  </div>
-              )}
+              {this.displayAvailablePosts()}
               <MessageCard
                   icon={process.env.img_assets + "/party_popper.png"}
                   title="You made it!"
@@ -98,14 +104,7 @@ class Feed extends React.Component<{}, FeedState> {
         );
       return (
           <div>
-            {hasUpdates && (
-                <div
-                    className="loaded-post-placeholder"
-                    onClick={this.loadNewPosts.bind(this)}
-                >
-                  Load new posts ({this.state.loadedPosts.length})
-                </div>
-            )}
+            {this.displayAvailablePosts()}
             {posts.map(post => (
                 <PostCard key={post.id} data={post}/>
             ))}
