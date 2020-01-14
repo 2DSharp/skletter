@@ -38,4 +38,10 @@ class Timeline extends AbstractView
     {
         return new JsonResponse($this->timeline->fetchTimeline($this->account->getSessionUser()->getId()));
     }
+
+    public function fetchPartialTimeline(Request $request): Response
+    {
+        return new JsonResponse($this->timeline->fetchTimeline($this->account->getSessionUser()->getId(),
+                                                               $request->query->get('lastPostId')));
+    }
 }

@@ -23,6 +23,7 @@ return [
     ['GET', '/api/getProfilePicture', ['Profile', 'displayProfilePicture']],
     ['POST', '/api/post', ['PostLetter', 'post']],
     ['GET', '/api/fetchTimeline', ['Timeline', 'fetchTimeline']],
+    ['GET', '/api/fetchTimelineUpdate', ['Timeline', 'fetchPartialTimeline']],
 
 
 ];

@@ -11,5 +11,6 @@ struct PostAggregate
 service Timeline
 {
     void fanout(1: string postId, 2: i32 userId);
-    list<PostAggregate> fetchTimeline(1: i32 userId)
+    list<PostAggregate> fetchTimeline(1: i32 userId);
+    list<PostAggregate> fetchPartialTimelineTill(1: i32 userId, 2: string lastPostId)
 }

@@ -34,9 +34,13 @@ class TimelineService
         $this->client->fanout($postId, $userId);
     }
 
-    public function fetchTimeline(int $userId)
+    public function fetchTimeline(int $userId, string $lastId = null)
     {
-        $postList = $this->client->fetchTimeline($userId);
+        if ($lastId !== null) {
+            $postList = $this->client->fetchPartialTimelineTill($userId, $lastId);
+        } else {
+            $postList = $this->client->fetchTimeline($userId);
+        }
         $posts = [];
 
         foreach ($postList as $postDTO) {
@@ -44,6 +48,7 @@ class TimelineService
         }
         return $posts;
     }
+
 
     private function convertToPost(PostAggregate $postDTO): Post
     {
