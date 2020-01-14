@@ -21,7 +21,7 @@ const PostCard: React.FunctionComponent<PostCard> = (props: PostCard) => {
             <div className="post-text">
                 <div className="subject">{props.data.title}</div>
                 <div className="byline">
-                    <div className="profile-meta"><b>{props.data.composerName} </b> ({props.data.username})
+                    <div className="profile-meta"><b>{props.data.composerName} </b> (@{props.data.username})
                         · {props.data.createdAt}</div>
                 </div>
                 <div className="post-content">
