@@ -77,7 +77,7 @@ class Feed extends React.Component<{}, FeedState> {
                 className="loaded-post-placeholder"
                 onClick={this.loadNewPosts.bind(this)}
             >
-              Load new posts ({this.state.loadedPosts.length})
+                Load new posts ({this.state.loadedPosts.length <= 10 ? this.state.loadedPosts.length : "10+"})
             </div>
         )
     );
