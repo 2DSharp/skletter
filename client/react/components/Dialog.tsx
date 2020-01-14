@@ -3,12 +3,14 @@ import Button from "./Controls/Button";
 import ReactDOM from "react-dom";
 import TransitionGroup from "react-transition-group/TransitionGroup";
 import CSSTransition from "react-transition-group/CSSTransition";
+import ProgressMeter from "./ProgressMeter";
 
 export interface DialogProps {
   heading: string;
   closable: boolean;
   overlayed: boolean;
-  onClose?: any
+  progress?: number
+  onClose?: any;
 }
 
 class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
@@ -29,19 +31,26 @@ class Dialog extends Component<DialogProps, { dialogDisplayed: boolean }> {
                 )}
                 <div className="simple-modal">
                   <TransitionGroup>
-                    <CSSTransition classNames="dialog-transition" appear={true}
-                                   timeout={{appear: 500, exit: 500, enter: 500}}>
+                    <CSSTransition
+                        classNames="dialog-transition"
+                        appear={true}
+                        timeout={{appear: 500, exit: 500, enter: 500}}
+                    >
                       <div className="dialog-container simple-modal__content">
                         <div className="header">
                           {closable && (
                               <Button action={this.closeDialog} type="close"/>
                           )}
                           <span>
-                      <b style={{textAlign: "left", margin: "10px"}}>
-                        {this.props.heading}
-                      </b>
-                    </span>
+                        <b style={{textAlign: "left", margin: "10px"}}>
+                          {this.props.heading}
+                        </b>
+                      </span>
                         </div>
+                        <ProgressMeter
+                            progress={this.props.progress != null ? this.props.progress : 0}
+                            classes="dialog-meter"
+                        />
                         <div className="dialog-content modal-main">
                           {this.props.children}
                         </div>
