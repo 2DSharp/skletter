@@ -19,6 +19,6 @@ class PostLetter extends AbstractView
 {
     public function post(Request $request, array $dto): Response
     {
-        return new JsonResponse(['id' => $dto['id']]);
+        return new JsonResponse(['success' => true]);
     }
 }
