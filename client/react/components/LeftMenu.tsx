@@ -46,21 +46,21 @@ const LeftMenu = () => {
       <>
         <div className="left-menu">
           <div className="action-menu">
-            {actions.map((item, i) => (
-                <ActionItem
-                    action={showAction}
-                    id={i}
-                    key={i}
-                    linkClass={item.linkClass}
-                    iconClass={item.iconClass}
-                    name={item.name}
-                />
-            ))}
+            <div className="menu-card">
+              {actions.map((item, i) => (
+                  <ActionItem
+                      action={showAction}
+                      id={i}
+                      key={i}
+                      linkClass={item.linkClass}
+                      iconClass={item.iconClass}
+                      name={item.name}
+                  />
+              ))}
+            </div>
           </div>
         </div>
-        {showDialog && (
-            <Composer onClose={() => setDialogShow(false)}/>
-        )}
+        {showDialog && <Composer handleSuccess={() => setDialogShow(false)} onClose={() => setDialogShow(false)}/>}
       </>
   );
 };
