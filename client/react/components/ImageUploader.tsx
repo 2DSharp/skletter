@@ -112,11 +112,11 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
   render() {
     return (
         <div style={{textAlign: "center", padding: "5px"}}>
-          <PushButton
-              className="main"
-              action={this.selectPicture}
-          >
-            <span style={{lineHeight: "40px", fontSize: 15}} className="fas fa-plus horizontal"/>
+          <PushButton className="main" action={this.selectPicture}>
+          <span
+              style={{lineHeight: "40px", fontSize: 15}}
+              className="fas fa-plus horizontal"
+          />
             <span className="bold spaced"> Upload Image</span>
           </PushButton>
           <input
@@ -228,9 +228,12 @@ class ImageUploader extends Component<ImageUploaderProps, ImageUploaderState> {
                 }}
                 className="upload-status"
             >
+          <span style={{margin: "5px", fontWeight: "bold"}}>
+            {this.props.placeholder}
+          </span>
               <ProgressMeter
                   progress={this.state.progress}
-                  placeholder={this.props.placeholder}
+                  classes="img-meter"
               />
             </div>
         )

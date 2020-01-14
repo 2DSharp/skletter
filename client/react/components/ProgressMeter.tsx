@@ -1,18 +1,15 @@
 import React from 'react';
 
 export interface ProgressMeterInterface {
-    placeholder: string,
+    classes?: string
     progress: number
 }
 
 const ProgressMeter = (props: ProgressMeterInterface) => {
     return (
         <div>
-          <span style={{margin: "5px", fontWeight: "bold"}}>
-            {props.placeholder}
-          </span>
-            <div className="upload-meter">
-                <span style={{width: props.progress + "%"}}/>
+            <div className={"upload-meter " + ((props.classes != null) ? props.classes : "")}>
+                <span className={props.classes != null ? props.classes : ""} style={{width: props.progress + "%"}}/>
             </div>
         </div>
     );
