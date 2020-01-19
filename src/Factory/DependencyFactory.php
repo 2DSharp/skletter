@@ -26,11 +26,12 @@ function addTwigGlobals(Environment $twig)
 {
     $twig->addGlobal(
         'server', [
-        'css_assets' => $_ENV['css_assets'],
-        'img_assets' => $_ENV['img_assets'],
-        'base_url' => $_ENV['base_url'],
-        'js_assets' => $_ENV['js_assets']
-        ]
+                    'css_assets' => $_ENV['css_assets'],
+                    'img_assets' => $_ENV['img_assets'],
+                    'base_url' => $_ENV['base_url'],
+                    'js_assets' => $_ENV['js_assets'],
+                    'USER_IMAGES' => $_ENV['USER_IMAGES']
+                ]
     );
 }
 
@@ -53,9 +54,9 @@ function buildPredis(): callable
     return function (): Client {
         return new Client(
             array(
-            "scheme" => "tcp",
-            "host" => "localhost",
-            "port" => 6379,
+                "scheme" => "tcp",
+                "host" => "localhost",
+                "port" => 6379,
                 "persistent" => "1")
         );
     };
@@ -97,21 +98,22 @@ function buildTwig(string $templatesDir, string $cacheDir)
     $loader = new \Twig\Loader\FilesystemLoader($templatesDir);
     $twig = new Environment(
         $loader, [
-            //  'cache' => $cacheDir,
-        ]
+                   //  'cache' => $cacheDir,
+               ]
     );
     addTwigGlobals($twig);
     return $twig;
 }
 
-function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir, string $cacheDir): callable
+function getLazyLoadingTwigFactory(LazyLoadingValueHolderFactory $lazyloader, string $templatesDir,
+                                   string $cacheDir): callable
 {
     return function () use ($lazyloader, $templatesDir, $cacheDir) : VirtualProxyInterface {
         $factory = $lazyloader;
-        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+        $initializer = function (&$wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
                                  $method,
                                  array $parameters,
-                                 & $initializer
+                                 &$initializer
         ) use ($templatesDir, $cacheDir) {
             $initializer = null; // disable initialization
             $wrappedObject = buildTwig($templatesDir, $cacheDir);
@@ -125,10 +127,10 @@ function getLazyLoadingPDO(LazyLoadingValueHolderFactory $lazyloader): callable
 {
     return function () use ($lazyloader) : VirtualProxyInterface {
         $factory = $lazyloader;
-        $initializer = function (& $wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
+        $initializer = function (&$wrappedObject, \ProxyManager\Proxy\LazyLoadingInterface $proxy,
                                  $method,
                                  array $parameters,
-                                 & $initializer
+                                 &$initializer
         ) {
             $wrappedObject = buildPDO();
             $initializer = null; // disable initialization
