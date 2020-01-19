@@ -159,7 +159,6 @@ body {
     margin: 5px 0 5px 0;
     height: 50px;
     min-width: 50px;
-    font-weight: 300;
     width: inherit;
     float: left;
     text-align: center;
@@ -177,7 +176,6 @@ body {
   -o-transition: $transition;
   transition: $transition;
 }
-
 .action-menu .action:hover {
   color: #cf065b;
   background-color: rgba(207, 22, 113, 0.075);
@@ -247,6 +245,12 @@ body {
   height: 100%;
   margin: 0px auto;
   align-items: flex-start;
+}
+
+.page-content {
+  padding: 10px;
+  height: 100px;
+  width: 700px;
 }
 
 .header-wrapper {
@@ -713,6 +717,7 @@ $breakpoint-tablet: 1190px;
         display: table-cell;
         font-size: 16px;
         line-height: 100% !important;
+        font-family: 'Lato', sans-serif;
       }
     }
   }
@@ -741,9 +746,9 @@ $breakpoint-tablet: 1190px;
   display: flex;
   flex-direction: column;
 
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
   background-color: #fff;
 
   &.big {
@@ -877,9 +882,9 @@ $breakpoint-tablet: 1190px;
 }
 
 .loaded-post-placeholder {
-  min-width: 150px;
-  max-width: 180px;
-  background-color: $accent-color;
+  min-width: 120px;
+  max-width: 150px;
+  background-color: $accent-element;
   color: #ffffff;
   font-weight: bold;
   margin: 5px auto;
@@ -887,9 +892,34 @@ $breakpoint-tablet: 1190px;
   cursor: pointer;
   text-align: center;
   padding: 10px;
-  font-size: 14px;
+  font-size: 12px;
 
   &:hover {
-    background-color: $accent-element;
+    background-color: $accent-hard;
+  }
+}
+
+.follow-btn {
+  color: $accent-hard;
+  background-color: #ffffff;
+  border-radius: 25px;
+  border: 1px solid $accent-hard;
+  font-size: 18px;
+  padding-right: 14px;
+  padding-left: 14px;
+  height: 38px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $accent-hard;
+    color: #ffffff;
+    @include transition(all 0.3s ease-in-out);
+  }
+
+  .active {
+    background-color: $accent-color;
+    border: 1px solid $accent-color;
+    @include transition(all 0.3s ease-in-out);
   }
 }
