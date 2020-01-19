@@ -12,7 +12,7 @@ const LeftMenu = () => {
     },
     {
       name: "Profile",
-      iconClass: "far fa-user icon"
+      iconClass: "fas fa-user icon"
     },
     {
       name: "Vault",
@@ -20,7 +20,7 @@ const LeftMenu = () => {
     },
     {
       name: "Favorites",
-      iconClass: "far fa-bookmark icon"
+      iconClass: "fas fa-bookmark icon"
     },
     {
       name: "Discover",
@@ -28,7 +28,7 @@ const LeftMenu = () => {
     },
     {
       name: "Drafts",
-      iconClass: "far fa-sticky-note icon"
+      iconClass: "fas fa-sticky-note icon"
     },
     {
       name: "Compose",
