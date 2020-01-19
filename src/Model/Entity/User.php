@@ -13,29 +13,18 @@ namespace Skletter\Model\Entity;
 
 class User
 {
-    protected int $id;
     protected string $name;
     protected string $username;
 
     /**
      * User constructor.
-     * @param int $id
      * @param string $name
      * @param string $username
      */
-    public function __construct(int $id, string $name, string $username)
+    public function __construct(string $name, string $username)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->username = $username;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

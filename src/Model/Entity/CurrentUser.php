@@ -16,6 +16,7 @@ use Skletter\Model\RemoteService\Romeo\UserDTO;
 
 class CurrentUser extends User
 {
+    private int $id;
     private int $status;
     private string $email;
     const TEMP = 0;
@@ -45,10 +46,20 @@ class CurrentUser extends User
      */
     public function __construct(int $id, string $name, string $username, string $email, int $status)
     {
-        parent::__construct($id, $name, $username);
+        parent::__construct($name, $username);
+        $this->id = $id;
         $this->email = $email;
         $this->status = $status;
     }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
 
     public static function buildFromDTO(UserDTO $dto): CurrentUser
     {
