@@ -17,6 +17,7 @@ use Skletter\Model\Mediator\ImageService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 class Profile extends AbstractView
 {
@@ -31,6 +32,10 @@ class Profile extends AbstractView
      * @var SessionManager
      */
     private SessionManager $session;
+    /**
+     * @var Environment
+     */
+    private Environment $twig;
 
     /**
      * Profile constructor.
@@ -40,13 +45,30 @@ class Profile extends AbstractView
      */
     public function __construct(ImageService $imageService,
                                 SessionManager $sessionManager,
+                                Environment $twig,
                                 AccountService $accountService)
     {
         $this->imageService = $imageService;
         $this->session = $sessionManager;
+        $this->twig = $twig;
         $this->accountService = $accountService;
     }
 
+    public function displayProfile(Request $request): Response
+    {
+        $username = str_replace('/', "", $request->getPathInfo());
+        $img = $this->accountService->getProfilePicture($username);
+        $html = $this->createHTMLFromTemplate(
+            $this->twig, 'pages/profile.twig',
+            ['title' => $username,
+                'username' => $username,
+                'pic' => $img
+            ]
+        );
+        //$this->accountService->getUserDetails($username);
+        return $this->respond($request, $html);
+        // return new Response(str_replace('/', "", $request->getPathInfo()));
+    }
 
     public function displayProfilePicture(Request $request): Response
     {
