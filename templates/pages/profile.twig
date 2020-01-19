@@ -1,0 +1,44 @@
+{% extends "logged_in_base.twig" %}
+
+{% block title %} {{ title }} {% endblock %}
+{% block head %}
+{% endblock %}
+{% block content %}
+
+    <div class='page-content'>
+        <div id="profile-info-root">
+            <div>
+                <div class="profile-card-hero">
+                    <div class="cover-image" style="background-image: url('{{ server.img_assets }}/wave.svg')">
+                        <div class="profile-image feature"
+                             style="background-image: url({{ server.USER_IMAGES }}/normal/{{ pic }}.jpg)"></div>
+                    </div>
+                    <div class="profile-data">
+                        <div class="stats"><span class="stat-num">100</span> followers</div>
+                        <div class="stats"><span class="stat-num">100</span> following</div>
+                        <div class="stats"><span class="stat-num">100</span> posts</div>
+                        <div class="blank"></div>
+                        <div class="profile-actions">
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                    </div>
+                    <div class="user-details">
+                        <div class="name">
+                            Dedipyaman Das
+                        </div>
+                        <div class="username">@{{ username }}</div>
+                        <div class="bio">
+                            I write code.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block costly_imports %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ server.css_assets }}/profile.css">
+    <script src="{{ server.js_assets }}/react-components/feed-bundle.js"></script>
+{% endblock %}
