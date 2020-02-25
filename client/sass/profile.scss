@@ -42,7 +42,7 @@
   }
 
   .user-details {
-    margin: 5px auto;
+    margin: 25px auto;
     text-align: center;
 
     .name {
@@ -68,8 +68,8 @@
 
 .profile-image {
   &.feature {
-    width: 128px;
-    height: 128px;
+    width: 150px;
+    height: 150px;
     margin: 120px auto;
     border: 5px solid #ffffff;
     box-shadow: 0 2px 7px rgba(0, 0, 0, .2);

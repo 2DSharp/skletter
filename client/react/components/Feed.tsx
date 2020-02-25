@@ -2,6 +2,7 @@ import React from "react";
 import PostCard from "./Post/PostCard";
 import Axios, {AxiosResponse} from "axios";
 import MessageCard from "./Post/MessageCard";
+import "../../../public/static/css/feed.css"
 
 export interface FeedState {
   isLoaded: boolean;
@@ -12,17 +13,17 @@ export interface FeedState {
 }
 
 class Feed extends React.Component<{}, FeedState> {
-  componentDidMount() {
-    Axios.get(process.env.API_URL + "/fetchTimeline")
-        .then(
-            function (response: AxiosResponse) {
-              this.setState({
-                isLoaded: true,
-                lastPostId: response.data.length > 0 ? response.data[0].id : "",
-                posts: response.data
-              });
-            }.bind(this)
-        )
+    async componentDidMount() {
+        Axios.get(process.env.API_URL + "/fetchTimeline")
+            .then(
+                function (response: AxiosResponse) {
+                    this.setState({
+                        isLoaded: true,
+                        lastPostId: response.data.length > 0 ? response.data[0].id : "",
+                        posts: response.data
+                    });
+                }.bind(this)
+            )
         .catch(function (error) {
           console.log(error);
         });
