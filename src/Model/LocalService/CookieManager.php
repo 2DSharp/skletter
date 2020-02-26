@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class CookieManager
 {
+
     /**
      * Generates a secure random cookie string with hmac
      *

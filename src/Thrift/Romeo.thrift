@@ -84,6 +84,7 @@ service Romeo
 {
     UserDTO registerNew(1: UserDTO user)
     CookieDTO loginWithPassword(1: string identifier, 2: string password, 3: LoginMetadata metaData)
+    CookieDTO loginWithCookie(1: CookieDTO cookie)
     void updateProfileImage(1: int id, 2: string imageId)
     UserDTO verifyToken(1: int id, 2: string token)
     UserDTO verifyPin(1: int id, 2: string pin)

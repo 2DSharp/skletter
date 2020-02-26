@@ -11,10 +11,13 @@
 namespace Skletter\Model\Mediator;
 
 use Error;
-use Skletter\Factory\CookieFactory;
 use Skletter\Model\Entity\CurrentUser;
+use Skletter\Model\Entity\User;
+use Skletter\Model\LocalService\CookieManager;
 use Skletter\Model\LocalService\SessionManager;
+use Skletter\Model\RemoteService\Romeo\CookieDTO;
 use Skletter\Model\RemoteService\Romeo\LoginMetadata;
+use Skletter\Model\RemoteService\Romeo\PublicProfileDTO;
 use Skletter\Model\RemoteService\Romeo\RomeoClient;
 use Skletter\Model\RemoteService\Romeo\UserDTO;
 use Skletter\Model\ValueObject\Result;
@@ -80,6 +83,12 @@ class AccountService
         }
     }
 
+    public function loginWithCookie(CookieDTO $cookieDTO, $params)
+    {
+        $cookieDTO = $this->userService->loginWithCookie($cookieDTO);
+        $this->persistSession($cookieDTO, $params);
+    }
+
     /**
      * @param string $identifier
      * @param string $password
@@ -96,23 +105,28 @@ class AccountService
             $meta->localSessionId = $this->session->getId();
 
             $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
-            if ($cookieDTO->notification != null) {
-                return new Result(false, $cookieDTO->notification->errors);
-            }
-            $user = CurrentUser::buildFromDTO($cookieDTO->user);
-            $this->session->storeLoginDetails($user);
-
-            $cookie = CookieFactory::createSignedCookie($cookieDTO, "persistence", $params['user-agent']);
-
-            $result = new Result(true);
-            $result->setValueObject($cookie);
-
-            return $result;
+            $this->persistSession($cookieDTO, $params);
         } catch (\TException $e) {
             $err = new Error();
             $err->message = "Something went wrong. Try again.";
             return new Result(false, ["global" => $err]);
         }
+    }
+
+    private function persistSession(CookieDTO $cookieDTO, array $params = [])
+    {
+        if ($cookieDTO->notification != null) {
+            return new Result(false, $cookieDTO->notification->errors);
+        }
+        $user = CurrentUser::buildFromDTO($cookieDTO->user);
+        $this->session->storeLoginDetails($user);
+
+        $cookie = CookieManager::createSignedCookie($cookieDTO, $_ENV['PERSISTENCE_COOKIE'], $params['user-agent']);
+
+        $result = new Result(true);
+        $result->setValueObject($cookie);
+
+        return $result;
     }
 
     public function confirmAccount(int $id, string $token, int $type)
@@ -157,5 +171,16 @@ class AccountService
     public function getProfilePicture(string $username): string
     {
         return $this->userService->getProfileImage($username);
+    }
+
+    public function getUserDetails(string $username): User
+    {
+        var_dump($this->userService->getPublicUserData($username));
+
+    }
+
+    private function convertProfileToEntity(PublicProfileDTO $dto): User
+    {
+        //$user = new User(0, $dto->name, $dto->username);
     }
 }
