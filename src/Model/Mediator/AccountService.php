@@ -105,7 +105,7 @@ class AccountService
             $meta->localSessionId = $this->session->getId();
 
             $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
-            $this->persistSession($cookieDTO, $params);
+            return $this->persistSession($cookieDTO, $params);
         } catch (\TException $e) {
             $err = new Error();
             $err->message = "Something went wrong. Try again.";
@@ -113,7 +113,7 @@ class AccountService
         }
     }
 
-    private function persistSession(CookieDTO $cookieDTO, array $params = [])
+    private function persistSession(CookieDTO $cookieDTO, array $params = []): Result
     {
         if ($cookieDTO->notification != null) {
             return new Result(false, $cookieDTO->notification->errors);
@@ -175,7 +175,7 @@ class AccountService
 
     public function getUserDetails(string $username): User
     {
-        var_dump($this->userService->getPublicUserData($username));
+        return $this->userService->getPublicUserData($username);
 
     }
 

@@ -41,10 +41,12 @@ class Home implements Controller
         try {
 
             if (!$this->sessionManager->isLoggedIn()) {
-                $token = $request->cookies->get($_ENV['PERSISTENCE_COOKIE'], 'none');
-                $params = ['User-Agent' => $request->headers->get('User-Agent')];
-                $cookieDTO = CookieManager::getLoginCookie($token, $params);
-                $this->accountService->loginWithCookie($cookieDTO, $params);
+                $token = $request->cookies->get($_ENV['PERSISTENCE_COOKIE'], null);
+                if (!is_null($token)) {
+                    $params = ['User-Agent' => $request->headers->get('User-Agent')];
+                    $cookieDTO = CookieManager::getLoginCookie($token, $params);
+                    $this->accountService->loginWithCookie($cookieDTO, $params);
+                }
             }
         } catch (InvalidCookie $e) {
             //log this
