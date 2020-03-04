@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from "react";
 
 const ProfileCard = () => {
     return (
@@ -6,13 +6,13 @@ const ProfileCard = () => {
             <div className="profile-card-hero">
                 <div className="cover-image">
                     <div className="profile-image feature"
-                         style={{backgroundImage: process.env.USER_IMAGES + "/normal/{{ pic }}.jpg")}}></div>
+                         style={{backgroundImage: process.env.USER_IMAGES + "/normal/{{ pic }}.jpg"}}/>
                 </div>
                 <div className="profile-data">
                     <div className="stats"><span className="stat-num">100</span> followers</div>
                     <div className="stats"><span className="stat-num">100</span> following</div>
                     <div className="stats"><span className="stat-num">100</span> posts</div>
-                    <div className="blank"></div>
+                    <div className="blank"/>
                     <div className="profile-actions">
                         <button className="follow-btn">Follow</button>
                     </div>
@@ -21,7 +21,7 @@ const ProfileCard = () => {
                     <div className="name">
                         Dedipyaman Das
                     </div>
-                    <div className="username">@{{username}}</div>
+                    <div className="username">@ded</div>
                     <div className="bio">
                         I write code.
                     </div>
