@@ -101,7 +101,7 @@ class AccountService
         try {
             $meta = new LoginMetadata();
             $meta->ipAddr = $params['ip-address'];
-            $meta->headers = $params['user-agent'];
+            $meta->headers = $params['User-Agent'];
             $meta->localSessionId = $this->session->getId();
 
             $cookieDTO = $this->userService->loginWithPassword($identifier, $password, $meta);
@@ -121,7 +121,7 @@ class AccountService
         $user = CurrentUser::buildFromDTO($cookieDTO->user);
         $this->session->storeLoginDetails($user);
 
-        $cookie = CookieManager::createSignedCookie($cookieDTO, $_ENV['PERSISTENCE_COOKIE'], $params['user-agent']);
+        $cookie = CookieManager::createSignedCookie($cookieDTO, $_ENV['PERSISTENCE_COOKIE'], $params['User-Agent']);
 
         $result = new Result(true);
         $result->setValueObject($cookie);
