@@ -11,6 +11,7 @@ namespace Skletter;
 use Auryn\Injector;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
+use Psr\Log\LoggerInterface;
 use Skletter\Component\FallbackExceptionHandler;
 use Skletter\Component\RedisSessionHandler;
 use Skletter\Component\TransportCollector;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Thrift\Transport\TFramedTransport;
 use Twig;
 use function Skletter\Factory\buildLazyLoader;
+use function Skletter\Factory\buildLogger;
 use function Skletter\Factory\buildPredis;
 use function Skletter\Factory\buildRabbitMQ;
 use function Skletter\Factory\buildRPCConnections;
@@ -53,6 +55,8 @@ $injector->define(
     FallbackExceptionHandler::class,
     [':logConfig' => ['LOG_FILE' => __DIR__ . '/../app/logs/error.log']]
 );
+$injector->delegate(LoggerInterface::class, buildLogger(__DIR__ . '/../app/logs/debug.log'));
+
 $injector->share(TransportCollector::class);
 $collector = $injector->make(TransportCollector::class);
 

@@ -10,11 +10,14 @@
 
 namespace Skletter\Factory;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use PDO;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Predis\Client;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
+use Psr\Log\LoggerInterface;
 use Skletter\Component\TransportCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Thrift\Protocol\TBinaryProtocol;
@@ -157,4 +160,13 @@ function buildBinaryProtocol(string $address, int $port, TransportCollector &$co
     $transport->open();
     $collector->add($transport);
     return new TBinaryProtocol($transport);
+}
+
+function buildLogger(string $location): callable
+{
+    return function () use ($location) : LoggerInterface {
+        $logger = new Logger('Debug Log');
+        $logger->pushHandler(new StreamHandler($location, Logger::DEBUG));
+        return $logger;
+    };
 }

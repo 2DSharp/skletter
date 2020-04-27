@@ -11,6 +11,7 @@
 namespace Skletter\Controller;
 
 
+use Psr\Log\LoggerInterface;
 use Skletter\Component\Core\Controller;
 use Skletter\Exception\InvalidCookie;
 use Skletter\Model\LocalService\CookieManager;
@@ -29,11 +30,16 @@ class Home implements Controller
      * @var AccountService
      */
     private AccountService $accountService;
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
-    public function __construct(SessionManager $sessionManager, AccountService $accountService)
+    public function __construct(SessionManager $sessionManager, AccountService $accountService, LoggerInterface $logger)
     {
         $this->sessionManager = $sessionManager;
         $this->accountService = $accountService;
+        $this->logger = $logger;
     }
 
     public function main(Request $request)
@@ -50,6 +56,7 @@ class Home implements Controller
             }
         } catch (InvalidCookie $e) {
             //log this
+            $this->logger->warning("Invalid cookie, potential tampering");
         }
     }
 
