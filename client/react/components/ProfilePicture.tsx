@@ -36,7 +36,8 @@ const ProfilePicture = (props: ProfilePictureProps) => {
     };
 
     useEffect(() => {
-        fetchAndAddPicture(props.username)
+        if (props.username != null)
+            fetchAndAddPicture(props.username)
     }, [props.username]);
 
     return (
